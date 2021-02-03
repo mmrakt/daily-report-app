@@ -15,6 +15,7 @@ import { AuthProvider } from '../auth/AuthProvider'
 import { AppProps } from 'next/app'
 import '../../styles/globals.css'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { Provider as NextAuthProvider } from 'next-auth/client'
 
 export const AuthContext = React.createContext(null)
 
@@ -58,9 +59,11 @@ export default function MyApp(props: AppProps): React.ReactElement {
                         <CssBaseline />
                         {/* @ts-ignore */}
                         <ApolloProvider client={client}>
-                            <AuthProvider>
-                                <Component {...pageProps} />
-                            </AuthProvider>
+                            <NextAuthProvider session={pageProps.session}>
+                                <AuthProvider>
+                                    <Component {...pageProps} />
+                                </AuthProvider>
+                            </NextAuthProvider>
                         </ApolloProvider>
                     </ThemeProvider>
                 </QueryClientProvider>

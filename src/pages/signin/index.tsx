@@ -1,47 +1,35 @@
 import React from 'react'
-import firebase from 'firebase'
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
+import { providers, signIn } from 'next-auth/client'
 import Layout from '../../components/layout'
-import { Container } from '@material-ui/core'
-import { AuthContext } from '../../auth/AuthProvider'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
 
-const Signin = (): React.ReactElement => {
-    const { signinAccount } = React.useContext(AuthContext)
-    const router = useRouter()
-
-    if (signinAccount) {
-        if (typeof window !== 'undefined') {
-            router.push('/')
-        }
+type IProviders = {
+    provider: {
+        id: string
+        name: string
     }
-    const uiConfig = {
-        signInFlow: 'popup',
-        signInSuccessUrl: '/',
-        signInOptions: [
-            firebase.auth.EmailAuthProvider.PROVIDER_ID,
-            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        ],
-    }
-
+}
+const SignIn = ({ providers }: { providers: IProviders }): React.ReactNode => {
     return (
-        <Layout title="ログイン">
-            <Container>
-                <header>
-                    <div>
-                        <StyledFirebaseAuth
-                            uiConfig={uiConfig}
-                            firebaseAuth={firebase.auth()}
-                        />
+        <>
+            <Layout title="ログイン">
+                {Object.values(providers).map((provider) => (
+                    <div key={provider.name}>
+                        <button onClick={() => signIn(provider.id)}>
+                            Sign in with {provider.name}
+                        </button>
                     </div>
-                    <Link href="/account/reset_password">
-                        <a>パスワードをお忘れの方はこちら</a>
-                    </Link>
-                </header>
-            </Container>
-        </Layout>
+                ))}
+            </Layout>
+        </>
     )
 }
 
-export default Signin
+export async function getStaticProps(context) {
+    return {
+        props: {
+            providers: await providers(context),
+        },
+    }
+}
+
+export default SignIn

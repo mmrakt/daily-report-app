@@ -7,8 +7,10 @@ import { fbAuth } from 'functions/firebase'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Modal from '../Modal'
+import { signIn, signOut, useSession } from 'next-auth/client'
 
 const MenuList = (): React.ReactElement => {
+    const [session, loading] = useSession()
     const { signinAccount } = React.useContext(AuthContext)
     const [isOpenModal, toggleModal] = React.useState(null)
     const router = useRouter()
@@ -20,9 +22,11 @@ const MenuList = (): React.ReactElement => {
         toggleModal(null)
     }
     const handleSignout = React.useCallback(async () => {
-        await fbAuth.signOut()
+        await signOut()
         router.push('/')
     }, [])
+
+    console.log(session)
 
     return (
         <>
@@ -54,9 +58,7 @@ const MenuList = (): React.ReactElement => {
                 ) : (
                     <div>
                         <MenuItem onClick={handleModalClose}>
-                            <Link href="/signin">
-                                <a>ログイン</a>
-                            </Link>
+                            <div onClick={signIn}>ログイン</div>
                         </MenuItem>
                         <MenuItem onClick={handleModalClose}>
                             <Link href="/signup">
