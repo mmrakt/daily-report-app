@@ -1,17 +1,13 @@
 import React from 'react'
-import {} from '@material-ui/core'
 import { MenuItem } from '@material-ui/core'
 import Link from 'next/link'
-import { AuthContext } from '../../auth/AuthProvider'
-import { fbAuth } from 'functions/firebase'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Modal from '../Modal'
 import { signIn, signOut, useSession } from 'next-auth/client'
 
 const MenuList = (): React.ReactElement => {
-    const [session, loading] = useSession()
-    const { signinAccount } = React.useContext(AuthContext)
+    const [session] = useSession()
     const [isOpenModal, toggleModal] = React.useState(null)
     const router = useRouter()
 
@@ -26,16 +22,10 @@ const MenuList = (): React.ReactElement => {
         router.push('/')
     }, [])
 
-    console.log(session)
-
     return (
         <>
             <Image
-                src={
-                    signinAccount && signinAccount.avatarURL
-                        ? signinAccount.avatarURL
-                        : '/avatar.png'
-                }
+                src={session?.user?.image || '/avatar.png'}
                 alt="アバター画像"
                 width={50}
                 height={50}
@@ -43,11 +33,11 @@ const MenuList = (): React.ReactElement => {
                 onClick={handleModalOpen}
             />
             <Modal isOpenModal={isOpenModal} toggleModal={toggleModal}>
-                {signinAccount ? (
+                {session?.user ? (
                     // NOTE: Material-uiのコンポーネント内でfragmentを使うとエラーになる
                     <div>
                         <MenuItem onClick={handleModalClose}>
-                            <Link href={`/${signinAccount.userId}`}>
+                            <Link href={`/${session.user.customId}`}>
                                 <a>マイページ</a>
                             </Link>
                         </MenuItem>
@@ -58,7 +48,14 @@ const MenuList = (): React.ReactElement => {
                 ) : (
                     <div>
                         <MenuItem onClick={handleModalClose}>
-                            <div onClick={signIn}>ログイン</div>
+                            <div
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    signIn()
+                                }}
+                            >
+                                ログイン
+                            </div>
                         </MenuItem>
                         <MenuItem onClick={handleModalClose}>
                             <Link href="/signup">

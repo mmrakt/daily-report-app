@@ -8,7 +8,7 @@ type IProps = {
 
 const ProtectedRoute: React.FC<IProps> = (props) => {
     const { children } = props
-    const { signinAccount } = React.useContext(AuthContext)
+    //const { signinAccount } = React.useContext(AuthContext)
 
     //TODO: signinAccountを取得する前にリダイレクトされてしまうので解消する
     // if (!signinAccount) {
