@@ -11,6 +11,10 @@ module.exports = {
         return config
     },
     images: {
-        domains: ['firebasestorage.googleapis.com'],
+        domains: [
+            'firebasestorage.googleapis.com',
+            'lh3.googleusercontent.com',
+            'pbs.twimg.com',
+        ],
     },
 }
