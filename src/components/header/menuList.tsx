@@ -2,14 +2,12 @@ import React from 'react'
 import { MenuItem } from '@material-ui/core'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 import Modal from '../Modal'
 import { signIn, signOut, useSession } from 'next-auth/client'
 
 const MenuList = (): React.ReactElement => {
     const [session] = useSession()
     const [isOpenModal, toggleModal] = React.useState(null)
-    const router = useRouter()
 
     const handleModalOpen = (e) => {
         toggleModal(e.currentTarget)
@@ -17,10 +15,16 @@ const MenuList = (): React.ReactElement => {
     const handleModalClose = () => {
         toggleModal(null)
     }
-    const handleSignout = React.useCallback(async () => {
-        await signOut()
-        router.push('/')
-    }, [])
+    const handleSignin = (event) => {
+        event.preventDefault()
+        signIn()
+    }
+    const handleSignout = (event) => {
+        event.preventDefault()
+        signOut({
+            callbackUrl: 'http://localhost:3000/signin',
+        })
+    }
 
     return (
         <>
@@ -48,14 +52,7 @@ const MenuList = (): React.ReactElement => {
                 ) : (
                     <div>
                         <MenuItem onClick={handleModalClose}>
-                            <div
-                                onClick={(e) => {
-                                    e.preventDefault()
-                                    signIn()
-                                }}
-                            >
-                                ログイン
-                            </div>
+                            <div onClick={handleSignin}>ログイン</div>
                         </MenuItem>
                         <MenuItem onClick={handleModalClose}>
                             <Link href="/signup">
