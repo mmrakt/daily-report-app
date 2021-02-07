@@ -2,15 +2,15 @@ import React from 'react'
 import {} from '@material-ui/core'
 import Layout from '../../components/layout'
 import Link from 'next/link'
-//import ProtectedRoute from '../../auth/ProtectedRoute'
 import Image from 'next/image'
 import { useSession } from 'next-auth/client'
+import ProtectedRoute from '../../auth/ProtectedRoute'
 
 const Mypage = (): React.ReactElement => {
     const [session] = useSession()
 
     return (
-        <>
+        <ProtectedRoute>
             {session?.user && (
                 <Layout title="マイページ">
                     <div className="flex my-8 space-x-4 mx-auto itmes-center">
@@ -54,7 +54,7 @@ const Mypage = (): React.ReactElement => {
                     </ul>
                 </Layout>
             )}
-        </>
+        </ProtectedRoute>
     )
 }
 export default Mypage
