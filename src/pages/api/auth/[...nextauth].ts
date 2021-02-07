@@ -79,6 +79,11 @@ const options = {
             return Promise.resolve(session)
         },
     },
+    events: {
+        async error(message) {
+            console.log(message)
+        },
+    },
     //database: process.env.DATABASE_URL,
     debug: false,
 }
