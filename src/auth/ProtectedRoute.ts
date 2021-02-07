@@ -13,7 +13,7 @@ const ProtectedRoute: any = (props: IProps) => {
     const [session] = useSession()
 
     if (!session) {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && session !== undefined) {
             router.push('/signin')
             return null
         }
