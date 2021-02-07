@@ -13,6 +13,8 @@ import { vldRules } from '@/utils/validationRule'
 import ProtectedRoute from '../../auth/ProtectedRoute'
 import Button from '../../components/Button'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/client'
+import { useMutation, useQueryClient } from 'react-query'
 
 const AvatarImg = styled.img`
     border-radius: 50%;
@@ -38,6 +40,8 @@ const useStyles = makeStyles((theme) => ({
 const Settings = (): React.ReactElement => {
     const classes = useStyles()
     const { signinAccount } = React.useContext(AuthContext)
+    const [session] = useSession()
+    const queryClient = useQueryClient()
     const [editedUserName, setEditedUserName] = useState('')
     const [editedProfile, setEditedProfile] = useState('')
     const [src, setSrc] = useState<any>(null)
@@ -49,7 +53,6 @@ const Settings = (): React.ReactElement => {
     const router = useRouter()
 
     React.useEffect(() => {
-        //NOTE: https://stackoverflow.com/questions/52474208/react-localstorage-is-not-defined-error-showing
         if (typeof window !== 'undefined') {
             setEditedUserName(
                 JSON.parse(localStorage.getItem('signinAccount'))['userName']
@@ -76,24 +79,35 @@ const Settings = (): React.ReactElement => {
     ): Promise<void> => {
         event.preventDefault()
 
-        await fbDb
-            .collection('users')
-            .doc(fbAuth.currentUser.uid)
-            .set(
-                {
-                    userName: editedUserName,
-                    profile: editedProfile,
-                },
-                { merge: true }
-            )
-            .then(() => {
-                updateAccountOnLocalStorage()
-            })
-            .catch((error) => {
-                console.log(error.message)
-            })
-        router.push(`/${signinAccount.userId}`)
+        try {
+            await mutate()
+            await updateAccountOnLocalStorage
+        } catch (error) {
+            console.log(error)
+        }
+
+        router.push(`/${session.user.customId}`)
     }
+
+    const { mutate } = useMutation(
+        () => {
+            return fetch(
+                `/api/user/update/?customId=${session.user.customId}`,
+                {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        userName: editedUserName,
+                        profile: editedProfile,
+                    }),
+                }
+            )
+        },
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('userList')
+            },
+        }
+    )
 
     const updateAccountOnLocalStorage = () => {
         localStorage.setItem(
@@ -107,15 +121,17 @@ const Settings = (): React.ReactElement => {
     return (
         <ProtectedRoute>
             <Layout title="アカウント設定">
-                {signinAccount && (
+                {session?.user && (
                     <Container component="main" maxWidth="xs">
                         <CssBaseline />
                         <div className={classes.paper}>
-                            {signinAccount.avatarURL ? (
-                                <AvatarImg src={signinAccount.avatarURL} />
-                            ) : (
-                                <AvatarImg src="/avatar.png" />
-                            )}
+                            <AvatarImg
+                                src={
+                                    session?.user?.image
+                                        ? session.user.image
+                                        : 'avatar.png'
+                                }
+                            />
                             <div>
                                 <input
                                     type="file"
