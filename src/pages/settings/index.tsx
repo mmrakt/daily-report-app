@@ -3,7 +3,6 @@ import {} from '@material-ui/core'
 import Layout from '../../components/layout'
 import { AuthContext } from '../../auth/AuthProvider'
 import { CssBaseline, Grid, makeStyles, Container } from '@material-ui/core'
-import { fbDb, fbAuth } from '../../../functions/firebase'
 import 'react-image-crop/dist/ReactCrop.css'
 import AvatalTrimmingModal from './AvatarTrimmingModal'
 import styled from 'styled-components'
@@ -39,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Settings = (): React.ReactElement => {
     const classes = useStyles()
-    const { signinAccount } = React.useContext(AuthContext)
     const [session] = useSession()
     const queryClient = useQueryClient()
     const [editedUserName, setEditedUserName] = useState('')
@@ -92,7 +90,7 @@ const Settings = (): React.ReactElement => {
     const { mutate } = useMutation(
         () => {
             return fetch(
-                `/api/user/update/?customId=${session.user.customId}`,
+                `/api/user/updateProfile/?customId=${session.user.customId}`,
                 {
                     method: 'POST',
                     body: JSON.stringify({
@@ -174,7 +172,11 @@ const Settings = (): React.ReactElement => {
                                         value={editedProfile}
                                         multiline
                                         rows={4}
-                                        onChange={setEditedProfile}
+                                        onChange={(
+                                            e: React.FocusEvent<HTMLInputElement>
+                                        ) => {
+                                            setEditedProfile(e.target.value)
+                                        }}
                                         inputRef={register({
                                             maxLength:
                                                 vldRules.checkMaxLength100,

@@ -1,16 +1,17 @@
-import type { NextApiHandler, NextApiRequest } from 'next'
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 
-// type IProps = {
-//     id: string
-//     name: string
-// }
+type IBody = {
+    userName: string
+    profile: string
+}
 
-//TODO: JSONの型定義をちゃんとやる
-
-const handler: NextApiHandler = async (req: NextApiRequest, res) => {
+const handler: NextApiHandler = async (
+    req: NextApiRequest,
+    res: NextApiResponse
+) => {
     try {
-        const { userName, profile } = JSON.parse(req.body)
+        const { userName, profile }: IBody = JSON.parse(req.body)
         await prisma.user.update({
             where: {
                 customId: String(req.query.customId),

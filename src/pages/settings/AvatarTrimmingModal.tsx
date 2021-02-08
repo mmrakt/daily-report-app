@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react'
-import {} from '@material-ui/core'
 import { AuthContext } from '../../auth/AuthProvider'
 import { Button } from '@material-ui/core'
 import { fbDb, fbAuth, fbStorage } from '../../../functions/firebase'
@@ -8,6 +7,8 @@ import 'react-image-crop/dist/ReactCrop.css'
 import { formatDateTime } from '../../utils/date'
 import Modal from 'react-modal'
 import { defaultCrop, imageCropped } from '../../utils/crop'
+import { useMutation, useQueryClient } from 'react-query'
+import { useSession } from 'next-auth/client'
 
 const modalStyle = {
     overlay: {
@@ -41,6 +42,8 @@ const AvatalTrimmingModal = (props: IProps): React.ReactElement => {
     const [croppedImageUrl, setCroppedImageUrl] = useState<string>('')
     const [croppedBlob, setCroppedBlob] = useState<Blob>(null)
     const processing = useRef(false)
+    const [session] = useSession()
+    const queryClient = useQueryClient()
 
     const onImageLoaded = (image: HTMLImageElement) => {
         setImageRef(image)
@@ -66,7 +69,7 @@ const AvatalTrimmingModal = (props: IProps): React.ReactElement => {
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ): void => {
         event.preventDefault()
-        //NOTE: 二重送信防止
+
         if (processing.current) return
         processing.current = true
 
@@ -76,42 +79,35 @@ const AvatalTrimmingModal = (props: IProps): React.ReactElement => {
                 .child('images/' + formatDateTime(new Date()))
                 .put(croppedBlob)
                 .then((snapshot) => {
-                    snapshot.ref.getDownloadURL().then((avatarURL: string) => {
-                        updateAccountAvatarOnFbDB(avatarURL)
-                        updateAuthContext(avatarURL)
-                        updatePhotoURLOnFbAuth(avatarURL)
-                        processing.current = false
-                        onRequestClose()
-                    })
+                    snapshot.ref
+                        .getDownloadURL()
+                        .then(async (avatarUrl: string) => {
+                            await mutate(avatarUrl)
+                            processing.current = false
+                            onRequestClose()
+                        })
                 })
         } catch (error) {
             console.log(error)
         }
     }
-    const updateAccountAvatarOnFbDB = (avatarURL: string): void => {
-        fbDb.collection('users').doc(fbAuth.currentUser.uid).set(
-            {
-                avatarURL,
+
+    const { mutate } = useMutation(
+        (avatarUrl: string) => {
+            return fetch(
+                `api/user/updateImage/?customId=${session.user.customId}`,
+                {
+                    method: 'POST',
+                    body: avatarUrl,
+                }
+            )
+        },
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('userList')
             },
-            {
-                merge: true,
-            }
-        )
-    }
-    const updateAuthContext = (avatarURL: string): void => {
-        setSigninAccount({
-            userId: signinAccount.userId,
-            userName: signinAccount.userName,
-            email: signinAccount.email,
-            profile: signinAccount.profile,
-            avatarURL,
-        })
-    }
-    const updatePhotoURLOnFbAuth = (avatarURL: string): void => {
-        fbAuth.currentUser.updateProfile({
-            photoURL: avatarURL,
-        })
-    }
+        }
+    )
 
     return (
         <Modal
