@@ -27,7 +27,7 @@ const SignIn = ({ providers }: { providers: IProviders }): React.ReactNode => {
 export async function getStaticProps(context) {
     return {
         props: {
-            providers: await providers(context),
+            providers: await providers(),
         },
     }
 }
