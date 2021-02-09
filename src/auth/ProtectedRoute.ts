@@ -1,19 +1,23 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { AuthContext } from './AuthProvider'
+import { useSession } from 'next-auth/client'
 
 type IProps = {
-    children: React.ReactElement
+    children: React.ReactNode
 }
 
-const ProtectedRoute: React.FC<IProps> = (props) => {
+//TODO: anyをなんとかする
+const ProtectedRoute: any = (props: IProps) => {
     const { children } = props
-    const { signinAccount } = React.useContext(AuthContext)
+    const router = useRouter()
+    const [session] = useSession()
 
-    if (!signinAccount) {
-        if (typeof window !== 'undefined') {
-            useRouter().push('/signin')
+    if (!session) {
+        if (typeof window !== 'undefined' && session !== undefined) {
+            router.push('/signin')
+            return null
         }
+        return null
     }
     return children
 }

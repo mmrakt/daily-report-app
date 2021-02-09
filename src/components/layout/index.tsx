@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import Header from '../../components/header/index'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import Container from '@material-ui/core/Container'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,9 +35,8 @@ const Layout = (props: LayoutProps): React.ReactElement => {
     return (
         <div className={classes.root}>
             <Header />
-            <main className={classes.content}>
-                <div className={classes.toolbar} />
-                <Container maxWidth="lg" className={classes.container}>
+            <main className="max-w-screen-md mx-auto my-20">
+                <div>
                     <Typography
                         component="h2"
                         variant="h5"
@@ -49,7 +47,7 @@ const Layout = (props: LayoutProps): React.ReactElement => {
                         {props.title}
                     </Typography>
                     {props.children}
-                </Container>
+                </div>
             </main>
         </div>
     )

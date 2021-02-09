@@ -13,8 +13,13 @@ import 'react-calendar/dist/Calendar.css'
 import 'react-toastify/dist/ReactToastify.css'
 import { AuthProvider } from '../auth/AuthProvider'
 import { AppProps } from 'next/app'
+import '../../styles/globals.css'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { Provider as NextAuthProvider } from 'next-auth/client'
 
 export const AuthContext = React.createContext(null)
+
+const queryClient = new QueryClient()
 
 // NOTE: functionでなくconstにすると下記エラーとなる
 // The default export is not a React Component
@@ -48,16 +53,20 @@ export default function MyApp(props: AppProps): React.ReactElement {
                 />
             </Head>
             <Provider store={store}>
-                <ThemeProvider theme={theme}>
-                    {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-                    <CssBaseline />
-                    {/* @ts-ignore */}
-                    <ApolloProvider client={client}>
-                        <AuthProvider>
-                            <Component {...pageProps} />
-                        </AuthProvider>
-                    </ApolloProvider>
-                </ThemeProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ThemeProvider theme={theme}>
+                        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+                        <CssBaseline />
+                        {/* @ts-ignore */}
+                        <ApolloProvider client={client}>
+                            <NextAuthProvider session={pageProps.session}>
+                                <AuthProvider>
+                                    <Component {...pageProps} />
+                                </AuthProvider>
+                            </NextAuthProvider>
+                        </ApolloProvider>
+                    </ThemeProvider>
+                </QueryClientProvider>
             </Provider>
         </>
     )

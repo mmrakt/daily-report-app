@@ -5,13 +5,16 @@ import { ErrorMessage } from '@hookform/error-message'
 type IProps = {
     name: string
     label: string
-    id: string
-    autoComplete: string
-    type: string
+    id?: string
+    autoComplete?: string
+    type?: string
     value?: string
+    disabled?: boolean
     multiline?: boolean
     rows?: number
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onBlur?: (any) => void
+    onFocus?: (any) => void
     inputRef?: (ref: any) => void
     error?: boolean
     errors?: any
@@ -25,9 +28,12 @@ const TextFieldEl = (props: IProps): React.ReactElement => {
         autoComplete,
         type,
         value,
+        disabled,
         multiline,
         rows,
         onChange,
+        onBlur,
+        onFocus,
         inputRef,
         error,
         errors,
@@ -44,10 +50,13 @@ const TextFieldEl = (props: IProps): React.ReactElement => {
                 name={name}
                 type={type}
                 value={value}
+                disabled={disabled}
                 multiline={multiline}
                 rows={rows}
                 autoComplete={autoComplete}
                 onChange={onChange}
+                onBlur={onBlur}
+                onFocus={onFocus}
                 inputRef={inputRef}
                 error={error}
             />

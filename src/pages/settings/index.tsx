@@ -1,15 +1,7 @@
 import React, { useState } from 'react'
 import {} from '@material-ui/core'
 import Layout from '../../components/layout'
-import { AuthContext } from '../../auth/AuthProvider'
-import {
-    Button,
-    CssBaseline,
-    Grid,
-    makeStyles,
-    Container,
-} from '@material-ui/core'
-import { fbDb, fbAuth } from '../../../functions/firebase'
+import { CssBaseline, Grid, makeStyles, Container } from '@material-ui/core'
 import 'react-image-crop/dist/ReactCrop.css'
 import AvatalTrimmingModal from './AvatarTrimmingModal'
 import styled from 'styled-components'
@@ -17,6 +9,10 @@ import { useForm } from 'react-hook-form'
 import TextFieldEl from '../../components/grid/textFieldEl'
 import { vldRules } from '@/utils/validationRule'
 import ProtectedRoute from '../../auth/ProtectedRoute'
+import Button from '../../components/Button'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/client'
+import { useMutation, useQueryClient } from 'react-query'
 
 const AvatarImg = styled.img`
     border-radius: 50%;
@@ -41,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Settings = (): React.ReactElement => {
     const classes = useStyles()
-    const { signinAccount } = React.useContext(AuthContext)
+    const [session] = useSession()
+    const queryClient = useQueryClient()
     const [editedUserName, setEditedUserName] = useState('')
     const [editedProfile, setEditedProfile] = useState('')
     const [src, setSrc] = useState<any>(null)
@@ -50,18 +47,20 @@ const Settings = (): React.ReactElement => {
         criteriaMode: 'all',
         mode: 'onChange',
     })
+    const router = useRouter()
 
     React.useEffect(() => {
-        //NOTE: https://stackoverflow.com/questions/52474208/react-localstorage-is-not-defined-error-showing
-        if (typeof window !== 'undefined') {
-            setEditedUserName(
-                JSON.parse(localStorage.getItem('signinAccount'))['userName']
-            )
-            setEditedProfile(
-                JSON.parse(localStorage.getItem('signinAccount'))['profile']
-            )
-        }
-    }, [])
+        // if (typeof window !== 'undefined') {
+        //     setEditedUserName(
+        //         JSON.parse(localStorage.getItem('signinUser'))['userName']
+        //     )
+        //     setEditedProfile(
+        //         JSON.parse(localStorage.getItem('signinUser'))['profile']
+        //     )
+        // }
+        setEditedUserName(session?.user?.name)
+        setEditedProfile(session?.user?.profile)
+    }, [session])
 
     const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -74,29 +73,44 @@ const Settings = (): React.ReactElement => {
         }
     }
 
-    const onUpdateAccountOnFbDB = async (): Promise<void> => {
-        await fbDb
-            .collection('users')
-            .doc(fbAuth.currentUser.uid)
-            .set(
-                {
-                    userName: editedUserName,
-                    profile: editedProfile,
-                },
-                { merge: true }
-            )
-            .then(() => {
-                updateAccountOnLocalStorage()
-            })
-            .catch((error) => {
-                console.log(error.message)
-            })
-        location.href = `/${signinAccount.userId}`
+    const handleUpdateUserNameAndProfile = async (
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ): Promise<void> => {
+        event.preventDefault()
+
+        try {
+            await mutate()
+            await updateUserNameAndProfileOnLocalStorage()
+        } catch (error) {
+            console.log(error)
+        }
+
+        router.push(`/${session.user.customId}`)
     }
 
-    const updateAccountOnLocalStorage = () => {
+    const { mutate } = useMutation(
+        () => {
+            return fetch(
+                `/api/user/updateProfile/?customId=${session.user.customId}`,
+                {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        userName: editedUserName,
+                        profile: editedProfile,
+                    }),
+                }
+            )
+        },
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('userList')
+            },
+        }
+    )
+
+    const updateUserNameAndProfileOnLocalStorage = () => {
         localStorage.setItem(
-            'signinAccount',
+            'signinUser',
             JSON.stringify({
                 userName: editedUserName,
                 profile: editedProfile,
@@ -106,15 +120,17 @@ const Settings = (): React.ReactElement => {
     return (
         <ProtectedRoute>
             <Layout title="アカウント設定">
-                {signinAccount && (
+                {session?.user && (
                     <Container component="main" maxWidth="xs">
                         <CssBaseline />
                         <div className={classes.paper}>
-                            {signinAccount.avatarURL ? (
-                                <AvatarImg src={signinAccount.avatarURL} />
-                            ) : (
-                                <AvatarImg src="/profile.png" />
-                            )}
+                            <AvatarImg
+                                src={
+                                    session?.user?.image
+                                        ? session.user.image
+                                        : 'avatar.png'
+                                }
+                            />
                             <div>
                                 <input
                                     type="file"
@@ -135,9 +151,9 @@ const Settings = (): React.ReactElement => {
                                         name="diplayName"
                                         autoComplete="userName"
                                         type="text"
-                                        value={editedUserName}
+                                        value={editedUserName || ''}
                                         onChange={(
-                                            e: React.ChangeEvent<HTMLInputElement>
+                                            e: React.FocusEvent<HTMLInputElement>
                                         ) => {
                                             setEditedUserName(e.target.value)
                                         }}
@@ -154,11 +170,11 @@ const Settings = (): React.ReactElement => {
                                         name="profile"
                                         autoComplete="profile"
                                         type="text"
-                                        value={editedProfile}
+                                        value={editedProfile || ''}
                                         multiline
                                         rows={4}
                                         onChange={(
-                                            e: React.ChangeEvent<HTMLInputElement>
+                                            e: React.FocusEvent<HTMLInputElement>
                                         ) => {
                                             setEditedProfile(e.target.value)
                                         }}
@@ -171,13 +187,11 @@ const Settings = (): React.ReactElement => {
                                     />
                                 </Grid>
                                 <Button
-                                    variant="contained"
-                                    color="primary"
-                                    className={classes.submit}
-                                    onClick={onUpdateAccountOnFbDB}
-                                >
-                                    更新
-                                </Button>
+                                    text="更新"
+                                    onClickEvent={
+                                        handleUpdateUserNameAndProfile
+                                    }
+                                />
                             </form>
                         </div>
                     </Container>

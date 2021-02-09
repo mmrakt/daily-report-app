@@ -73,6 +73,11 @@ const Drawer = (props: IProps): React.ReactElement => {
             icon: <AssignmentTurnedInIcon />,
             listItemText: 'ToDo管理',
         },
+        {
+            href: '/tweet',
+            icon: <AssignmentTurnedInIcon />,
+            listItemText: 'タイムライン',
+        },
     ]
     return (
         <>

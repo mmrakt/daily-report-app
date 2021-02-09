@@ -14,6 +14,8 @@ import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { vldRules } from '../../utils/validationRule'
 import TextFieldEl from '../../components/grid/textFieldEl'
+import { AuthContext } from '../../auth/AuthProvider'
+import { useMutation } from 'react-query'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -38,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 const Signup = (): React.ReactElement => {
     const router = useRouter()
     const classes = useStyles()
+    const { signinAccount } = React.useContext(AuthContext)
 
     const [userId, setUserId] = useState('')
     const [userName, setUserName] = useState('')
@@ -51,6 +54,12 @@ const Signup = (): React.ReactElement => {
     })
     const onSubmit = (data) => console.log(data)
 
+    if (signinAccount) {
+        if (typeof window !== 'undefined') {
+            router.push('/')
+        }
+    }
+
     const onSignup = async (): Promise<void> => {
         setLoading(false)
         if (email && orgPassword && loading) {
@@ -63,12 +72,13 @@ const Signup = (): React.ReactElement => {
                         })
                     })
 
-                fbDb.collection('users').doc(fbAuth.currentUser.uid).set({
-                    userId: userId,
-                    userName: userName,
-                    email: email,
-                })
-                router.push(`/{$fbAuth.currentUser.uid}`)
+                // fbDb.collection('users').doc(fbAuth.currentUser.uid).set({
+                //     userId: userId,
+                //     userName: userName,
+                //     email: email,
+                // })
+                await mutate()
+                router.push(`/${fbAuth.currentUser.uid}`)
             } catch (error) {
                 console.log(error)
             } finally {
@@ -76,6 +86,16 @@ const Signup = (): React.ReactElement => {
             }
         }
     }
+
+    const { mutate } = useMutation(() => {
+        return fetch('/api/user/create', {
+            method: 'POST',
+            body: JSON.stringify({
+                id: userId,
+                name: userName,
+            }),
+        })
+    })
 
     return (
         <Layout title="ユーザー登録">

@@ -10,4 +10,12 @@ module.exports = {
         config.plugins.push(new webpack.DefinePlugin(env))
         return config
     },
+    images: {
+        domains: [
+            'firebasestorage.googleapis.com',
+            'lh3.googleusercontent.com',
+            'pbs.twimg.com',
+        ],
+    },
+    reactStrictMode: true,
 }
