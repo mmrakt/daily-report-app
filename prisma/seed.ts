@@ -2,10 +2,10 @@ import prisma from '../src/lib/prisma'
 
 const seed = async (): Promise<void> => {
     await prisma.user.upsert({
-        where: { id: 'testuser01' },
+        where: { customId: 'testuser01' },
         update: {},
         create: {
-            id: 'testuser01',
+            customId: 'testuser01',
             name: 'testuser01',
             profile: 'testtest',
             avatarUrl: '',
@@ -15,13 +15,13 @@ const seed = async (): Promise<void> => {
                 },
             },
         },
-        select: { id: true, name: true, profile: true },
+        select: { customId: true, name: true, profile: true },
     })
     await prisma.user.upsert({
-        where: { id: 'testuser02' },
+        where: { customId: 'testuser02' },
         update: {},
         create: {
-            id: 'testuser02',
+            customId: 'testuser02',
             name: 'testuser02',
             profile: 'testtesttest',
             avatarUrl: '',
@@ -31,13 +31,13 @@ const seed = async (): Promise<void> => {
                 },
             },
         },
-        select: { id: true, name: true, profile: true },
+        select: { customId: true, name: true, profile: true },
     })
     await prisma.user.upsert({
-        where: { id: 'testuser03' },
+        where: { customId: 'testuser03' },
         update: {},
         create: {
-            id: 'testuser03',
+            customId: 'testuser03',
             name: 'testuser03',
             profile: 'testtesttest',
             avatarUrl: '',
@@ -47,7 +47,7 @@ const seed = async (): Promise<void> => {
                 },
             },
         },
-        select: { id: true, name: true, profile: true },
+        select: { customId: true, name: true, profile: true },
     })
 }
 
