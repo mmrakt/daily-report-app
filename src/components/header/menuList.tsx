@@ -6,7 +6,7 @@ import Modal from '../Modal'
 import { signIn, signOut, useSession } from 'next-auth/client'
 
 const MenuList = (): React.ReactElement => {
-    const [session] = useSession()
+    const [session]: any = useSession()
     const [isOpenModal, toggleModal] = React.useState(null)
 
     const handleModalOpen = (e) => {
@@ -41,7 +41,7 @@ const MenuList = (): React.ReactElement => {
                     // NOTE: Material-uiのコンポーネント内でfragmentを使うとエラーになる
                     <div>
                         <MenuItem onClick={handleModalClose}>
-                            <Link href={`/${session.user.customId}`}>
+                            <Link href={`/${session?.user?.customId}`}>
                                 <a>マイページ</a>
                             </Link>
                         </MenuItem>

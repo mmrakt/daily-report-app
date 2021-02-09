@@ -17,5 +17,5 @@ module.exports = {
             'pbs.twimg.com',
         ],
     },
-    reactStrictMode: true,
+    reactStrictMode: false,
 }
