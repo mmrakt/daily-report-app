@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import {} from '@material-ui/core'
 import Layout from '../../components/layout'
-import { AuthContext } from '../../auth/AuthProvider'
 import { CssBaseline, Grid, makeStyles, Container } from '@material-ui/core'
 import 'react-image-crop/dist/ReactCrop.css'
 import AvatalTrimmingModal from './AvatarTrimmingModal'
@@ -51,15 +50,17 @@ const Settings = (): React.ReactElement => {
     const router = useRouter()
 
     React.useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setEditedUserName(
-                JSON.parse(localStorage.getItem('signinAccount'))['userName']
-            )
-            setEditedProfile(
-                JSON.parse(localStorage.getItem('signinAccount'))['profile']
-            )
-        }
-    }, [])
+        // if (typeof window !== 'undefined') {
+        //     setEditedUserName(
+        //         JSON.parse(localStorage.getItem('signinUser'))['userName']
+        //     )
+        //     setEditedProfile(
+        //         JSON.parse(localStorage.getItem('signinUser'))['profile']
+        //     )
+        // }
+        setEditedUserName(session?.user?.name)
+        setEditedProfile(session?.user?.profile)
+    }, [session])
 
     const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -72,14 +73,14 @@ const Settings = (): React.ReactElement => {
         }
     }
 
-    const onUpdateAccountOnFbDB = async (
+    const handleUpdateUserNameAndProfile = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ): Promise<void> => {
         event.preventDefault()
 
         try {
             await mutate()
-            await updateAccountOnLocalStorage
+            await updateUserNameAndProfileOnLocalStorage()
         } catch (error) {
             console.log(error)
         }
@@ -107,9 +108,9 @@ const Settings = (): React.ReactElement => {
         }
     )
 
-    const updateAccountOnLocalStorage = () => {
+    const updateUserNameAndProfileOnLocalStorage = () => {
         localStorage.setItem(
-            'signinAccount',
+            'signinUser',
             JSON.stringify({
                 userName: editedUserName,
                 profile: editedProfile,
@@ -150,7 +151,7 @@ const Settings = (): React.ReactElement => {
                                         name="diplayName"
                                         autoComplete="userName"
                                         type="text"
-                                        value={editedUserName}
+                                        value={editedUserName || ''}
                                         onChange={(
                                             e: React.FocusEvent<HTMLInputElement>
                                         ) => {
@@ -169,7 +170,7 @@ const Settings = (): React.ReactElement => {
                                         name="profile"
                                         autoComplete="profile"
                                         type="text"
-                                        value={editedProfile}
+                                        value={editedProfile || ''}
                                         multiline
                                         rows={4}
                                         onChange={(
@@ -187,7 +188,9 @@ const Settings = (): React.ReactElement => {
                                 </Grid>
                                 <Button
                                     text="更新"
-                                    onClickEvent={onUpdateAccountOnFbDB}
+                                    onClickEvent={
+                                        handleUpdateUserNameAndProfile
+                                    }
                                 />
                             </form>
                         </div>

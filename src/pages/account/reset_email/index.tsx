@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Layout from '../../../components/layout'
-import { AuthContext } from '../../../auth/AuthProvider'
 import { firebase, fbAuth, fbDb } from 'functions/firebase'
 import { CssBaseline, Grid, Container } from '@material-ui/core'
 import TextFieldEl from '../../../components/grid/textFieldEl'
@@ -9,11 +8,11 @@ import { vldRules } from '../../../utils/validationRule'
 import ProtectedRoute from '../../../auth/ProtectedRoute'
 import Button from '../../../components/Button'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/client'
 
 const ResetEmail = (): React.ReactElement => {
-    const { signinAccount } = React.useContext(AuthContext)
+    const [session] = useSession()
     const router = useRouter()
-
     const [newEmail, setNewEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const { register, errors } = useForm({
@@ -78,7 +77,7 @@ const ResetEmail = (): React.ReactElement => {
 
     return (
         <ProtectedRoute>
-            {signinAccount && (
+            {session && (
                 <Layout title="メールアドレス変更">
                     <Container component="main" maxWidth="xs">
                         <CssBaseline />
@@ -90,7 +89,7 @@ const ResetEmail = (): React.ReactElement => {
                                 <input
                                     type="text"
                                     name="oldMail"
-                                    value={signinAccount.email}
+                                    value={session.user.email || ''}
                                     disabled
                                     className="mt-1 block w-full rounded-md border-red-500 shadow-sm my-2"
                                 />

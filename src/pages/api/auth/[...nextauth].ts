@@ -5,6 +5,12 @@ import prisma from '../../../lib/prisma'
 import { NextApiRequest } from 'next'
 import { NextApiResponse } from 'next-auth/_utils'
 
+/*NOTE:
+user: User object
+account: providerのログイン情報
+profile: User objectのカラム 
+*/
+
 const options = {
     providers: [
         Providers.GitHub({
