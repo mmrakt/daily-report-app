@@ -2,14 +2,21 @@ import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import adapters from 'next-auth/adapters'
 import prisma from '../../../lib/prisma'
-import { NextApiRequest } from 'next'
-import { NextApiResponse } from 'next-auth/_utils'
+import { NextApiRequest, NextApiResponse } from 'next'
+import type { User } from '@prisma/client'
 
 /*NOTE:
 user: User object
 account: providerのログイン情報
 profile: User objectのカラム 
 */
+
+interface IUser extends User {
+    account: {
+        provider: any
+        screen_name: string
+    }
+}
 
 const options = {
     providers: [
@@ -60,6 +67,7 @@ const options = {
         //TODO: 型定義ちゃんとやる。デフォルトの型を交差型でオーバーライド必要
         //node_modules/@types/next-auth/_utils.d.tsのSessionBaseのコメントアウト外す
         session: async (session: any, { user }) => {
+            //const dbUser: IUser = user.user
             session.user.name = user.name
             session.user.profile = user.profile
             switch (user.account.provider) {
