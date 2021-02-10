@@ -41,7 +41,7 @@ const MenuList = (): React.ReactElement => {
                     // NOTE: Material-uiのコンポーネント内でfragmentを使うとエラーになる
                     <div>
                         <MenuItem onClick={handleModalClose}>
-                            <Link href="">
+                            <Link href={`/${session?.user?.customId}`}>
                                 <a>マイページ</a>
                             </Link>
                         </MenuItem>
