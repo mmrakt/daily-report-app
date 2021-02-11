@@ -32,10 +32,6 @@ const options = {
             clientId: process.env.TWITTER_ID,
             clientSecret: process.env.TWITTER_SECRET,
         }),
-        Providers.Email({
-            server: process.env.EMAIL_SERVER,
-            from: process.env.EMAIL_FROM,
-        }),
     ],
     pages: {
         signIn: '/signin',
