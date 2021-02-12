@@ -1,5 +1,5 @@
 import React from 'react'
-// import Layout from '../../components/layout'
+import Layout from '../../components/layout'
 // import {
 //     BarChart,
 //     CartesianGrid,
@@ -289,9 +289,9 @@ const Aggregate = (): any => {
     //         },
     //     ]
     return (
-        <div></div>
-        //         <Layout title="集計データ確認">
-        //             <div>
+        <Layout title="集計データ確認">
+            <div>
+                {/* <div>
         //                 <h5>月次総労働時間</h5>
         //                 <BarChart width={1000} height={400} data={monthlyTotalHourList}>
         //                     <CartesianGrid strokeDasharray="3 3" />
@@ -328,8 +328,9 @@ const Aggregate = (): any => {
         //                     <Bar dataKey="新卒研修" stackId="projects" fill="#ffd700" />
         //                     <Bar dataKey="その他" stackId="projects" fill="#c0c0c0" />
         //                 </BarChart>
-        //             </div>
-        //         </Layout>
+        //             </div> */}
+            </div>
+        </Layout>
     )
 }
 
