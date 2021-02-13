@@ -1,28 +1,21 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Tweet } from '@prisma/client'
 import dayjs from 'dayjs'
 import Image from 'next/image'
-import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { useQuery } from 'react-query'
 import { User as IUser } from '@prisma/client'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import { MenuItem } from '@material-ui/core'
 import Modal from '../../components/Modal'
+import { useMutate } from '../../hooks/useMutate'
 
 const TweetItem = ({ tweet }: { tweet: Tweet }): React.ReactElement => {
     const [isOpenModal, toggleModal] = React.useState(null)
-    const queryClient = useQueryClient()
-    const { mutate } = useMutation(
-        () => {
-            return fetch(`/api/tweet/delete/?id=${tweet.id}`, {
-                method: 'POST',
-            })
-        },
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries('tweetList')
-            },
-        }
-    )
+    const { mutate } = useMutate({
+        path: `/api/tweet/delete/?id=${tweet.id}`,
+        method: 'POST',
+        key: 'tweetList',
+    })
 
     const handleModalOpen = (e) => {
         toggleModal(e.currentTarget)

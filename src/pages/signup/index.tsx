@@ -9,7 +9,7 @@ import {
     makeStyles,
     Container,
 } from '@material-ui/core'
-import { fbAuth, fbDb } from '../../../functions/firebase'
+import { fbAuth } from '../../../functions/firebase'
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { vldRules } from '../../utils/validationRule'
@@ -71,12 +71,6 @@ const Signup = (): React.ReactElement => {
                             displayName: userName,
                         })
                     })
-
-                // fbDb.collection('users').doc(fbAuth.currentUser.uid).set({
-                //     userId: userId,
-                //     userName: userName,
-                //     email: email,
-                // })
                 await mutate()
                 router.push(`/${fbAuth.currentUser.uid}`)
             } catch (error) {

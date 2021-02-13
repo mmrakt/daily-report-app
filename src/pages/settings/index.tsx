@@ -12,7 +12,8 @@ import ProtectedRoute from '../../auth/ProtectedRoute'
 import Button from '../../components/Button'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client'
-import { useMutation, useQueryClient } from 'react-query'
+import { useQueryClient } from 'react-query'
+import { useMutate } from '../../hooks/useMutate'
 
 const AvatarImg = styled.img`
     border-radius: 50%;
@@ -50,14 +51,6 @@ const Settings = (): React.ReactElement => {
     const router = useRouter()
 
     React.useEffect(() => {
-        // if (typeof window !== 'undefined') {
-        //     setEditedUserName(
-        //         JSON.parse(localStorage.getItem('signinUser'))['userName']
-        //     )
-        //     setEditedProfile(
-        //         JSON.parse(localStorage.getItem('signinUser'))['profile']
-        //     )
-        // }
         setEditedUserName(session?.user?.name)
         setEditedProfile(session?.user?.profile)
     }, [session])
@@ -87,26 +80,15 @@ const Settings = (): React.ReactElement => {
 
         router.push(`/${session.user.customId}`)
     }
-
-    const { mutate } = useMutation(
-        () => {
-            return fetch(
-                `/api/user/updateProfile/?customId=${session.user.customId}`,
-                {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        userName: editedUserName,
-                        profile: editedProfile,
-                    }),
-                }
-            )
-        },
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries('userList')
-            },
-        }
-    )
+    const { mutate } = useMutate({
+        path: `/api/user/updateProfile/?customId=${session.user.customId}`,
+        method: 'POST',
+        body: JSON.stringify({
+            userName: editedUserName,
+            profile: editedProfile,
+        }),
+        key: 'userList',
+    })
 
     const updateUserNameAndProfileOnLocalStorage = () => {
         localStorage.setItem(

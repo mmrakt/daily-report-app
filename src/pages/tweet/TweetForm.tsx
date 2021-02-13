@@ -1,29 +1,18 @@
 import React, { useState, useRef } from 'react'
 import {} from '@material-ui/core'
 import Button from '../../components/Button'
-import { useMutation, useQueryClient } from 'react-query'
-//import {AuthContext} from '../../auth/AuthProvider'
+import { useMutate } from '../../hooks/useMutate'
 
 const TweetForm = (): React.ReactElement => {
-    //const { signinAccount } = React.useContext(AuthContext)
     const [content, setContent] = useState<string>('')
-    const queryClient = useQueryClient()
     const inputRef = useRef(null)
 
-    const { mutate } = useMutation(
-        () => {
-            return fetch('/api/tweet/create', {
-                method: 'POST',
-                body: content,
-            })
-        },
-        {
-            onSuccess: () => {
-                //クエリのキャッシュの無効化
-                queryClient.invalidateQueries('tweetList')
-            },
-        }
-    )
+    const { mutate } = useMutate({
+        path: '/api/tweet/create',
+        method: 'POST',
+        body: content,
+        key: 'tweetList',
+    })
 
     const onTweet = (event) => {
         event.preventDefault()

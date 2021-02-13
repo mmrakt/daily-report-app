@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
-import { AuthContext } from '../../auth/AuthProvider'
 import { Button } from '@material-ui/core'
-import { fbDb, fbAuth, fbStorage } from '../../../functions/firebase'
+import { fbStorage } from '../../../functions/firebase'
 import ReactCrop, { Crop } from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import { formatDateTime } from '../../utils/date'
@@ -35,7 +34,6 @@ type IProps = {
 }
 
 const AvatalTrimmingModal = (props: IProps): React.ReactElement => {
-    const { signinAccount, setSigninAccount } = React.useContext(AuthContext)
     const { src, modalIsOpen, onRequestClose } = props
     const [crop, setCrop] = useState<Crop>(defaultCrop)
     const [imageRef, setImageRef] = useState<HTMLImageElement | null>(null)
