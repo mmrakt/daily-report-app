@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "analyze": "cross-env ANALYZE=true next build",
     "export": "next build && next export -o dist",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
@@ -113,8 +114,10 @@
     "@graphql-codegen/typescript": "^1.20.0",
     "@graphql-codegen/typescript-operations": "^1.17.13",
     "@graphql-codegen/typescript-react-apollo": "^2.2.1",
+    "@next/bundle-analyzer": "^10.0.6",
     "@prisma/cli": "^2.15.0",
     "@types/autosize": "^3.0.7",
+    "cross-env": "^7.0.3",
     "eslint-plugin-react-hooks": "^4.2.0",
     "ts-node": "^9.1.1"
   },
