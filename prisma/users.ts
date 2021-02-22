@@ -1,0 +1,38 @@
+export const users = [
+    {
+        customId: 'hogehoge',
+        name: 'hogehoge',
+        email: 'hogehoge@example.com',
+        emailVerified: null,
+        image: '',
+        profile: 'hogehoge',
+        avatarUrl: null,
+    },
+    {
+        customId: 'fugafuga',
+        name: 'fugafuga',
+        email: 'fugafuga@example.com',
+        emailVerified: null,
+        image: '',
+        profile: 'fugafuga',
+        avatarUrl: null,
+    },
+    {
+        customId: 'piyopiyo',
+        name: 'piyopiyo',
+        email: 'piyopiyo@example.com',
+        emailVerified: null,
+        image: '',
+        profile: 'piyopiyo',
+        avatarUrl: null,
+    },
+    {
+        customId: 'foobar',
+        name: 'foobar',
+        email: 'foobar@example.com',
+        emailVerified: null,
+        image: '',
+        profile: 'foobar',
+        avatarUrl: null,
+    },
+]
