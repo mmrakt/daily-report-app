@@ -2,15 +2,20 @@ import React, { useState, useRef } from 'react'
 import {} from '@material-ui/core'
 import Button from '../../components/Button'
 import { useMutate } from '../../hooks/useMutate'
+import { useSession } from 'next-auth/client'
 
 const TweetForm = (): React.ReactElement => {
     const [content, setContent] = useState<string>('')
     const inputRef = useRef(null)
+    const [session] = useSession()
 
     const { mutate } = useMutate({
         path: '/api/tweet/create',
         method: 'POST',
-        body: content,
+        body: JSON.stringify({
+            customId: session.user.customId,
+            content,
+        }),
         key: 'tweetList',
     })
 

@@ -8,9 +8,11 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import { MenuItem } from '@material-ui/core'
 import Modal from '../../components/Modal'
 import { useMutate } from '../../hooks/useMutate'
+import Link from 'next/link'
 
 const TweetItem = ({ tweet }: { tweet: Tweet }): React.ReactElement => {
     const [isOpenModal, toggleModal] = React.useState(null)
+
     const { mutate } = useMutate({
         path: `/api/tweet/delete/?id=${tweet.id}`,
         method: 'POST',
@@ -26,6 +28,7 @@ const TweetItem = ({ tweet }: { tweet: Tweet }): React.ReactElement => {
         event.preventDefault()
         mutate()
     }
+    //TODO: useQueryで取ってくるuserデータが全て重複してしまうの解消したい。tweet.userIdは正しく紐づいているはずだがreact-queryの仕様の問題っぽい
     const { data: user, isLoading } = useQuery<IUser>('user', async () => {
         const res = await fetch(`/api/user/fetch/?id=${tweet.userId}`)
         return res.json()
@@ -34,17 +37,21 @@ const TweetItem = ({ tweet }: { tweet: Tweet }): React.ReactElement => {
 
     return (
         <div className="flex my-4 mx-2 py-2 px-2">
-            <Image
-                src={user.avatarUrl ? user.avatarUrl : '/avatar.png'}
-                alt="アバター画像"
-                width={50}
-                height={50}
-                className="rounded-full mx-2"
-            />
+            <Link href={`/${user.customId}`}>
+                <a>
+                    <Image
+                        src={user.avatarUrl ? user.avatarUrl : '/avatar.png'}
+                        alt="アバター画像"
+                        width={50}
+                        height={50}
+                        className="rounded-full mx-2"
+                    />
+                </a>
+            </Link>
             <div className="mx-2 w-full">
                 <div className="text-base w-full">
                     <strong className="mx-1">{user.name}</strong>
-                    <span className="mx-1">@{user.id}</span>
+                    <span className="mx-1">@{user.customId}</span>
                     {dayjs(tweet.createdAt).format('YYYY/MM/DD HH:mm:ss')}
                     <MoreHorizIcon
                         className="float-right"
