@@ -5,9 +5,19 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useSession } from 'next-auth/client'
 import ProtectedRoute from '../../auth/ProtectedRoute'
+import { useQuery } from 'react-query'
+import { User as IUser } from '@prisma/client'
+import { useRouter } from 'next/router'
 
 const Mypage = (): React.ReactElement => {
     const [session] = useSession()
+    const router = useRouter()
+
+    const { data, isLoading } = useQuery<IUser>('user', async () => {
+        const res = await fetch(`/api/user/fetch/?id=${router.query}`)
+        return res.json()
+    })
+    if (isLoading) return <span>Loading...</span>
 
     return (
         <ProtectedRoute>
@@ -17,7 +27,7 @@ const Mypage = (): React.ReactElement => {
                         <div>
                             <Image
                                 className="shadow-inner rounded-full"
-                                src={session.user.image || '/avatar.png'}
+                                src={data.image || '/avatar.png'}
                                 alt="アバター"
                                 width={150}
                                 height={150}
@@ -25,13 +35,13 @@ const Mypage = (): React.ReactElement => {
                         </div>
                         <div>
                             <h1 className="leading-tight font-semibold text-3xl my-2 mx-2">
-                                {session.user.name}
+                                {data.name}
                             </h1>
                             <p className="text-grey-500 my-2 mx-2">
-                                @{session.user.customId}
+                                @{data.customId}
                             </p>
                             <p className="w-60 break-words my-2 mx-2">
-                                {session.user.profile}
+                                {data.profile}
                             </p>
                         </div>
                         <Link href="/settings">
