@@ -54,7 +54,7 @@ const options = {
                     profile: user.profile,
                     account: {
                         provider: account.provider,
-                        screen_name: account.results.screen_name,
+                        screen_name: account.results?.screen_name,
                     },
                 }
             }
