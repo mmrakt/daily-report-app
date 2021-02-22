@@ -12,7 +12,6 @@ import ProtectedRoute from '../../auth/ProtectedRoute'
 import Button from '../../components/Button'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client'
-import { useQueryClient } from 'react-query'
 import { useMutate } from '../../hooks/useMutate'
 
 const AvatarImg = styled.img`
@@ -39,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
 const Settings = (): React.ReactElement => {
     const classes = useStyles()
     const [session] = useSession()
-    const queryClient = useQueryClient()
     const [editedUserName, setEditedUserName] = useState('')
     const [editedProfile, setEditedProfile] = useState('')
     const [src, setSrc] = useState<any>(null)
@@ -81,7 +79,7 @@ const Settings = (): React.ReactElement => {
         router.push(`/${session.user.customId}`)
     }
     const { mutate } = useMutate({
-        path: `/api/user/updateProfile/?customId=${session.user.customId}`,
+        path: `/api/user/updateProfile/?customId=${session?.user?.customId}`,
         method: 'POST',
         body: JSON.stringify({
             userName: editedUserName,

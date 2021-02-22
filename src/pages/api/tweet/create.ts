@@ -1,11 +1,13 @@
 import type { NextApiHandler } from 'next'
 import prisma from '../../../lib/prisma'
 
-const handler: NextApiHandler = async ({ body }: { body: string }, res) => {
+const handler: NextApiHandler = async ({ body }, res) => {
     try {
+        const { customId, content } = JSON.parse(body)
         await prisma.tweet.create({
             data: {
-                content: body,
+                content,
+                userId: customId,
             },
         })
         res.json({

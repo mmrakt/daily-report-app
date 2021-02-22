@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { stringify } from 'querystring'
 import prisma from '../../../lib/prisma'
 
 export default async (
@@ -6,9 +7,10 @@ export default async (
     res: NextApiResponse
 ): Promise<void> => {
     if (req.method === 'GET') {
-        const userList = await prisma.user.findFirst({
-            where: { id: req.body.id },
+        //console.log(String(req.query.id))
+        const user = await prisma.user.findFirst({
+            where: { customId: String(req.query.id) },
         })
-        return res.status(200).json(userList)
+        return res.status(200).json(user)
     }
 }

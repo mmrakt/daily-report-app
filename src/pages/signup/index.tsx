@@ -64,15 +64,8 @@ const Signup = (): React.ReactElement => {
         setLoading(false)
         if (email && orgPassword && loading) {
             try {
-                await fbAuth
-                    .createUserWithEmailAndPassword(email, orgPassword)
-                    .then((result) => {
-                        result.user.updateProfile({
-                            displayName: userName,
-                        })
-                    })
                 await mutate()
-                router.push(`/${fbAuth.currentUser.uid}`)
+                router.push('/')
             } catch (error) {
                 console.log(error)
             } finally {
