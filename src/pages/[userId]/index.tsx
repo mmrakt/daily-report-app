@@ -3,25 +3,38 @@ import {} from '@material-ui/core'
 import Layout from '../../components/layout'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useSession } from 'next-auth/client'
 import ProtectedRoute from '../../auth/ProtectedRoute'
 import { useQuery } from 'react-query'
 import { User as IUser } from '@prisma/client'
 import { useRouter } from 'next/router'
 
 const Mypage = (): React.ReactElement => {
-    const [session] = useSession()
     const router = useRouter()
 
-    const { data, isLoading } = useQuery<IUser>('user', async () => {
-        const res = await fetch(`/api/user/fetch/?id=${router.query}`)
-        return res.json()
-    })
+    const { data, isLoading, refetch } = useQuery<IUser>(
+        'user',
+        async () => {
+            const res = await fetch(
+                `/api/user/fetch/?id=${router.query.userId}`
+            )
+            return res.json()
+        },
+        {
+            enabled: false,
+        }
+    )
+
+    React.useEffect(() => {
+        if (router.query.userId !== undefined) {
+            refetch()
+        }
+    }, [router.query, refetch])
+
     if (isLoading) return <span>Loading...</span>
 
     return (
         <ProtectedRoute>
-            {session?.user && (
+            {data && (
                 <Layout title="マイページ">
                     <div className="flex my-8 space-x-4 mx-auto itmes-center">
                         <div>
