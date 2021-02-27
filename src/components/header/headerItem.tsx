@@ -4,15 +4,16 @@ import Link from 'next/link'
 type IProps = {
     url: string
     name: string
+    textColor: string
 }
 
 const HeaderItem = (props: IProps): React.ReactElement => {
     return (
-        <span className="ml-5 font-medium text-base">
-            <Link href={props.url}>
-                <a>{props.name}</a>
-            </Link>
-        </span>
+        <Link href={props.url}>
+            <a className={`px-4 py-8 font-medium text-base ${props.textColor}`}>
+                {props.name}
+            </a>
+        </Link>
     )
 }
 

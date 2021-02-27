@@ -6,9 +6,13 @@ import Link from 'next/link'
 import MediaQuery from 'react-responsive'
 import HEADER_ITEMS from './items'
 import HeaderItem from './headerItem'
+import { useRouter } from 'next/router'
 
 const Header = (): React.ReactElement => {
     const [isOpenDrawer, setIsOpenDrawer] = React.useState(false)
+    const [isSelectedTab, setSelectedTab] = React.useState<string>('')
+    const router = useRouter()
+
     const handleDrawer = () => {
         if (!isOpenDrawer) {
             setIsOpenDrawer(true)
@@ -17,12 +21,16 @@ const Header = (): React.ReactElement => {
         }
     }
 
+    React.useEffect(() => {
+        setSelectedTab(router.asPath)
+    }, [router])
+
     return (
         <>
-            <div className="shadow-lg h-20 flex items-center">
+            <div className="shadow-lg h-20 flex">
                 <MediaQuery query="(max-width: 900px)">
                     <MenuIcon
-                        className="ml-8"
+                        className="ml-8 py-3"
                         onClick={handleDrawer}
                         fontSize="large"
                     />
@@ -30,14 +38,14 @@ const Header = (): React.ReactElement => {
                         isOpenDrawer={isOpenDrawer}
                         handleClose={handleDrawer}
                     />
-                    <span className="mx-3 font-black text-xl">
+                    <span className="mx-4 py-8 font-black text-xl">
                         <Link href="/">
                             <a>日報ツール</a>
                         </Link>
                     </span>
                 </MediaQuery>
                 <MediaQuery query="(min-width: 900px)">
-                    <span className="ml-8 font-black text-xl">
+                    <span className="px-8 py-8 font-black text-xl">
                         <Link href="/">
                             <a>日報ツール</a>
                         </Link>
@@ -46,13 +54,18 @@ const Header = (): React.ReactElement => {
                         <HeaderItem
                             url={item.url}
                             name={item.name}
+                            textColor={
+                                item.url === isSelectedTab
+                                    ? 'text-black'
+                                    : 'text-gray-400'
+                            }
                             key={item.name}
                         />
                     ))}
                 </MediaQuery>
-                <p className="ml-auto mr-8">
+                <div className="ml-auto mr-8 py-4">
                     <MenuList />
-                </p>
+                </div>
             </div>
         </>
     )
