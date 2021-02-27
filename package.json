@@ -76,6 +76,7 @@
     "minireset.css": "^0.0.6",
     "next": "^10.0.4",
     "next-auth": "^3.2.0",
+    "nextjs-progressbar": "^0.0.7",
     "onchange": "^7.1.0",
     "postcss": "8.1.7",
     "prettier": "^2.2.1",

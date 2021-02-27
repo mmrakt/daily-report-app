@@ -8,7 +8,7 @@ import HEADER_ITEMS from './items'
 import HeaderItem from './headerItem'
 import { useRouter } from 'next/router'
 
-const Header = (): React.ReactElement => {
+const Header = React.memo(() => {
     const [isOpenDrawer, setIsOpenDrawer] = React.useState(false)
     const [isSelectedTab, setSelectedTab] = React.useState<string>('')
     const router = useRouter()
@@ -28,28 +28,30 @@ const Header = (): React.ReactElement => {
     return (
         <>
             <div className="shadow-lg h-20 flex">
-                <MediaQuery query="(max-width: 900px)">
-                    <MenuIcon
-                        className="ml-8 py-3"
-                        onClick={handleDrawer}
-                        fontSize="large"
-                    />
+                <MediaQuery query="(max-width: 1000px)">
+                    <p className="ml-8 py-7">
+                        <MenuIcon
+                            className=""
+                            onClick={handleDrawer}
+                            fontSize="large"
+                        />
+                    </p>
                     <Drawer
                         isOpenDrawer={isOpenDrawer}
                         handleClose={handleDrawer}
                     />
-                    <span className="mx-4 py-8 font-black text-xl">
+                    <p className="mx-4 py-8 font-black text-xl">
                         <Link href="/">
                             <a>日報ツール</a>
                         </Link>
-                    </span>
+                    </p>
                 </MediaQuery>
-                <MediaQuery query="(min-width: 900px)">
-                    <span className="px-8 py-8 font-black text-xl">
+                <MediaQuery query="(min-width: 1000px)">
+                    <p className="px-8 py-8 font-black text-xl">
                         <Link href="/">
                             <a>日報ツール</a>
                         </Link>
-                    </span>
+                    </p>
                     {HEADER_ITEMS.map((item) => (
                         <HeaderItem
                             url={item.url}
@@ -69,6 +71,8 @@ const Header = (): React.ReactElement => {
             </div>
         </>
     )
-}
+})
+
+Header.displayName = 'Header'
 
 export default Header
