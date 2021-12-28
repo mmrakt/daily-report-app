@@ -1,17 +1,17 @@
 mutation PostArticle(
-  $authorId: uuid!
-  $content: String!
-  $subject: String!
-  $publishedAt: timestamptz
+    $authorId: uuid!
+    $content: String!
+    $subject: String!
+    $publishedAt: timestamptz
 ) {
-  insert_articles_one(
-    object: {
-      authorId: $authorId
-      content: $content
-      subject: $subject
-      publishedAt: $publishedAt
+    insert_articles_one(
+        object: {
+            author_id: $authorId
+            content: $content
+            subject: $subject
+            published_at: $publishedAt
+        }
+    ) {
+        id
     }
-  ) {
-    id
-  }
 }

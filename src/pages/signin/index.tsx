@@ -1,6 +1,7 @@
 import React from 'react'
 import { providers, signIn } from 'next-auth/client'
 import Layout from '../../components/layout'
+import SocialButton from './socialButton'
 
 type IProviders = {
     provider: {
@@ -26,10 +27,29 @@ const SignIn = ({ providers }: { providers: IProviders }): React.ReactNode => {
         <>
             <Layout title="ログイン">
                 {Object.values(providers).map((provider) => (
-                    <div key={provider.name}>
-                        <button onClick={() => signIn(provider.id)}>
-                            Sign in with {provider.name}
-                        </button>
+                    <div key={provider.id}>
+                        <SocialButton
+                            id={provider.id}
+                            name={provider.name}
+                            theme={
+                                provider.name === 'GitHub'
+                                    ? 'bg-gray-500'
+                                    : provider.name === 'Google'
+                                    ? 'bg-red-400'
+                                    : provider.name === 'Twitter'
+                                    ? 'bg-blue-500'
+                                    : ''
+                            }
+                            hover={
+                                provider.name === 'GitHub'
+                                    ? 'bg-gray-600'
+                                    : provider.name === 'Google'
+                                    ? 'bg-red-500'
+                                    : provider.name === 'Twitter'
+                                    ? 'bg-blue-600'
+                                    : ''
+                            }
+                        />
                     </div>
                 ))}
             </Layout>

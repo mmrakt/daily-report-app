@@ -1,15 +1,11 @@
 query getAllTasks {
-  tasks {
-    target
-    reportDateText
-    hour {
-      hours
+    tasks {
+        target
+        reportDateText
+        hourId
+        categoryId
+        project
+        ticketTitle
+        note
     }
-    category {
-      category
-    }
-    project
-    ticketTitle
-    note
-  }
 }

@@ -9,11 +9,7 @@
         "prettier",
         "prettier/@typescript-eslint"
     ],
-    "plugins": [
-        "@typescript-eslint",
-        "react"
-    ],
-    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint", "react"],
     "env": {
         "browser": true,
         "node": true,

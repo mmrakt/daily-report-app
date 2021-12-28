@@ -1,4 +1,16 @@
 
+DROP TABLE "public"."tasks";
+
+DROP TABLE "public"."reports";
+
+DROP TABLE "public"."articles";
+
+DROP TABLE "public"."users";
+
+DROP TABLE "public"."categories";
+
+DROP TABLE "public"."hours";
+
 
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -143,6 +155,20 @@ alter table "public"."reports"
 ALTER TABLE "public"."reports" DROP COLUMN "ids" CASCADE;
 
 ALTER TABLE "public"."tasks" DROP CONSTRAINT "tasks_reportDateText_key";
+
+
+DROP TABLE "public"."tasks";
+
+DROP TABLE "public"."reports";
+
+DROP TABLE "public"."articles";
+
+DROP TABLE "public"."users";
+
+DROP TABLE "public"."categories";
+
+DROP TABLE "public"."hours";
+
 
 CREATE TABLE "public"."reports"("dateText" text NOT NULL, "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz DEFAULT now(), PRIMARY KEY ("dateText") , UNIQUE ("dateText"));
 CREATE OR REPLACE FUNCTION "public"."set_current_timestamp_updated_at"()

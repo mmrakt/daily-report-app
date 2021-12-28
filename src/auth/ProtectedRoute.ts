@@ -17,8 +17,17 @@ const ProtectedRoute: any = (props: IProps) => {
             router.push('/signin')
             return null
         }
-        return null
+        return `<div>loading...</div>`
     }
+
+    // React.useEffect(() => {
+    //     if (!session) {
+    //         if (typeof window !== 'undefined' && session !== undefined) {
+    //             router.push('/signin')
+    //         }
+    //     }
+    // }, [session, router])
+
     return children
 }
 
