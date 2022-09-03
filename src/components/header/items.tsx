@@ -4,7 +4,6 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd'
 import LibraryAddCheckIcon from '@material-ui/icons/LibraryAddCheck'
 import EqualizerIcon from '@material-ui/icons/Equalizer'
 import MenuIcon from '@material-ui/icons/Menu'
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn'
 
 const HEADER_ITEMS = [
     {
@@ -26,16 +25,6 @@ const HEADER_ITEMS = [
         url: '/aggregate',
         icon: <EqualizerIcon />,
         name: '集計データ確認',
-    },
-    {
-        url: '/todo',
-        icon: <AssignmentTurnedInIcon />,
-        name: 'ToDo管理',
-    },
-    {
-        url: '/tweet',
-        icon: <AssignmentTurnedInIcon />,
-        name: 'タイムライン',
     },
 ]
 
