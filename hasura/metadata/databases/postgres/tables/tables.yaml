@@ -1,6 +1,0 @@
-- "!include public_articles.yaml"
-- "!include public_categories.yaml"
-- "!include public_hours.yaml"
-- "!include public_reports.yaml"
-- "!include public_tasks.yaml"
-- "!include public_users.yaml"

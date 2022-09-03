@@ -1,5 +1,5 @@
 import type { NextApiHandler } from 'next'
-import prisma from '../../../lib/prisma'
+import prisma from '../../../libs/prisma'
 
 // type IProps = {
 //     id: string

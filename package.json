@@ -16,7 +16,7 @@
         "fb:init": "firebase init",
         "fb:emulate": "firebase emulators:start",
         "prisma:dev": "prisma:migrate && prisma:studio",
-        "prisma:migrate": "prisma migrate dev --preview-feature",
+        "prisma:migrate": "prisma migrate dev --preview-feature && prisma generate",
         "prisma:seed": "prisma db seed --preview-feature",
         "prisma:studio": "prisma studio",
         "dev:db": "concurrently \"make up\" \"next dev\" \"yarn run prisma:studio\" "

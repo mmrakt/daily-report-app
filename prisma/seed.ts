@@ -1,4 +1,4 @@
-import prisma from '../src/lib/prisma'
+import prisma from '../src/libs/prisma'
 import { users } from './users'
 import { tweets } from './tweets'
 

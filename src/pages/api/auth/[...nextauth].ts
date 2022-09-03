@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import adapters from 'next-auth/adapters'
-import prisma from '../../../lib/prisma'
+import prisma from '../../../libs/prisma'
 import { NextApiRequest, NextApiResponse } from 'next'
 import type { User } from '@prisma/client'
 

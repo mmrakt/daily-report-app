@@ -65,7 +65,8 @@ model User {
   avatarUrl     String?
   role          Role      @relation(fields: [roleId], references: [id])
   roleId        Int
-  task          Task[]
+  tasks         Task[]
+  reports       Report[]
 }
 
 model Role {
@@ -73,7 +74,16 @@ model Role {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
-  user      User[]
+  users     User[]
+}
+
+// NOTE: @db.Date だとmigrateが失敗するので一旦stringにしておく
+model Report {
+  id     Int    @id @default(autoincrement())
+  date   String
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+  tasks  Task[]
 }
 
 model Task {
@@ -88,8 +98,10 @@ model Task {
   hourId     Int
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
-  project    Project? @relation(fields: [projectId], references: [id])
-  projectId  Int?
+  project    Project  @relation(fields: [projectId], references: [id])
+  projectId  Int
+  report     Report   @relation(fields: [reportId], references: [id])
+  reportId   Int
 }
 
 model Hour {
@@ -97,7 +109,7 @@ model Hour {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   hours     Int
-  task      Task[]
+  tasks     Task[]
 }
 
 model Category {
@@ -105,7 +117,7 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
-  task      Task[]
+  tasks     Task[]
 }
 
 model Project {
@@ -113,5 +125,5 @@ model Project {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
-  task      Task[]
+  tasks     Task[]
 }
