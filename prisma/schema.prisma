@@ -63,14 +63,55 @@ model User {
   image         String?
   profile       String?
   avatarUrl     String?
-  tweetList     Tweet[]
+  role          Role      @relation(fields: [roleId], references: [id])
+  roleId        Int
+  task          Task[]
 }
 
-model Tweet {
-  id        Int      @id @default(autoincrement())
+model Role {
+  id        Int      @unique @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  content   String
-  user      User?    @relation(fields: [userId], references: [customId])
-  userId    String?
+  name      String
+  user      User[]
+}
+
+model Task {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  summary    String
+  note       String?
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  hour       Hour     @relation(fields: [hourId], references: [id])
+  hourId     Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  project    Project? @relation(fields: [projectId], references: [id])
+  projectId  Int?
+}
+
+model Hour {
+  id        Int      @unique @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  hours     Int
+  task      Task[]
+}
+
+model Category {
+  id        Int      @unique @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  task      Task[]
+}
+
+model Project {
+  id        Int      @unique @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  task      Task[]
 }
