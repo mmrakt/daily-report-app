@@ -21,8 +21,12 @@ const Index = (): React.ReactElement => {
     if (isLoading) return <LoadingSpinner />
     if (isError) return <p>ERROR</p>
 
+    console.log(data)
+
     const getTileContent = ({ date }) => {
         const IsCheckedElement = () => {
+            console.log(date)
+            console.log(formatDate(date))
             if (data.some((report) => report.date === formatDate(date))) {
                 return <DoneIcon color="secondary" />
             } else {
@@ -39,7 +43,7 @@ const Index = (): React.ReactElement => {
         )
     }
     return (
-        <Layout title="提出状況確認">
+        <Layout>
             <div className="calendarBox">
                 <StyledCalendar
                     value={new Date()}

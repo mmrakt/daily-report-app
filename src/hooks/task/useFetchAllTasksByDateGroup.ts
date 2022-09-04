@@ -5,7 +5,7 @@ const useFetchAllTasksByDateGroup = (
     userId: number
 ): UseQueryResult<Task[]> => {
     return useQuery<Task[]>(['tasks', userId], async () => {
-        const res = await fetch(`/api/tasks/${userId}`)
+        const res = await fetch(`/api/tasks?userId=${userId}`)
         return res.json()
     })
 }

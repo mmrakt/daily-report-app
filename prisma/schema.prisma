@@ -86,20 +86,11 @@ model Task {
   date       String
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
-  hour       Hour     @relation(fields: [hourId], references: [id])
-  hourId     Int
+  hours      Float
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
   project    Project  @relation(fields: [projectId], references: [id])
   projectId  Int
-}
-
-model Hour {
-  id        Int      @unique @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  hours     Int
-  tasks     Task[]
 }
 
 model Category {
