@@ -8,6 +8,8 @@ import { formatDate } from '@/utils/date'
 import styled from 'styled-components'
 import { useFetchAllTasksByDateGroup } from '@/hooks/task/useFetchAllTasksByDateGroup'
 import LoadingSpinner from '../components/common/LoadingSpinner'
+import dayjs from 'dayjs'
+import { AiOutlineCheck } from 'react-icons/ai'
 
 const StyledCalendar = styled(Calendar)`
     margin: 0 auto;
@@ -25,10 +27,28 @@ const Index = (): React.ReactElement => {
 
     const getTileContent = ({ date }) => {
         const IsCheckedElement = () => {
-            console.log(date)
-            console.log(formatDate(date))
-            if (data.some((report) => report.date === formatDate(date))) {
-                return <DoneIcon color="secondary" />
+            console.log(dayjs(date).format('YYYY-MM-DD'))
+            if (
+                data.some(
+                    (report) => report.date === dayjs(date).format('YYYY-MM-DD')
+                )
+            ) {
+                return (
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6 text-green-500 mx-auto"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4.5 12.75l6 6 9-13.5"
+                        />
+                    </svg>
+                )
             } else {
                 return <RemoveIcon color="disabled" />
             }
