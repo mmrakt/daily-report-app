@@ -8,7 +8,7 @@ import {
     MenuItem,
     TableRow,
 } from '@material-ui/core'
-import { Const } from '../../utils/const'
+import { Const } from '../utils/const'
 
 type Props = {
     task: {
@@ -25,7 +25,7 @@ type Props = {
     onDelete: () => void
     onChange: (label: string, value: string | number) => void
 }
-const TaskItem = (props: Props): React.ReactElement => {
+const Item = (props: Props): React.ReactElement => {
     const { task, hourList, categoryList, onDelete, onChange } = props
 
     // NOTE: inputとselect両方から受け取るためanyを指定
@@ -117,4 +117,4 @@ const TaskItem = (props: Props): React.ReactElement => {
         </TableRow>
     )
 }
-export default TaskItem
+export default Item

@@ -3,14 +3,10 @@ import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../components/theme'
-import { Provider } from 'react-redux'
-import store from '../store/store'
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import 'minireset.css'
 import '../base.css'
 import 'react-calendar/dist/Calendar.css'
 import 'react-toastify/dist/ReactToastify.css'
-//import { AuthProvider } from '../auth/AuthProvider'
 import { AppProps } from 'next/app'
 import '../../styles/globals.css'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -33,11 +29,6 @@ export default function MyApp(props: AppProps): React.ReactElement {
         }
     }, [])
 
-    const client = new ApolloClient({
-        uri: 'http://localhost:8080/v1/graphql',
-        cache: new InMemoryCache(),
-    })
-
     return (
         <>
             <Head>
@@ -47,20 +38,16 @@ export default function MyApp(props: AppProps): React.ReactElement {
                     content="minimum-scale=1, initial-scale=1, width=device-width"
                 />
             </Head>
-            <ApolloProvider client={client}>
-                <Provider store={store}>
-                    <QueryClientProvider client={queryClient}>
-                        <ThemeProvider theme={theme}>
-                            <CssBaseline />
+            <QueryClientProvider client={queryClient}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
 
-                            <NextAuthProvider session={pageProps.session}>
-                                <NextNprogress />
-                                <Component {...pageProps} />
-                            </NextAuthProvider>
-                        </ThemeProvider>
-                    </QueryClientProvider>
-                </Provider>
-            </ApolloProvider>
+                    <NextAuthProvider session={pageProps.session}>
+                        <NextNprogress />
+                        <Component {...pageProps} />
+                    </NextAuthProvider>
+                </ThemeProvider>
+            </QueryClientProvider>
         </>
     )
 }

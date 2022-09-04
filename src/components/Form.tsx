@@ -10,13 +10,7 @@ import {
     Paper,
     Button,
 } from '@material-ui/core'
-import Layout from '../../components/layout'
-import TaskItem from './TaskItem'
-import {
-    usePostReportMutation,
-    usePostTaskMutation,
-    useGetReportQuery,
-} from '../../generated/graphql'
+import Item from './Item'
 import { useRouter } from 'next/router'
 import { ToastContainer, toast } from 'react-toastify'
 import styled from 'styled-components'
@@ -31,41 +25,45 @@ const StyledButton = styled(Button)`
     justify-content: flex-end;
 `
 
-const Submit = (): React.ReactElement => {
+type IProps = {
+    selectDate: string
+}
+
+const Form: React.FC<IProps> = ({ selectDate }) => {
     const router = useRouter()
-    const reportDate = router.query
-    const [postTask] = usePostTaskMutation()
-    const [postReport] = usePostReportMutation()
+    console.log(selectDate)
+    // const [postTask] = usePostTaskMutation()
+    // const [postReport] = usePostReportMutation()
     const [tasks, setTasks] = useState([])
     const [hourList, setHourList] = useState([])
     const [categoryList, setCategoryList] = useState([])
 
-    const { data } = useGetReportQuery({
-        variables: {
-            dateText: reportDate.date as string,
-        },
-    })
-    React.useEffect(() => {
-        if (data) {
-            if (data.reports.length) {
-                const submittedTasks = [...data.reports[0].tasks]
-                setTasks(submittedTasks)
-            } else {
-                setTasks([
-                    {
-                        id: uuidv4(),
-                        target: false,
-                        hourId: 1,
-                        project: '',
-                        ticketTitle: '',
-                        note: '',
-                    },
-                ])
-            }
-            setHourList(data.hours)
-            setCategoryList(data.categories)
-        }
-    }, [data])
+    // const { data } = useGetReportQuery({
+    //     variables: {
+    //         dateText: reportDate.date as string,
+    //     },
+    // })
+    // React.useEffect(() => {
+    //     if (data) {
+    //         if (data.reports.length) {
+    //             const submittedTasks = [...data.reports[0].tasks]
+    //             setTasks(submittedTasks)
+    //         } else {
+    //             setTasks([
+    //                 {
+    //                     id: uuidv4(),
+    //                     target: false,
+    //                     hourId: 1,
+    //                     project: '',
+    //                     ticketTitle: '',
+    //                     note: '',
+    //                 },
+    //             ])
+    //         }
+    //         setHourList(data.hours)
+    //         setCategoryList(data.categories)
+    //     }
+    // }, [data])
 
     const handleAddTask = () => {
         setTasks([
@@ -127,26 +125,26 @@ const Submit = (): React.ReactElement => {
             try {
                 ev.preventDefault()
 
-                await postReport({
-                    variables: {
-                        dateText: reportDate.date as string,
-                        createdAt: 'now()',
-                        updatedAt: null,
-                    },
-                })
-                tasks.forEach(async (task) => {
-                    await postTask({
-                        variables: {
-                            target: task.target,
-                            reportDateText: reportDate.date as string,
-                            hourId: task.hourId,
-                            categoryId: task.categoryId,
-                            project: task.project,
-                            ticketTitle: task.ticketTitle,
-                            note: task.note,
-                        },
-                    })
-                })
+                // await postReport({
+                //     variables: {
+                //         dateText: reportDate.date as string,
+                //         createdAt: 'now()',
+                //         updatedAt: null,
+                //     },
+                // })
+                // tasks.forEach(async (task) => {
+                //     await postTask({
+                //         variables: {
+                //             target: task.target,
+                //             reportDateText: reportDate.date as string,
+                //             hourId: task.hourId,
+                //             categoryId: task.categoryId,
+                //             project: task.project,
+                //             ticketTitle: task.ticketTitle,
+                //             note: task.note,
+                //         },
+                //     })
+                // })
                 await toast.success('提出完了しました。お疲れ様でした。', {
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -163,7 +161,7 @@ const Submit = (): React.ReactElement => {
     )
 
     return (
-        <Layout title="提出フォーム">
+        <>
             <ToastContainer />
             <StyledButton
                 variant="contained"
@@ -187,7 +185,7 @@ const Submit = (): React.ReactElement => {
                     </TableHead>
                     <TableBody>
                         {tasks.map((task) => (
-                            <TaskItem
+                            <Item
                                 task={task}
                                 hourList={hourList}
                                 categoryList={categoryList}
@@ -224,7 +222,7 @@ const Submit = (): React.ReactElement => {
                     </StyledButton>
                 </form>
             </StyledButtons>
-        </Layout>
+        </>
     )
 }
-export default Submit
+export default Form
