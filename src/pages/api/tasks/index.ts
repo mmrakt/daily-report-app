@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma, { Task } from '@/libs/prisma'
+import prisma from '@/libs/prisma'
 
 const handler = async (
     req: NextApiRequest,
@@ -7,7 +7,8 @@ const handler = async (
 ): Promise<void> => {
     if (req.method === 'GET') {
         const userId = Number(req.query.userId)
-        const tasks: Task[] = await prisma.task.findMany({
+        const tasks = await prisma.task.groupBy({
+            by: ['date'],
             where: {
                 userId: {
                     equals: userId,
@@ -23,13 +24,15 @@ const handler = async (
     } else if (req.method === 'POST') {
         try {
             const body = JSON.parse(req.body)
-            const { userId, summary, projectId, categoryId, hourId } = body
+            const { userId, summary, date, projectId, categoryId, hourId } =
+                body
             const note = body.note ? body.note : ''
             await prisma.task.create({
                 data: {
                     userId,
                     summary,
                     note,
+                    date,
                     projectId,
                     hourId,
                     categoryId,

@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("PRISMA_DB_URL")
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -66,7 +66,6 @@ model User {
   role          Role      @relation(fields: [roleId], references: [id])
   roleId        Int
   tasks         Task[]
-  reports       Report[]
 }
 
 model Role {
@@ -78,20 +77,13 @@ model Role {
 }
 
 // NOTE: @db.Date だとmigrateが失敗するので一旦stringにしておく
-model Report {
-  id     Int    @id @default(autoincrement())
-  date   String
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int
-  tasks  Task[]
-}
-
 model Task {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   summary    String
   note       String?
+  date       String
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
   hour       Hour     @relation(fields: [hourId], references: [id])
@@ -100,8 +92,6 @@ model Task {
   categoryId Int
   project    Project  @relation(fields: [projectId], references: [id])
   projectId  Int
-  report     Report   @relation(fields: [reportId], references: [id])
-  reportId   Int
 }
 
 model Hour {

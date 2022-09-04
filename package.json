@@ -12,11 +12,9 @@
         "prettier:watch": "onchange '**/*.{ts,tsx,js}' -- prettier --config ./.prettierrc --write {{changed}}",
         "test": "jest --watch",
         "test:coverage": "jest --collect-coverage",
-        "hasuracli": "hasura console --project hasura",
         "fb:init": "firebase init",
         "fb:emulate": "firebase emulators:start",
-        "prisma:dev": "prisma:migrate && prisma:studio",
-        "prisma:migrate": "prisma migrate dev --preview-feature && prisma generate",
+        "prisma:update": "prisma migrate dev && prisma generate",
         "prisma:seed": "prisma db seed --preview-feature",
         "prisma:studio": "prisma studio",
         "dev:db": "concurrently \"make up\" \"next dev\" \"yarn run prisma:studio\" "

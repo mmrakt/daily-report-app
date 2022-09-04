@@ -168,11 +168,11 @@ const Signup = (): React.ReactElement => {
                                 errors={errors}
                                 render={({ messages }) =>
                                     messages &&
-                                    Object.entries(
-                                        messages
-                                    ).map(([type, message]) => (
-                                        <p key={type}>{message}</p>
-                                    ))
+                                    Object.entries(messages).map(
+                                        ([type, message]) => (
+                                            <p key={type}>{message}</p>
+                                        )
+                                    )
                                 }
                             />
                             <TextFieldEl

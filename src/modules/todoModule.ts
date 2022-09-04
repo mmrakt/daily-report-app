@@ -49,11 +49,7 @@ const todoModule = createSlice({
     },
 })
 
-export const {
-    handleAdd,
-    handleFilterChange,
-    handleCheck,
-    handleDelete,
-} = todoModule.actions
+export const { handleAdd, handleFilterChange, handleCheck, handleDelete } =
+    todoModule.actions
 
 export default todoModule

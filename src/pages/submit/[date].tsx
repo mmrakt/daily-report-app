@@ -159,7 +159,7 @@ const Submit = (): React.ReactElement => {
                 console.log(err)
             }
         },
-        [tasks, postReport, postTask]
+        []
     )
 
     return (
