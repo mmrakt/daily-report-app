@@ -30,8 +30,6 @@ type IProps = {
 }
 
 const Form: React.FC<IProps> = ({ selectDate }) => {
-    const router = useRouter()
-    console.log(selectDate)
     // const [postTask] = usePostTaskMutation()
     // const [postReport] = usePostReportMutation()
     const [tasks, setTasks] = useState([])
@@ -161,7 +159,7 @@ const Form: React.FC<IProps> = ({ selectDate }) => {
     )
 
     return (
-        <>
+        <div className="">
             <ToastContainer />
             <StyledButton
                 variant="contained"
@@ -222,7 +220,7 @@ const Form: React.FC<IProps> = ({ selectDate }) => {
                     </StyledButton>
                 </form>
             </StyledButtons>
-        </>
+        </div>
     )
 }
 export default Form

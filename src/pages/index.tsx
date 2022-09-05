@@ -22,16 +22,16 @@ const modalStyle = {
         position: 'fixed',
         top: 0,
         left: 0,
-        backgroundColor: 'rgba(0,0,0,0.85)',
+        backgroundColor: 'rgba(0,0,0,0.5)',
     },
     content: {
         position: 'absolute',
-        top: '5rem',
-        left: '5rem',
-        right: '5rem',
-        bottom: '5rem',
+        top: '10rem',
+        left: '20rem',
+        right: '20rem',
+        bottom: '10rem',
         backgroundColor: 'white',
-        padding: '1.5rem',
+        padding: '5rem',
     },
 }
 
