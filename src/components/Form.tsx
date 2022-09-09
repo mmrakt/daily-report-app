@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 import {
     TableRow,
     TableHead,
@@ -14,6 +13,13 @@ import Item from './Item'
 import { useRouter } from 'next/router'
 import { ToastContainer, toast } from 'react-toastify'
 import styled from 'styled-components'
+import { useFetchTasksByDate } from '@/hooks/task/useFetchTasksByDate'
+import LoadingSpinner from './common/LoadingSpinner'
+import { useFetchCategories } from '@/hooks/category/useFetchCategories'
+import { useFetchProjects } from '@/hooks/project/useFetchProjects'
+import { HOURS } from '../consts/index'
+import { uuidv4 } from '@firebase/util'
+import { ITask } from '../types/index'
 
 const StyledTable = styled(Table)`
     minwidth: 650;
@@ -32,90 +38,98 @@ type IProps = {
 const Form: React.FC<IProps> = ({ selectDate }) => {
     // const [postTask] = usePostTaskMutation()
     // const [postReport] = usePostReportMutation()
-    const [tasks, setTasks] = useState([])
-    const [hourList, setHourList] = useState([])
-    const [categoryList, setCategoryList] = useState([])
+    const createInitialTask = () => {
+        return {
+            tempId: uuidv4(),
+            hours: HOURS[0],
+            projectId: 1,
+            categoryId: 1,
+            summary: '',
+            note: '',
+            userId: userId,
+            date: selectDate,
+        }
+    }
+    const [editTasks, setEditTasks] = useState<ITask[]>([createInitialTask()])
 
+    // FIXME:
+    const userId = 1
+    const roleId = 1
+    const { data: submittedTasks, isLoading: isLoadingFetchTasks } =
+        useFetchTasksByDate(userId, selectDate)
+
+    const { data: categories, isLoading: isLoadingFeatchCategories } =
+        useFetchCategories(roleId)
+    const { data: projects, isLoading: isLoadingFeatchProjects } =
+        useFetchProjects(roleId)
+
+    // if (
+    //     isLoadingFetchTasks ||
+    //     isLoadingFeatchCategories ||
+    //     isLoadingFeatchProjects
+    // )
+    //     return <LoadingSpinner />
     // const { data } = useGetReportQuery({
     //     variables: {
     //         dateText: reportDate.date as string,
     //     },
     // })
-    // React.useEffect(() => {
-    //     if (data) {
-    //         if (data.reports.length) {
-    //             const submittedTasks = [...data.reports[0].tasks]
-    //             setTasks(submittedTasks)
-    //         } else {
-    //             setTasks([
-    //                 {
-    //                     id: uuidv4(),
-    //                     target: false,
-    //                     hourId: 1,
-    //                     project: '',
-    //                     ticketTitle: '',
-    //                     note: '',
-    //                 },
-    //             ])
-    //         }
-    //         setHourList(data.hours)
-    //         setCategoryList(data.categories)
-    //     }
-    // }, [data])
+    React.useEffect(() => {
+        if (submittedTasks) {
+            const assignedIdTasks = []
+            for (let i = 0; i < submittedTasks.length; ++i) {
+                const assignedIdTask = Object.assign({}, submittedTasks[i])
+                assignedIdTasks.splice(i, 0, assignedIdTask)
+                assignedIdTask[i].tempId = uuidv4()
+            }
+            setEditTasks(assignedIdTasks)
+        }
+    }, [submittedTasks])
 
     const handleAddTask = () => {
-        setTasks([
-            ...tasks,
-            {
-                id: uuidv4(),
-                target: false,
-                hourId: 1,
-                categoryId: 1,
-                project: '',
-                ticketTitle: '',
-                note: '',
-            },
-        ])
+        setEditTasks([...editTasks, createInitialTask()])
     }
 
-    const handleDeleteTask = (id) => {
-        const newTasks = tasks.filter((row) => row.id !== id)
-        setTasks(newTasks)
+    const handleDeleteTask = (tempId: string) => {
+        const newTasks = editTasks.filter((task) => task.tempId !== tempId)
+        setEditTasks(newTasks)
     }
     const handleDeleteAllTasks = () => {
-        setTasks([])
+        setEditTasks([])
     }
     const handleUpdateTask = (
-        id: number,
+        tempId: string,
         label: string,
         value?: string | number
     ) => {
-        const newTasks = tasks.map((task) => {
-            if (task.id === id) {
-                switch (label) {
-                    case 'target':
-                        task.target = !task.target
-                        break
-                    case 'hourId':
-                        task.hourId = value
-                        break
-                    case 'categoryId':
-                        task.categoryId = value
-                        break
-                    case 'project':
-                        task.project = value
-                        break
-                    case 'ticketTitle':
-                        task.ticketTitle = value
-                        break
-                    case 'note':
-                        task.note = value
-                        break
+        const newTasks = editTasks.map((task) => {
+            if (task.tempId === tempId) {
+                if (typeof value === 'string') {
+                    switch (label) {
+                        case 'summary':
+                            task.summary = value
+                            break
+                        case 'note':
+                            task.note = value
+                            break
+                    }
+                } else {
+                    switch (label) {
+                        case 'hours':
+                            task.hours = value
+                            break
+                        case 'categoryId':
+                            task.categoryId = value
+                            break
+                        case 'projectId':
+                            task.projectId = value
+                            break
+                    }
                 }
             }
             return task
         })
-        setTasks(newTasks)
+        setEditTasks(newTasks)
     }
 
     const handleSubmitTasks = React.useCallback(
@@ -125,7 +139,7 @@ const Form: React.FC<IProps> = ({ selectDate }) => {
 
                 // await postReport({
                 //     variables: {
-                //         dateText: reportDate.date as string,
+                //         dateText: reportDate.date as "String",
                 //         createdAt: 'now()',
                 //         updatedAt: null,
                 //     },
@@ -138,7 +152,7 @@ const Form: React.FC<IProps> = ({ selectDate }) => {
                 //             hourId: task.hourId,
                 //             categoryId: task.categoryId,
                 //             project: task.project,
-                //             ticketTitle: task.ticketTitle,
+                //             summary: task.summary,
                 //             note: task.note,
                 //         },
                 //     })
@@ -172,7 +186,6 @@ const Form: React.FC<IProps> = ({ selectDate }) => {
                 <StyledTable aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center">目標</TableCell>
                             <TableCell align="center">時間(h)</TableCell>
                             <TableCell align="center">カテゴリー</TableCell>
                             <TableCell align="center">プロジェクト</TableCell>
@@ -182,17 +195,21 @@ const Form: React.FC<IProps> = ({ selectDate }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {tasks.map((task) => (
+                        {editTasks.map((task) => (
                             <Item
                                 task={task}
-                                hourList={hourList}
-                                categoryList={categoryList}
-                                key={task.id}
+                                categories={categories}
+                                projects={projects}
+                                key={task.tempId}
                                 onChange={(label, inputValue) => {
-                                    handleUpdateTask(task.id, label, inputValue)
+                                    handleUpdateTask(
+                                        task.tempId,
+                                        label,
+                                        inputValue
+                                    )
                                 }}
                                 onDelete={() => {
-                                    handleDeleteTask(task.id)
+                                    handleDeleteTask(task.tempId)
                                 }}
                             />
                         ))}

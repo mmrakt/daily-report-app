@@ -1,5 +1,8 @@
 import React from 'react'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { Project, Category } from '@prisma/client'
+import { HOURS } from '../consts/index'
+import { ITask } from '../types/index'
 import {
     Checkbox,
     TextField,
@@ -8,41 +11,28 @@ import {
     MenuItem,
     TableRow,
 } from '@material-ui/core'
-import { Const } from '../utils/const'
 
-type Props = {
-    task: {
-        id: string
-        target: boolean
-        hourId: number
-        categoryId: number
-        project: string
-        ticketTitle: string
-        note: string
-    }
-    hourList: { id: number; hour: number }[]
-    categoryList: { id: number; category: string }[]
+type IProps = {
+    task: ITask
+    categories: Category[]
+    projects: Project[]
     onDelete: () => void
     onChange: (label: string, value: string | number) => void
 }
-const Item = (props: Props): React.ReactElement => {
-    const { task, hourList, categoryList, onDelete, onChange } = props
 
+const Item: React.FC<IProps> = ({
+    task,
+    categories,
+    projects,
+    onDelete,
+    onChange,
+}) => {
     // NOTE: inputとselect両方から受け取るためanyを指定
     const handleChange = (e: React.ChangeEvent<any>, label: string) => {
         onChange(label, e.target.value)
     }
     return (
         <TableRow>
-            <TableCell component="th" scope="row" align="center">
-                <Checkbox
-                    id="target"
-                    onChange={(e) => {
-                        handleChange(e, 'target')
-                    }}
-                    value={task.target}
-                />
-            </TableCell>
             <TableCell align="center">
                 <Select
                     id="hourId"
@@ -50,11 +40,11 @@ const Item = (props: Props): React.ReactElement => {
                         handleChange(e, 'hourId')
                     }}
                     fullWidth
-                    value={task.hourId}
+                    value={task.hours}
                 >
-                    {hourList.map((hour, index) => (
+                    {HOURS.map((hour, index) => (
                         <MenuItem value={index} key={index}>
-                            {hour.hour}h
+                            {hour}h
                         </MenuItem>
                     ))}
                 </Select>
@@ -68,9 +58,9 @@ const Item = (props: Props): React.ReactElement => {
                     fullWidth
                     value={task.categoryId}
                 >
-                    {categoryList.map((category, index) => (
-                        <MenuItem value={index} key={index}>
-                            {category.category}
+                    {categories.map((category, index) => (
+                        <MenuItem value={category.id} key={index}>
+                            {category.name}
                         </MenuItem>
                     ))}
                 </Select>
@@ -82,22 +72,22 @@ const Item = (props: Props): React.ReactElement => {
                         handleChange(e, 'project')
                     }}
                     fullWidth
-                    value={task.project}
+                    value={task.projectId}
                 >
-                    {Const.PROJECT_LIST.map((project, index) => (
-                        <MenuItem value={project} key={index}>
-                            {project}
+                    {projects.map((project, index) => (
+                        <MenuItem value={project.id} key={index}>
+                            {project.name}
                         </MenuItem>
                     ))}
                 </Select>
             </TableCell>
             <TableCell align="center">
                 <TextField
-                    id="ticketTitle"
+                    id="summary"
                     onChange={(e) => {
-                        handleChange(e, 'ticketTitle')
+                        handleChange(e, 'summary')
                     }}
-                    value={task.ticketTitle || ''}
+                    value={task.summary || ''}
                     fullWidth
                 />
             </TableCell>

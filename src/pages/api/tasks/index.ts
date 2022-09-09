@@ -6,7 +6,7 @@ const handler = async (
     res: NextApiResponse
 ): Promise<void> => {
     if (req.method === 'GET') {
-        const { userId } = JSON.parse(req.body)
+        const userId = Number(req.query.userId)
         const tasks = await prisma.task.groupBy({
             by: ['date'],
             where: {
