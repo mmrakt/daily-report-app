@@ -53,7 +53,7 @@ model VerificationRequest {
 }
 
 model User {
-  id            Int       @unique @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   customId      String?   @unique
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -69,11 +69,15 @@ model User {
 }
 
 model Role {
-  id        Int      @unique @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  users     User[]
+  id                Int                 @id @default(autoincrement())
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  name              String
+  users             User[]
+  categories        Category[]
+  projects          Project[]
+  CategoriesOnRoles CategoriesOnRoles[]
+  ProjectsOnRoles   ProjectsOnRoles[]
 }
 
 // NOTE: @db.Date だとmigrateが失敗するので一旦stringにしておく
@@ -94,17 +98,43 @@ model Task {
 }
 
 model Category {
-  id        Int      @unique @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  tasks     Task[]
+  id                Int                 @id @default(autoincrement())
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  name              String
+  tasks             Task[]
+  roles             Role[]
+  CategoriesOnRoles CategoriesOnRoles[]
 }
 
 model Project {
-  id        Int      @unique @default(autoincrement())
+  id              Int               @id @default(autoincrement())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  name            String
+  tasks           Task[]
+  roles           Role[]
+  ProjectsOnRoles ProjectsOnRoles[]
+}
+
+model CategoriesOnRoles {
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  role       Role     @relation(fields: [roleId], references: [id])
+  roleId     Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@id([categoryId, roleId])
+}
+
+model ProjectsOnRoles {
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId Int
+  role      Role     @relation(fields: [roleId], references: [id])
+  roleId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String
-  tasks     Task[]
+
+  @@id([projectId, roleId])
 }

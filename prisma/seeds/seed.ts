@@ -5,6 +5,8 @@ const seed = async (): Promise<void> => {
     // users()
     // categories()
     // projects()
+    // projectsOnRoles()
+    // categoriesOnRoles()
     tasks()
 }
 
@@ -18,9 +20,9 @@ const users = async () => {
         data: Array(5)
             .fill(0)
             .map((v, i) => ({
-                customId: 'id_00' + i.toString(),
+                customId: 'admin_id_00' + i.toString(),
                 name: 'admin_00' + i.toString(),
-                email: 'email' + i.toString() + '@gmail.com',
+                email: 'admin_email' + i.toString() + '@gmail.com',
                 roleId: 1,
             })),
     })
@@ -28,9 +30,9 @@ const users = async () => {
         data: Array(5)
             .fill(0)
             .map((v, i) => ({
-                customId: 'id_00' + i.toString(),
+                customId: 'user_id_00' + i.toString(),
                 name: 'user_00' + i.toString(),
-                email: 'email' + i.toString() + '@gmail.com',
+                email: 'user_email' + i.toString() + '@gmail.com',
                 roleId: 2,
             })),
     })
@@ -53,6 +55,110 @@ const projects = async () => {
             .map((v, i) => ({
                 name: 'プロジェクト' + i.toString(),
             })),
+    })
+}
+
+const projectsOnRoles = async () => {
+    await prisma.projectsOnRoles.createMany({
+        data: [
+            {
+                roleId: 1,
+                projectId: 1,
+            },
+            {
+                roleId: 1,
+                projectId: 2,
+            },
+            {
+                roleId: 1,
+                projectId: 3,
+            },
+            {
+                roleId: 1,
+                projectId: 4,
+            },
+            {
+                roleId: 1,
+                projectId: 5,
+            },
+        ],
+    })
+
+    await prisma.projectsOnRoles.createMany({
+        data: [
+            {
+                roleId: 2,
+                projectId: 6,
+            },
+            {
+                roleId: 2,
+                projectId: 7,
+            },
+            {
+                roleId: 2,
+                projectId: 8,
+            },
+            {
+                roleId: 2,
+                projectId: 9,
+            },
+            {
+                roleId: 2,
+                projectId: 10,
+            },
+        ],
+    })
+}
+
+const categoriesOnRoles = async () => {
+    await prisma.categoriesOnRoles.createMany({
+        data: [
+            {
+                roleId: 1,
+                categoryId: 1,
+            },
+            {
+                roleId: 1,
+                categoryId: 2,
+            },
+            {
+                roleId: 1,
+                categoryId: 3,
+            },
+            {
+                roleId: 1,
+                categoryId: 4,
+            },
+            {
+                roleId: 1,
+                categoryId: 5,
+            },
+        ],
+    })
+
+    await prisma.categoriesOnRoles.createMany({
+        data: [
+            {
+                roleId: 2,
+                categoryId: 6,
+            },
+            {
+                roleId: 2,
+                categoryId: 7,
+            },
+            {
+                roleId: 2,
+                categoryId: 8,
+            },
+            {
+                roleId: 2,
+                categoryId: 9,
+            },
+            {
+                roleId: 2,
+                categoryId: 10,
+            },
+        ],
     })
 }
 

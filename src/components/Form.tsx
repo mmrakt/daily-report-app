@@ -20,6 +20,7 @@ import { useFetchProjects } from '@/hooks/project/useFetchProjects'
 import { HOURS } from '../consts/index'
 import { uuidv4 } from '@firebase/util'
 import { ITask } from '../types/index'
+import { Project, Task, Category } from '@prisma/client'
 
 const StyledTable = styled(Table)`
     minwidth: 650;
@@ -35,9 +36,55 @@ type IProps = {
     selectDate: string
 }
 
-const Form: React.FC<IProps> = ({ selectDate }) => {
-    // const [postTask] = usePostTaskMutation()
-    // const [postReport] = usePostReportMutation()
+const FormContainer: React.FC<IProps> = ({ selectDate }) => {
+    // FIXME:
+    const userId = 1
+    const roleId = 1
+    const { data: submittedTasks, isLoading: isLoadingFetchTasks } =
+        useFetchTasksByDate(userId, selectDate)
+
+    const { data: categories, isLoading: isLoadingFeatchCategories } =
+        useFetchCategories(roleId)
+    const { data: projects, isLoading: isLoadingFeatchProjects } =
+        useFetchProjects(roleId)
+
+    if (
+        isLoadingFetchTasks ||
+        isLoadingFeatchCategories ||
+        isLoadingFeatchProjects
+    )
+        return <LoadingSpinner />
+
+    console.log(categories)
+    return (
+        <Form
+            submittedTasks={submittedTasks}
+            categories={categories}
+            projects={projects}
+            userId={userId}
+            roleId={roleId}
+            selectDate={selectDate}
+        />
+    )
+}
+
+type IProps2 = {
+    submittedTasks: Task[]
+    categories: Category[]
+    projects: Project[]
+    userId: number
+    roleId: number
+    selectDate: string
+}
+
+const Form: React.FC<IProps2> = ({
+    submittedTasks,
+    categories,
+    projects,
+    userId,
+    roleId,
+    selectDate,
+}) => {
     const createInitialTask = () => {
         return {
             tempId: uuidv4(),
@@ -52,28 +99,6 @@ const Form: React.FC<IProps> = ({ selectDate }) => {
     }
     const [editTasks, setEditTasks] = useState<ITask[]>([createInitialTask()])
 
-    // FIXME:
-    const userId = 1
-    const roleId = 1
-    const { data: submittedTasks, isLoading: isLoadingFetchTasks } =
-        useFetchTasksByDate(userId, selectDate)
-
-    const { data: categories, isLoading: isLoadingFeatchCategories } =
-        useFetchCategories(roleId)
-    const { data: projects, isLoading: isLoadingFeatchProjects } =
-        useFetchProjects(roleId)
-
-    // if (
-    //     isLoadingFetchTasks ||
-    //     isLoadingFeatchCategories ||
-    //     isLoadingFeatchProjects
-    // )
-    //     return <LoadingSpinner />
-    // const { data } = useGetReportQuery({
-    //     variables: {
-    //         dateText: reportDate.date as string,
-    //     },
-    // })
     React.useEffect(() => {
         if (submittedTasks) {
             const assignedIdTasks = []
@@ -240,4 +265,4 @@ const Form: React.FC<IProps> = ({ selectDate }) => {
         </div>
     )
 }
-export default Form
+export default FormContainer
