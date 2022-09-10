@@ -1,12 +1,21 @@
 import prisma from '../../src/libs/prisma'
 
+const sleep = (second) =>
+    new Promise((resolve) => setTimeout(resolve, second * 1000))
+
 const seed = async (): Promise<void> => {
-    // roles()
-    // users()
-    // categories()
-    // projects()
-    // projectsOnRoles()
-    // categoriesOnRoles()
+    roles()
+    await sleep(3)
+    users()
+    await sleep(3)
+    categories()
+    await sleep(3)
+    projects()
+    await sleep(3)
+    projectsOnRoles()
+    await sleep(3)
+    categoriesOnRoles()
+    await sleep(3)
     tasks()
 }
 

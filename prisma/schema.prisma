@@ -69,15 +69,13 @@ model User {
 }
 
 model Role {
-  id                Int                 @id @default(autoincrement())
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  name              String
-  users             User[]
-  categories        Category[]
-  projects          Project[]
-  CategoriesOnRoles CategoriesOnRoles[]
-  ProjectsOnRoles   ProjectsOnRoles[]
+  id         Int                 @id @default(autoincrement())
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  name       String
+  users      User[]
+  categories CategoriesOnRoles[]
+  projects   ProjectsOnRoles[]
 }
 
 // NOTE: @db.Date だとmigrateが失敗するので一旦stringにしておく
@@ -98,23 +96,21 @@ model Task {
 }
 
 model Category {
-  id                Int                 @id @default(autoincrement())
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  name              String
-  tasks             Task[]
-  roles             Role[]
-  CategoriesOnRoles CategoriesOnRoles[]
+  id        Int                 @id @default(autoincrement())
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  name      String
+  tasks     Task[]
+  roles     CategoriesOnRoles[]
 }
 
 model Project {
-  id              Int               @id @default(autoincrement())
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  name            String
-  tasks           Task[]
-  roles           Role[]
-  ProjectsOnRoles ProjectsOnRoles[]
+  id        Int               @id @default(autoincrement())
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  name      String
+  tasks     Task[]
+  roles     ProjectsOnRoles[]
 }
 
 model CategoriesOnRoles {
