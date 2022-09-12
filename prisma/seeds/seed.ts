@@ -183,18 +183,62 @@ const tasks = async () => {
         '2022-09-03',
         '2022-09-04',
     ]
+    // userId=1
     dateList.forEach(async (date) => {
         await prisma.task.createMany({
-            data: Array(10)
+            data: Array(5)
                 .fill(0)
                 .map((v, i) => ({
-                    summary: '作業' + i.toString(),
-                    note: '補足' + i.toString(),
+                    summary: '作業1-' + i.toString(),
+                    note: '補足1-' + i.toString(),
                     date,
                     hours: 0.25 * (i + 1),
                     categoryId: i + 1,
                     projectId: i + 1,
                     userId: 1,
+                })),
+        })
+        await prisma.task.createMany({
+            data: Array(5)
+                .fill(0)
+                .map((v, i) => ({
+                    summary: '作業2-' + i.toString(),
+                    note: '補足2-' + i.toString(),
+                    date,
+                    hours: 0.25 * (i + 1),
+                    categoryId: i + 1,
+                    projectId: i + 1,
+                    userId: 1,
+                })),
+        })
+    })
+
+    // userId=2
+    dateList.forEach(async (date) => {
+        await prisma.task.createMany({
+            data: Array(5)
+                .fill(0)
+                .map((v, i) => ({
+                    summary: '作業1-' + i.toString(),
+                    note: '補足1-' + i.toString(),
+                    date,
+                    hours: 0.25 * (i + 1),
+                    categoryId: i + 1,
+                    projectId: i + 1,
+                    userId: 2,
+                })),
+        })
+        await prisma.task.createMany({
+            data: Array(5)
+                .fill(0)
+                .map((v, i) => ({
+                    summary: '作業2-' + i.toString(),
+                    note: '補足2-' + i.toString(),
+                    date,
+                    hours: 0.25 * (i + 1),
+                    categoryId: i + 6,
+                    projectId: i + 6,
+                    userId: 2,
                 })),
         })
     })

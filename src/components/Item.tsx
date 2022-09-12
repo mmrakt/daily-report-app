@@ -40,10 +40,10 @@ const Item: React.FC<IProps> = ({
                         handleChange(e, 'hourId')
                     }}
                     fullWidth
-                    value={task.hours}
+                    value={task.hours !== undefined ? task.hours : 0.25}
                 >
                     {HOURS.map((hour, index) => (
-                        <MenuItem value={index} key={index}>
+                        <MenuItem value={hour} key={index}>
                             {hour}h
                         </MenuItem>
                     ))}
@@ -56,7 +56,7 @@ const Item: React.FC<IProps> = ({
                         handleChange(e, 'categoryId')
                     }}
                     fullWidth
-                    value={task.categoryId}
+                    value={task.categoryId !== undefined ? task.categoryId : 1}
                 >
                     {categories.map((category, index) => (
                         <MenuItem value={category.id} key={index}>
@@ -67,12 +67,12 @@ const Item: React.FC<IProps> = ({
             </TableCell>
             <TableCell align="center">
                 <Select
-                    id="project"
+                    id="projectId"
                     onChange={(e) => {
-                        handleChange(e, 'project')
+                        handleChange(e, 'projectId')
                     }}
                     fullWidth
-                    value={task.projectId}
+                    value={task.projectId !== undefined ? task.projectId : 1}
                 >
                     {projects.map((project, index) => (
                         <MenuItem value={project.id} key={index}>

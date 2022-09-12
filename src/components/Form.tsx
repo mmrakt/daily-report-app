@@ -55,7 +55,6 @@ const FormContainer: React.FC<IProps> = ({ selectDate }) => {
     )
         return <LoadingSpinner />
 
-    console.log(categories)
     return (
         <Form
             submittedTasks={submittedTasks}
@@ -105,7 +104,7 @@ const Form: React.FC<IProps2> = ({
             for (let i = 0; i < submittedTasks.length; ++i) {
                 const assignedIdTask = Object.assign({}, submittedTasks[i])
                 assignedIdTasks.splice(i, 0, assignedIdTask)
-                assignedIdTask[i].tempId = uuidv4()
+                assignedIdTasks[i].tempId = uuidv4()
             }
             setEditTasks(assignedIdTasks)
         }

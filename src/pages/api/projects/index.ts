@@ -7,7 +7,7 @@ const handler = async (
 ): Promise<void> => {
     if (req.method === 'GET') {
         const roleId = Number(req.query.roleId)
-        const categories = await prisma.category.findMany({
+        const projects = await prisma.project.findMany({
             where: {
                 roles: {
                     every: {
@@ -19,8 +19,8 @@ const handler = async (
             },
         })
 
-        if (categories) {
-            res.status(200).json(categories)
+        if (projects) {
+            res.status(200).json(projects)
         } else {
             res.status(400).json({ debugMessage: 'There was no one...' })
         }

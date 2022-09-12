@@ -20,9 +20,10 @@ const handler = async (
                     },
                 },
             })
+            console.log(tasks)
 
             if (tasks) {
-                res.status(200).end()
+                res.status(200).json(tasks)
             } else {
                 res.status(400).json({
                     debugMessage: `task not found...`,
