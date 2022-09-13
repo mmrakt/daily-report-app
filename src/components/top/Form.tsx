@@ -9,18 +9,14 @@ import {
     Paper,
     Button,
 } from '@material-ui/core'
-import Item from './Item'
-import { useRouter } from 'next/router'
+import Item from '../Item'
 import { ToastContainer, toast } from 'react-toastify'
 import styled from 'styled-components'
-import { useFetchTasksByDate } from '@/hooks/task/useFetchTasksByDate'
-import LoadingSpinner from './common/LoadingSpinner'
-import { useFetchCategories } from '@/hooks/category/useFetchCategories'
-import { useFetchProjects } from '@/hooks/project/useFetchProjects'
-import { HOURS } from '../consts/index'
+import { HOURS } from '../../consts/index'
 import { uuidv4 } from '@firebase/util'
-import { ITask } from '../types/index'
+import { ITask } from '../../types/index'
 import { Project, Task, Category } from '@prisma/client'
+import { useCreateTasksByDate } from '@/hooks/task/useCreateTasksByDate'
 
 const StyledTable = styled(Table)`
     minwidth: 650;
@@ -31,41 +27,6 @@ const StyledButtons = styled.div`
 const StyledButton = styled(Button)`
     justify-content: flex-end;
 `
-
-type IProps = {
-    selectDate: string
-}
-
-const FormContainer: React.FC<IProps> = ({ selectDate }) => {
-    // FIXME:
-    const userId = 1
-    const roleId = 1
-    const { data: submittedTasks, isLoading: isLoadingFetchTasks } =
-        useFetchTasksByDate(userId, selectDate)
-
-    const { data: categories, isLoading: isLoadingFeatchCategories } =
-        useFetchCategories(roleId)
-    const { data: projects, isLoading: isLoadingFeatchProjects } =
-        useFetchProjects(roleId)
-
-    if (
-        isLoadingFetchTasks ||
-        isLoadingFeatchCategories ||
-        isLoadingFeatchProjects
-    )
-        return <LoadingSpinner />
-
-    return (
-        <Form
-            submittedTasks={submittedTasks}
-            categories={categories}
-            projects={projects}
-            userId={userId}
-            roleId={roleId}
-            selectDate={selectDate}
-        />
-    )
-}
 
 type IProps2 = {
     submittedTasks: Task[]
@@ -97,6 +58,7 @@ const Form: React.FC<IProps2> = ({
         }
     }
     const [editTasks, setEditTasks] = useState<ITask[]>([createInitialTask()])
+    const createTasksMuatation = useCreateTasksByDate()
 
     React.useEffect(() => {
         if (submittedTasks) {
@@ -160,27 +122,7 @@ const Form: React.FC<IProps2> = ({
         async (ev: React.FormEvent<HTMLFormElement>) => {
             try {
                 ev.preventDefault()
-
-                // await postReport({
-                //     variables: {
-                //         dateText: reportDate.date as "String",
-                //         createdAt: 'now()',
-                //         updatedAt: null,
-                //     },
-                // })
-                // tasks.forEach(async (task) => {
-                //     await postTask({
-                //         variables: {
-                //             target: task.target,
-                //             reportDateText: reportDate.date as string,
-                //             hourId: task.hourId,
-                //             categoryId: task.categoryId,
-                //             project: task.project,
-                //             summary: task.summary,
-                //             note: task.note,
-                //         },
-                //     })
-                // })
+                await createTasksMuatation.mutate(editTasks)
                 await toast.success('提出完了しました。お疲れ様でした。', {
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -192,6 +134,8 @@ const Form: React.FC<IProps2> = ({
             } catch (err) {
                 console.log(err)
             }
+
+            console.log(editTasks)
         },
         []
     )
@@ -264,4 +208,4 @@ const Form: React.FC<IProps2> = ({
         </div>
     )
 }
-export default FormContainer
+export default Form

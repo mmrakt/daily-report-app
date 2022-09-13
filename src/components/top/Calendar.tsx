@@ -3,10 +3,10 @@ import { Calendar as ReactCalendar } from 'react-calendar'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
 import Modal from 'react-modal'
-import Form from '@/components/Form'
 import { Task } from '@prisma/client'
 import 'react-calendar/dist/Calendar.css'
 import CheckMark from '../common/CheckMark'
+import FormContainer from './FormContainer'
 
 const StyledCalendar = styled(ReactCalendar)`
     margin: 0 auto;
@@ -96,7 +96,7 @@ const Calendar: React.FC<{ submittedDates: Task[] }> = ({ submittedDates }) => {
                 }}
                 ariaHideApp={false}
             >
-                <Form selectDate={selectDate} />
+                <FormContainer selectDate={selectDate} />
             </Modal>
         </div>
     )
