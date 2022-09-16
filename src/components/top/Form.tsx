@@ -17,6 +17,7 @@ import { uuidv4 } from '@firebase/util'
 import { ITask } from '../../types/index'
 import { Project, Task, Category } from '@prisma/client'
 import { useCreateTasksByDate } from '@/hooks/task/useCreateTasksByDate'
+import tasks from '@/pages/api/tasks'
 
 const StyledTable = styled(Table)`
     minwidth: 650;
@@ -28,8 +29,8 @@ const StyledButton = styled(Button)`
     justify-content: flex-end;
 `
 
-type IProps2 = {
-    submittedTasks: Task[]
+type IProps = {
+    submittedTasks?: Task[]
     categories: Category[]
     projects: Project[]
     userId: number
@@ -37,7 +38,7 @@ type IProps2 = {
     selectDate: string
 }
 
-const Form: React.FC<IProps2> = ({
+const Form: React.FC<IProps> = ({
     submittedTasks,
     categories,
     projects,
@@ -61,6 +62,7 @@ const Form: React.FC<IProps2> = ({
     const createTasksMuatation = useCreateTasksByDate()
 
     React.useEffect(() => {
+        // TODO: モーダルからフォーカスが外れるとsubmittedTasksの中身がすり替わってしまう事象を解消する
         if (submittedTasks) {
             const assignedIdTasks = []
             for (let i = 0; i < submittedTasks.length; ++i) {
@@ -122,7 +124,9 @@ const Form: React.FC<IProps2> = ({
         async (ev: React.FormEvent<HTMLFormElement>) => {
             try {
                 ev.preventDefault()
-                await createTasksMuatation.mutate(editTasks)
+                await createTasksMuatation.mutate(
+                    removeTempIdByTasks(editTasks)
+                )
                 await toast.success('提出完了しました。お疲れ様でした。', {
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -134,11 +138,20 @@ const Form: React.FC<IProps2> = ({
             } catch (err) {
                 console.log(err)
             }
-
-            console.log(editTasks)
         },
-        []
+        [createTasksMuatation, editTasks]
     )
+
+    const removeTempIdByTasks = (tasks: ITask[]): ITask[] => {
+        const tempTasks = tasks
+        const returnTasks = []
+        tempTasks.forEach((returnTask) => {
+            delete returnTask.tempId
+            returnTasks.push(returnTask)
+        })
+        console.log(returnTasks)
+        return returnTasks
+    }
 
     return (
         <div className="">

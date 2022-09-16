@@ -28,7 +28,7 @@ const handler = async (
 
         try {
             await prisma.task.createMany({
-                data: body[0],
+                data: body['tasks'],
                 skipDuplicates: true,
             })
             res.status(200).end()
