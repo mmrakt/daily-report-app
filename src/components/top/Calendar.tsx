@@ -32,36 +32,42 @@ const modalStyle = {
     },
 }
 
-type MemorizedCalendarProps = {
-    TileContent: (props: { date: string }) => JSX.Element
-    onChange: (date: string) => void
+// type MemorizedCalendarProps = {
+//     TileContent: (props: { date: string }) => JSX.Element
+//     onChange: (date: string) => void
+// }
+
+type CalenderProps = {
+    dates: Pick<Task, 'date'>[]
 }
 
-const Calendar: React.FC<{ submittedDates: Task[] }> = ({ submittedDates }) => {
-    const [dates] = React.useState<Task[]>(submittedDates)
+const Calendar: React.FC<{ submittedDates: CalenderProps }> = ({
+    submittedDates,
+}) => {
+    const [dates] = React.useState<CalenderProps>(submittedDates)
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false)
     const [selectDate, setSelectDate] = React.useState<string>('')
 
-    const MemorizedCalendar = React.memo(
-        ({ TileContent, onChange }: MemorizedCalendarProps) => {
-            const onModalOpen = (date: string) => {
-                onChange(date)
-            }
+    // const MemorizedCalendar = React.memo(
+    //     ({ TileContent, onChange }: MemorizedCalendarProps) => {
+    //         const onModalOpen = (date: string) => {
+    //             onChange(date)
+    //         }
 
-            return (
-                <StyledCalendar
-                    value={new Date()}
-                    tileContent={TileContent}
-                    calendarType="US"
-                    onClickDay={(value) => {
-                        onModalOpen(value)
-                    }}
-                />
-            )
-        }
-    )
+    //         return (
+    //             <StyledCalendar
+    //                 value={new Date()}
+    //                 tileContent={TileContent}
+    //                 calendarType="US"
+    //                 onClickDay={(value) => {
+    //                     onModalOpen(value)
+    //                 }}
+    //             />
+    //         )
+    //     }
+    // )
 
-    MemorizedCalendar.displayName = 'MemorizedCalendar'
+    // MemorizedCalendar.displayName = 'MemorizedCalendar'
 
     const TileContent = ({ date }: { date: string }) => {
         if (
@@ -82,10 +88,18 @@ const Calendar: React.FC<{ submittedDates: Task[] }> = ({ submittedDates }) => {
 
     return (
         <div className="calendarBox">
-            <MemorizedCalendar
+            {/* <MemorizedCalendar
                 TileContent={TileContent}
                 onChange={(date: string) => {
                     onModalOpen(date)
+                }}
+            /> */}
+            <StyledCalendar
+                value={new Date()}
+                tileContent={TileContent}
+                calendarType="US"
+                onClickDay={(value) => {
+                    onModalOpen(value)
                 }}
             />
             <Modal

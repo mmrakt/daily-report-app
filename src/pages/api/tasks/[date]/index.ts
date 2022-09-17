@@ -20,7 +20,6 @@ const handler = async (
                     },
                 },
             })
-            console.log(tasks)
 
             if (tasks) {
                 res.status(200).json(tasks)

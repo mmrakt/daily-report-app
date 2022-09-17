@@ -48,7 +48,7 @@ const Form: React.FC<IProps> = ({
     selectDate,
     onSubmit,
 }) => {
-    const createInitialTask = () => {
+    const createInitialTask = (): ITask => {
         return {
             tempId: uuidv4(),
             hours: HOURS[0],
@@ -60,22 +60,18 @@ const Form: React.FC<IProps> = ({
             date: selectDate,
         }
     }
-    const [editTasks, setEditTasks] = useState<ITask[]>([createInitialTask()])
+    const [editTasks, setEditTasks] = useState<ITask[]>()
     const createTasksMuatation = useCreateTasksByDate()
 
     React.useEffect(() => {
-        // TODO: モーダルからフォーカスが外れるとsubmittedTasksの中身がすり替わってしまう事象を解消する
         if (submittedTasks) {
-            const assignedIdTasks = []
-            for (let i = 0; i < submittedTasks.length; ++i) {
-                const assignedIdTask = Object.assign({}, submittedTasks[i])
-                assignedIdTasks.splice(i, 0, assignedIdTask)
-                assignedIdTasks[i].tempId = uuidv4()
-            }
-            setEditTasks(assignedIdTasks)
+            setEditTasks(assignTempIdToTasks(submittedTasks))
+        } else {
+            setEditTasks([createInitialTask()])
         }
     }, [submittedTasks])
 
+    // console.log(editTasks)
     const handleAddTask = () => {
         setEditTasks([...editTasks, createInitialTask()])
     }
@@ -144,8 +140,18 @@ const Form: React.FC<IProps> = ({
                 console.log(err)
             }
         },
-        [createTasksMuatation, editTasks]
+        [createTasksMuatation, editTasks, onSubmit]
     )
+
+    const assignTempIdToTasks = (submittedTasks: Task[]): ITask[] => {
+        const assignedIdTasks = []
+        for (let i = 0; i < submittedTasks.length; ++i) {
+            const assignedIdTask = Object.assign({}, submittedTasks[i])
+            assignedIdTasks.splice(i, 0, assignedIdTask)
+            assignedIdTasks[i].tempId = uuidv4()
+        }
+        return assignedIdTasks
+    }
 
     const removeTempIdByTasks = (tasks: ITask[]): ITask[] => {
         const tempTasks = tasks
@@ -181,24 +187,25 @@ const Form: React.FC<IProps> = ({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {editTasks.map((task) => (
-                            <Item
-                                task={task}
-                                categories={categories}
-                                projects={projects}
-                                key={task.tempId}
-                                onChange={(label, inputValue) => {
-                                    handleUpdateTask(
-                                        task.tempId,
-                                        label,
-                                        inputValue
-                                    )
-                                }}
-                                onDelete={() => {
-                                    handleDeleteTask(task.tempId)
-                                }}
-                            />
-                        ))}
+                        {editTasks &&
+                            editTasks.map((task) => (
+                                <Item
+                                    task={task}
+                                    categories={categories}
+                                    projects={projects}
+                                    key={task.tempId}
+                                    onChange={(label, inputValue) => {
+                                        handleUpdateTask(
+                                            task.tempId,
+                                            label,
+                                            inputValue
+                                        )
+                                    }}
+                                    onDelete={() => {
+                                        handleDeleteTask(task.tempId)
+                                    }}
+                                />
+                            ))}
                     </TableBody>
                 </StyledTable>
             </TableContainer>
