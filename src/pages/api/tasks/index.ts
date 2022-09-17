@@ -24,13 +24,25 @@ const handler = async (
         }
     } else if (req.method === 'POST') {
         const body = JSON.parse(req.body) as CreateTasks[]
-        console.log(body)
+        const { userId, date } = body['tasks'][0]
 
         try {
-            await prisma.task.createMany({
-                data: body['tasks'],
-                skipDuplicates: true,
-            })
+            await prisma.$transaction([
+                prisma.task.deleteMany({
+                    where: {
+                        userId: {
+                            equals: userId,
+                        },
+                        date: {
+                            equals: date,
+                        },
+                    },
+                }),
+                prisma.task.createMany({
+                    data: body['tasks'],
+                    skipDuplicates: true,
+                }),
+            ])
             res.status(200).end()
         } catch (error) {
             console.error(error)
