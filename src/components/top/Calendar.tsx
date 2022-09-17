@@ -96,7 +96,12 @@ const Calendar: React.FC<{ submittedDates: Task[] }> = ({ submittedDates }) => {
                 }}
                 ariaHideApp={false}
             >
-                <FormContainer selectDate={selectDate} />
+                <FormContainer
+                    onSubmit={() => {
+                        setIsModalOpen(false)
+                    }}
+                    selectDate={selectDate}
+                />
             </Modal>
         </div>
     )

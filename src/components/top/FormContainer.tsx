@@ -5,7 +5,10 @@ import { useFetchCategories } from '@/hooks/category/useFetchCategories'
 import { useFetchProjects } from '@/hooks/project/useFetchProjects'
 import Form from '@/components/top/Form'
 
-const FormContainer: React.FC<{ selectDate: string }> = ({ selectDate }) => {
+const FormContainer: React.FC<{
+    selectDate: string
+    onSubmit: () => void
+}> = ({ selectDate, onSubmit }) => {
     // FIXME:
     const userId = 1
     const roleId = 1
@@ -32,6 +35,7 @@ const FormContainer: React.FC<{ selectDate: string }> = ({ selectDate }) => {
             userId={userId}
             roleId={roleId}
             selectDate={selectDate}
+            onSubmit={onSubmit}
         />
     )
 }

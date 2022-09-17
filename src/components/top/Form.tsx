@@ -36,6 +36,7 @@ type IProps = {
     userId: number
     roleId: number
     selectDate: string
+    onSubmit: () => void
 }
 
 const Form: React.FC<IProps> = ({
@@ -45,6 +46,7 @@ const Form: React.FC<IProps> = ({
     userId,
     roleId,
     selectDate,
+    onSubmit,
 }) => {
     const createInitialTask = () => {
         return {
@@ -128,13 +130,16 @@ const Form: React.FC<IProps> = ({
                     removeTempIdByTasks(editTasks)
                 )
                 await toast.success('提出完了しました。お疲れ様でした。', {
-                    autoClose: 3000,
+                    autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
                 })
+                setTimeout(() => {
+                    onSubmit()
+                }, 2000)
             } catch (err) {
                 console.log(err)
             }
