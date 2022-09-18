@@ -3,3 +3,14 @@ export const HOURS = [
 ]
 
 export const DISPLAY_NOTICE_MILLISECOUND = 2000
+
+export const TAB_ITEMS = [
+    {
+        url: '/assignment',
+        name: 'ロール設定',
+    },
+    {
+        url: '/classification',
+        name: '分類設定',
+    },
+]

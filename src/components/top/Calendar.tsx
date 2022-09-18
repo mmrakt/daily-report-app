@@ -23,7 +23,8 @@ const modalStyle = {
     },
     content: {
         maxWidth: '1000px',
-        // margin: ''
+        minWidth: '700px',
+        margin: '0 auto',
         position: 'absolute',
         top: '10rem',
         left: '20rem',

@@ -1,8 +1,8 @@
 import React from 'react'
 import { useFetchTasksByDate } from '@/hooks/task/useFetchTasksByDate'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
-import { useFetchCategories } from '@/hooks/category/useFetchCategories'
-import { useFetchProjects } from '@/hooks/project/useFetchProjects'
+import { useFetchCategoriesByRole } from '@/hooks/category/useFetchCategoriesByRole'
+import { useFetchProjectsByRole } from '@/hooks/project/useFetchProjectsByRole'
 import Form from '@/components/top/Form'
 
 const FormContainer: React.FC<{
@@ -16,9 +16,9 @@ const FormContainer: React.FC<{
         useFetchTasksByDate(userId, selectDate)
 
     const { data: categories, isLoading: isLoadingFeatchCategories } =
-        useFetchCategories(roleId)
+        useFetchCategoriesByRole(roleId)
     const { data: projects, isLoading: isLoadingFeatchProjects } =
-        useFetchProjects(roleId)
+        useFetchProjectsByRole(roleId)
 
     if (
         isLoadingFetchTasks ||

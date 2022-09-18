@@ -7,7 +7,7 @@ type IProps = {
     textColor: string
 }
 
-const HeaderItem = (props: IProps): React.ReactElement => {
+const Tab = (props: IProps): React.ReactElement => {
     return (
         <Link href={props.url}>
             <a
@@ -19,4 +19,4 @@ const HeaderItem = (props: IProps): React.ReactElement => {
     )
 }
 
-export default HeaderItem
+export default Tab
