@@ -17,6 +17,7 @@ import { uuidv4 } from '@firebase/util'
 import { ITask } from '../../types/index'
 import { Project, Task, Category } from '@prisma/client'
 import { useCreateTasksByDate } from '@/hooks/task/useCreateTasksByDate'
+import CloseIcon from '../common/CloseIcon'
 
 const StyledTable = styled(Table)`
     minwidth: 650;
@@ -167,13 +168,17 @@ const Form: React.FC<IProps> = ({
     return (
         <div className="">
             <ToastContainer />
-            <StyledButton
-                variant="contained"
-                onClick={handleAddTask}
-                data-testid="add-button"
-            >
-                作業を追加
-            </StyledButton>
+            <div className="flex">
+                <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={handleAddTask}
+                >
+                    追加
+                </button>
+                <div className="float-right">
+                    <CloseIcon />
+                </div>
+            </div>
             <TableContainer component={Paper}>
                 <StyledTable aria-label="simple table">
                     <TableHead>
