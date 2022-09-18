@@ -12,12 +12,11 @@ import {
 import Item from '../Item'
 import { ToastContainer, toast } from 'react-toastify'
 import styled from 'styled-components'
-import { HOURS } from '../../consts/index'
+import { HOURS, DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
 import { uuidv4 } from '@firebase/util'
 import { ITask } from '../../types/index'
 import { Project, Task, Category } from '@prisma/client'
 import { useCreateTasksByDate } from '@/hooks/task/useCreateTasksByDate'
-import tasks from '@/pages/api/tasks'
 
 const StyledTable = styled(Table)`
     minwidth: 650;
@@ -48,7 +47,7 @@ const Form: React.FC<IProps> = ({
     selectDate,
     onSubmit,
 }) => {
-    const createInitialTask = (): ITask => {
+    const createInitialTask = React.useCallback(() => {
         return {
             tempId: uuidv4(),
             hours: HOURS[0],
@@ -59,19 +58,19 @@ const Form: React.FC<IProps> = ({
             userId: userId,
             date: selectDate,
         }
-    }
+    }, [userId, selectDate])
+
     const [editTasks, setEditTasks] = useState<ITask[]>()
     const createTasksMuatation = useCreateTasksByDate()
 
     React.useEffect(() => {
-        if (submittedTasks) {
+        if (submittedTasks.length) {
             setEditTasks(assignTempIdToTasks(submittedTasks))
         } else {
             setEditTasks([createInitialTask()])
         }
-    }, [submittedTasks])
+    }, [submittedTasks, createInitialTask])
 
-    // console.log(editTasks)
     const handleAddTask = () => {
         setEditTasks([...editTasks, createInitialTask()])
     }
@@ -126,16 +125,17 @@ const Form: React.FC<IProps> = ({
                     removeTempIdByTasks(editTasks)
                 )
                 await toast.success('提出完了しました。お疲れ様でした。', {
-                    autoClose: 2000,
+                    autoClose: DISPLAY_NOTICE_MILLISECOUND,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
                 })
+                //
                 setTimeout(() => {
                     onSubmit()
-                }, 2000)
+                }, DISPLAY_NOTICE_MILLISECOUND)
             } catch (err) {
                 console.log(err)
             }

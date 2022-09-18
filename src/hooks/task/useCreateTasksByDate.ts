@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query'
+import { DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
 
 export type CreateTasks = {
     userId: number
@@ -22,13 +23,15 @@ const useCreateTasksByDate = () => {
             }),
         {
             onSuccess: (data, variables) => {
-                queryClient.invalidateQueries([
-                    'tasks',
-                    {
-                        userId: variables[0].userId,
-                        date: variables[0].date,
-                    },
-                ])
+                // TODO: setTimeoutを使わずにcache破棄のタイミングを遅延させる
+                setTimeout(() => {
+                    queryClient.resetQueries([
+                        'tasks',
+                        {
+                            userId: variables[0].userId,
+                        },
+                    ])
+                }, DISPLAY_NOTICE_MILLISECOUND)
             },
         }
     )
