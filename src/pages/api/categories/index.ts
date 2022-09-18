@@ -6,14 +6,11 @@ const handler = async (
     res: NextApiResponse
 ): Promise<void> => {
     if (req.method === 'GET') {
-        const roleId = Number(req.query.roleId)
         const categories = await prisma.category.findMany({
-            where: {
+            include: {
                 roles: {
-                    every: {
-                        roleId: {
-                            equals: roleId,
-                        },
+                    select: {
+                        roleId: true,
                     },
                 },
             },

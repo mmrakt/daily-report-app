@@ -3,7 +3,7 @@ import { Project } from '@prisma/client'
 
 const useFetchProjectsByRole = (roleId: number): UseQueryResult<Project[]> => {
     return useQuery<Project[]>(['projects', roleId], async () => {
-        const res = await fetch(`/api/projects?roleId=${roleId}`)
+        const res = await fetch(`/api/roles/${roleId}/projects`)
         return res.json()
     })
 }

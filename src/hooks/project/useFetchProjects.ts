@@ -1,8 +1,8 @@
 import { useQuery, UseQueryResult } from 'react-query'
-import { Project } from '@prisma/client'
+import { ProjectAndRoleIds } from '../../types/index'
 
-const useFetchProjects = (): UseQueryResult<Project[]> => {
-    return useQuery<Project[]>(['projects'], async () => {
+const useFetchProjects = (): UseQueryResult<ProjectAndRoleIds[]> => {
+    return useQuery<ProjectAndRoleIds[]>(['projects'], async () => {
         const res = await fetch(`/api/projects`)
         return res.json()
     })

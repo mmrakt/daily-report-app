@@ -6,14 +6,11 @@ const handler = async (
     res: NextApiResponse
 ): Promise<void> => {
     if (req.method === 'GET') {
-        const roleId = Number(req.query.roleId)
         const projects = await prisma.project.findMany({
-            where: {
+            include: {
                 roles: {
-                    every: {
-                        roleId: {
-                            equals: roleId,
-                        },
+                    select: {
+                        roleId: true,
                     },
                 },
             },

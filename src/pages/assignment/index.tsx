@@ -3,7 +3,7 @@ import React from 'react'
 import Layout from '../../components/layout/index'
 import { useFetchRoles } from '@/hooks/role/useFetchRoles'
 import LoadingSpinner from '../../components/common/LoadingSpinner'
-import Table from '../../components/assignment/Table'
+import TableContainer from '../../components/assignment/Table'
 
 const Assignment: React.VFC = () => {
     const [selectedRoleId, setSelectedRoleId] = React.useState<string>()
@@ -53,7 +53,7 @@ const Assignment: React.VFC = () => {
                 </div>
             </div>
             <div className="class">
-                {isDisplayed && <Table roleId={selectedRoleId} />}
+                {isDisplayed && <TableContainer roleId={selectedRoleId} />}
             </div>
         </Layout>
     )
