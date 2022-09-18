@@ -22,6 +22,8 @@ const modalStyle = {
         backgroundColor: 'rgba(0,0,0,0.5)',
     },
     content: {
+        maxWidth: '1000px',
+        // margin: ''
         position: 'absolute',
         top: '10rem',
         left: '20rem',
@@ -61,7 +63,7 @@ const Calendar: React.FC<{ submittedDates: CalenderProps }> = ({
     }, [])
 
     return (
-        <div className="calendarBox">
+        <div className="">
             <StyledCalendar
                 value={new Date()}
                 tileContent={TileContent}

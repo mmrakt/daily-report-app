@@ -7,7 +7,6 @@ import {
     TableBody,
     Table,
     Paper,
-    Button,
 } from '@material-ui/core'
 import Item from './Item'
 import { ToastContainer, toast } from 'react-toastify'
@@ -17,16 +16,11 @@ import { uuidv4 } from '@firebase/util'
 import { ITask } from '../../types/index'
 import { Project, Task, Category } from '@prisma/client'
 import { useCreateTasksByDate } from '@/hooks/task/useCreateTasksByDate'
-import CloseIcon from '../common/CloseIcon'
+import CloseIcon from '@/components/common/CloseIcon'
+import Button from '@/components/common/Button'
 
 const StyledTable = styled(Table)`
     minwidth: 650;
-`
-const StyledButtons = styled.div`
-    display: flex;
-`
-const StyledButton = styled(Button)`
-    justify-content: flex-end;
 `
 
 type IProps = {
@@ -133,7 +127,6 @@ const Form: React.FC<IProps> = ({
                     draggable: true,
                     progress: undefined,
                 })
-                //
                 setTimeout(() => {
                     onSubmit()
                 }, DISPLAY_NOTICE_MILLISECOUND)
@@ -161,26 +154,30 @@ const Form: React.FC<IProps> = ({
             delete returnTask.tempId
             returnTasks.push(returnTask)
         })
-        console.log(returnTasks)
         return returnTasks
     }
 
     return (
         <div className="">
             <ToastContainer />
-            <div className="flex">
+            <div className="">
+                <Button
+                    text="追加"
+                    color="tertiary"
+                    className=""
+                    onClickEvent={handleAddTask}
+                />
                 <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={handleAddTask}
+                    className="float-right"
+                    onClick={() => {
+                        onSubmit()
+                    }}
                 >
-                    追加
+                    <CloseIcon className="text-gray-500 hover:text-gray-400" />
                 </button>
-                <div className="float-right">
-                    <CloseIcon />
-                </div>
             </div>
             <TableContainer component={Paper}>
-                <StyledTable aria-label="simple table">
+                <StyledTable>
                     <TableHead>
                         <TableRow>
                             <TableCell align="center">時間(h)</TableCell>
@@ -214,27 +211,23 @@ const Form: React.FC<IProps> = ({
                     </TableBody>
                 </StyledTable>
             </TableContainer>
-            <StyledButtons>
-                <StyledButton
-                    variant="contained"
+            <div className="flex">
+                <Button
+                    text="一括削除"
                     color="secondary"
-                    disableElevation
-                    onClick={handleDeleteAllTasks}
-                    data-testid="delete-button"
-                >
-                    一括削除
-                </StyledButton>
+                    className=""
+                    onClickEvent={handleDeleteAllTasks}
+                />
                 <form onSubmit={handleSubmitTasks}>
-                    <StyledButton
-                        variant="contained"
+                    <Button
+                        text="提出"
                         color="primary"
-                        disableElevation
                         type="submit"
-                    >
-                        提出する
-                    </StyledButton>
+                        className=""
+                        onClickEvent={handleSubmitTasks}
+                    />
                 </form>
-            </StyledButtons>
+            </div>
         </div>
     )
 }
