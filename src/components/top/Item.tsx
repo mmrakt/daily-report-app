@@ -1,8 +1,8 @@
 import React from 'react'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Project, Category } from '@prisma/client'
-import { HOURS } from '../consts/index'
-import { ITask } from '../types/index'
+import { HOURS } from '../../consts/index'
+import { ITask } from '../../types/index'
 import {
     Checkbox,
     TextField,

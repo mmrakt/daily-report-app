@@ -1,8 +1,8 @@
 import React from 'react'
 import { cleanup } from '@testing-library/react'
-import DrawerItem from '../header/drawerItem'
-import Drawer from '../header/drawer'
-import MenuList from '../header/menuList'
+import DrawerItem from '../layout/header/drawerItem'
+import Drawer from '../layout/header/drawer'
+import MenuList from '../layout/header/menuList'
 import renderer from 'react-test-renderer'
 import MenuIcon from '@material-ui/icons/Menu'
 

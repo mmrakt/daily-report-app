@@ -1,5 +1,5 @@
 import React from 'react'
-import { formatDate } from '../../utils/date'
+import { formatDate } from '../../../utils/date'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
 import LibraryAddCheckIcon from '@material-ui/icons/LibraryAddCheck'
 import EqualizerIcon from '@material-ui/icons/Equalizer'

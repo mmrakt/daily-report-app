@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, cleanup, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import TaskItem from '../Item'
+import TaskItem from '../top/Item'
 import Submit from '../../pages/submit/[date]'
 import { withMockedRouter } from '../../utils/test/withMockedRouter'
 

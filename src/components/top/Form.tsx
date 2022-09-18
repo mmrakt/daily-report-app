@@ -9,7 +9,7 @@ import {
     Paper,
     Button,
 } from '@material-ui/core'
-import Item from '../Item'
+import Item from './Item'
 import { ToastContainer, toast } from 'react-toastify'
 import styled from 'styled-components'
 import { HOURS, DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'

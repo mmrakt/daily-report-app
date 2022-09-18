@@ -2,7 +2,7 @@ import React from 'react'
 import { MenuItem } from '@material-ui/core'
 import Link from 'next/link'
 import Image from 'next/image'
-import Modal from '../Modal'
+import Modal from '../../common/Modal'
 import { signIn, signOut, useSession } from 'next-auth/client'
 
 const MenuList = React.memo(() => {
