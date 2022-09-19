@@ -1,46 +1,25 @@
 import React from 'react'
-import { useFetchCategories } from '@/hooks/category/useFetchCategories'
-import { useFetchProjects } from '@/hooks/project/useFetchProjects'
-import { Category, Project } from '@prisma/client'
-import LoadingSpinner from '../common/LoadingSpinner'
+import { Project } from '@prisma/client'
 import { useState, useEffect } from 'react'
-import { CategoryAndRoleIds, ProjectAndRoleIds } from '../../types/index'
+import { ProjectAndRoleIds } from '../../types/index'
 import Button from '@/components/common/Button'
-import { useCreateCategoriesOnRoles } from '@/hooks/role/useCreateCategoriesOnRoles'
-import { CategoriesOnRoles } from '../../hooks/role/useCreateCategoriesOnRoles'
-import categories from '@/pages/api/categories'
 import { DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
+import { ProjectsOnRoles } from '../../hooks/role/useCreateProjectsOnRole'
 import { toast, ToastContainer } from 'react-toastify'
+import { useCreateProjectsOnRoles } from '@/hooks/role/useCreateProjectsOnRole'
 
-const TableContainer: React.FC<{ roleId: number }> = ({ roleId }) => {
-    const { data: categories, isLoading: isLoadingFetchCategories } =
-        useFetchCategories()
-    const { data: projects, isLoading: isLoadingFetchProjects } =
-        useFetchProjects()
-
-    if (isLoadingFetchCategories || isLoadingFetchProjects)
-        return <LoadingSpinner />
-
-    return <Table categories={categories} projects={projects} roleId={roleId} />
-}
-
-const Table: React.FC<{
-    categories: CategoryAndRoleIds[]
+const ProjectsContainer: React.FC<{
     projects: ProjectAndRoleIds[]
     roleId: number
-}> = ({ categories, projects, roleId }) => {
-    const [selectedCategories, setSelectedCategories] = useState<Category[]>()
+}> = ({ projects, roleId }) => {
     const [selectedProjects, setSelectedProjects] = useState<Project[]>()
-    const createCategoriesOnRoles = useCreateCategoriesOnRoles()
+    const createProjectsOnRoles = useCreateProjectsOnRoles()
 
     useEffect(() => {
-        setSelectedCategories(extractRegisterdByRoleId(categories))
         setSelectedProjects(extractRegisterdByRoleId(projects))
-    }, [categories, projects])
+    }, [projects])
 
-    const extractRegisterdByRoleId = (
-        targetArray: CategoryAndRoleIds[] | Project[]
-    ) => {
+    const extractRegisterdByRoleId = (targetArray: ProjectAndRoleIds[]) => {
         const result = []
         targetArray.forEach((target) => {
             target.roles.forEach((role) => {
@@ -54,22 +33,22 @@ const Table: React.FC<{
 
     const handleCheck = (targetId: number) => {
         if (existsById(targetId)) {
-            setSelectedCategories(
-                selectedCategories.filter(
-                    (selectedCategory) => selectedCategory.id !== targetId
+            setSelectedProjects(
+                selectedProjects.filter(
+                    (selectedProject) => selectedProject.id !== targetId
                 )
             )
         } else {
-            const checkedCategory = categories.find(
-                (category) => category.id === targetId
+            const checkedProjects = projects.find(
+                (project) => project.id === targetId
             )
-            setSelectedCategories([...selectedCategories, checkedCategory])
+            setSelectedProjects([...selectedProjects, checkedProjects])
         }
     }
 
     const existsById = (targetId: number) => {
-        return selectedCategories.findIndex(
-            (selectedCategory) => selectedCategory.id === targetId
+        return selectedProjects.findIndex(
+            (selectedProject) => selectedProject.id === targetId
         ) !== -1
             ? true
             : false
@@ -77,14 +56,14 @@ const Table: React.FC<{
 
     const handleSubmit = async () => {
         try {
-            const categoriesOnRoles: CategoriesOnRoles = []
-            selectedCategories.forEach((category) => {
-                categoriesOnRoles.push({
-                    categoryId: category.id,
+            const projectsOnRoles: ProjectsOnRoles = []
+            selectedProjects.forEach((project) => {
+                projectsOnRoles.push({
+                    projectId: project.id,
                     roleId: roleId,
                 })
             })
-            await createCategoriesOnRoles.mutate(categoriesOnRoles)
+            await createProjectsOnRoles.mutate(projectsOnRoles)
             await toast.success('更新完了', {
                 autoClose: DISPLAY_NOTICE_MILLISECOUND,
                 hideProgressBar: false,
@@ -106,25 +85,25 @@ const Table: React.FC<{
                     <h2 className="text-lg bold">カテゴリー</h2>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-3">
-                    {categories &&
-                        selectedCategories &&
-                        categories.map((category) => (
-                            <div key={category.id}>
+                    {projects &&
+                        selectedProjects &&
+                        projects.map((project) => (
+                            <div key={project.id}>
                                 <input
-                                    checked={existsById(category.id)}
+                                    checked={existsById(project.id)}
                                     onChange={(e) => {
                                         handleCheck(Number(e.target.value))
                                     }}
                                     id="checked-checkbox"
                                     type="checkbox"
-                                    value={category.id}
+                                    value={project.id}
                                     className="w-4 h-4 rounded border-gray-300 focus:ring-2"
                                 />
                                 <label
                                     htmlFor="checked-checkbox"
                                     className="ml-2 text-sm font-medium"
                                 >
-                                    {category.name}
+                                    {project.name}
                                 </label>
                             </div>
                         ))}
@@ -143,4 +122,4 @@ const Table: React.FC<{
     )
 }
 
-export default TableContainer
+export default ProjectsContainer

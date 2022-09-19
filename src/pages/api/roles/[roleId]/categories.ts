@@ -26,7 +26,6 @@ const handler = async (
         }
     } else if (req.method === 'POST') {
         const body = JSON.parse(req.body) as CategoriesOnRoles[]
-        console.log(body)
         const { roleId } = body['categoriesOnRoles'][0]
 
         try {
