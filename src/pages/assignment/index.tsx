@@ -52,8 +52,10 @@ const Assignment: React.VFC = () => {
                     />
                 </div>
             </div>
-            <div className="class">
-                {isDisplayed && <TableContainer roleId={selectedRoleId} />}
+            <div className="mt-5">
+                {isDisplayed && (
+                    <TableContainer roleId={Number(selectedRoleId)} />
+                )}
             </div>
         </Layout>
     )

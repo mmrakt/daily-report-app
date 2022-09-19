@@ -218,15 +218,15 @@ const Form: React.FC<IProps> = ({
                     className=""
                     onClickEvent={handleDeleteAllTasks}
                 />
-                <form onSubmit={handleSubmitTasks}>
-                    <Button
-                        text="提出"
-                        color="primary"
-                        type="submit"
-                        className=""
-                        onClickEvent={handleSubmitTasks}
-                    />
-                </form>
+                {/* <form onSubmit={handleSubmitTasks}> */}
+                <Button
+                    text="提出"
+                    color="primary"
+                    type="submit"
+                    className=""
+                    onClickEvent={handleSubmitTasks}
+                />
+                {/* </form> */}
             </div>
         </div>
     )
