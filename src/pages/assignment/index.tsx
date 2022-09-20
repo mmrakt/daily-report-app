@@ -3,7 +3,7 @@ import Layout from '../../components/layout/index'
 import SearchResultContainer from '../../components/assignment/SearchResultContainer'
 import SearchContainer from '@/components/assignment/SearchContainer'
 
-const Assignment: React.VFC = () => {
+const AssignmentPage: React.VFC = () => {
     const [selectedRoleId, setSelectedRoleId] = React.useState<string>()
     const [isDisplayed, setIsDisplayed] = React.useState<boolean>(false)
 
@@ -28,4 +28,4 @@ const Assignment: React.VFC = () => {
     )
 }
 
-export default Assignment
+export default AssignmentPage
