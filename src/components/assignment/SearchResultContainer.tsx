@@ -17,6 +17,7 @@ const SearchResultContainer: React.FC<{ roleId: number }> = ({ roleId }) => {
     return (
         <>
             <CategoriesContainer categories={categories} roleId={roleId} />
+            <div className="mt-5" />
             <ProjectsContainer projects={projects} roleId={roleId} />
         </>
     )

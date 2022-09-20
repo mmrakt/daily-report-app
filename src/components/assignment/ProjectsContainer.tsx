@@ -82,7 +82,7 @@ const ProjectsContainer: React.FC<{
             <ToastContainer />
             <div className="bg-gray-200 rounded p-5">
                 <div className="p-3">
-                    <h2 className="text-lg bold">カテゴリー</h2>
+                    <h2 className="text-lg bold">プロジェクト</h2>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-3">
                     {projects &&

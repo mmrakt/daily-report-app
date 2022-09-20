@@ -1,6 +1,6 @@
 import React from 'react'
 import { Category } from '@prisma/client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { CategoryAndRoleIds } from '../../types/index'
 import Button from '@/components/common/Button'
 import { useCreateCategoriesOnRoles } from '@/hooks/role/useCreateCategoriesOnRoles'
@@ -12,29 +12,34 @@ const CategoriesContainer: React.FC<{
     categories: CategoryAndRoleIds[]
     roleId: number
 }> = ({ categories, roleId }) => {
-    const [selectedCategories, setSelectedCategories] = useState<Category[]>()
+    const [selectCategories, setSelectCategories] = useState<Category[]>()
+    useState<Category[]>()
     const createCategoriesOnRoles = useCreateCategoriesOnRoles()
 
-    useEffect(() => {
-        setSelectedCategories(extractRegisterdByRoleId(categories))
-    }, [categories])
-
-    const extractRegisterdByRoleId = (targetArray: CategoryAndRoleIds[]) => {
-        const result = []
-        targetArray.forEach((target) => {
-            target.roles.forEach((role) => {
-                if (role.roleId === roleId) {
-                    result.push(target)
-                }
+    const extractRegisterdByRoleId = useCallback(
+        (targetArray: CategoryAndRoleIds[]) => {
+            const result = []
+            targetArray.forEach((target) => {
+                target.roles.forEach((role) => {
+                    if (role.roleId === roleId) {
+                        result.push(target)
+                    }
+                })
             })
-        })
-        return result
-    }
+            return result
+        },
+        [roleId]
+    )
+
+    useEffect(() => {
+        const extractedCategories = extractRegisterdByRoleId(categories)
+        setSelectCategories(extractedCategories)
+    }, [categories, extractRegisterdByRoleId])
 
     const handleCheck = (targetId: number) => {
         if (existsById(targetId)) {
-            setSelectedCategories(
-                selectedCategories.filter(
+            setSelectCategories(
+                selectCategories.filter(
                     (selectedCategory) => selectedCategory.id !== targetId
                 )
             )
@@ -42,12 +47,12 @@ const CategoriesContainer: React.FC<{
             const checkedCategory = categories.find(
                 (category) => category.id === targetId
             )
-            setSelectedCategories([...selectedCategories, checkedCategory])
+            setSelectCategories([...selectCategories, checkedCategory])
         }
     }
 
     const existsById = (targetId: number) => {
-        return selectedCategories.findIndex(
+        return selectCategories.findIndex(
             (selectedCategory) => selectedCategory.id === targetId
         ) !== -1
             ? true
@@ -56,14 +61,7 @@ const CategoriesContainer: React.FC<{
 
     const handleSubmit = async () => {
         try {
-            const categoriesOnRoles: CategoriesOnRoles = []
-            selectedCategories.forEach((category) => {
-                categoriesOnRoles.push({
-                    categoryId: category.id,
-                    roleId: roleId,
-                })
-            })
-            await createCategoriesOnRoles.mutate(categoriesOnRoles)
+            await createCategoriesOnRoles.mutate(createCategoiresOnRoles())
             await toast.success('更新完了', {
                 autoClose: DISPLAY_NOTICE_MILLISECOUND,
                 hideProgressBar: false,
@@ -77,6 +75,17 @@ const CategoriesContainer: React.FC<{
         }
     }
 
+    const createCategoiresOnRoles = () => {
+        const categoriesOnRoles: CategoriesOnRoles = []
+        selectCategories.forEach((category) => {
+            categoriesOnRoles.push({
+                categoryId: category.id,
+                roleId: roleId,
+            })
+        })
+        return categoriesOnRoles
+    }
+
     return (
         <>
             <ToastContainer />
@@ -86,7 +95,7 @@ const CategoriesContainer: React.FC<{
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-3">
                     {categories &&
-                        selectedCategories &&
+                        selectCategories &&
                         categories.map((category) => (
                             <div key={category.id}>
                                 <input
