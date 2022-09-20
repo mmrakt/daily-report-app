@@ -13,6 +13,7 @@ type IProps = {
     ) => Promise<void> | void
     className?: string
     disabled?: boolean
+    ref?: React.MutableRefObject<HTMLButtonElement>
 }
 const Button = (props: IProps): React.ReactElement => {
     let colorStyle = ''
@@ -29,10 +30,11 @@ const Button = (props: IProps): React.ReactElement => {
     }
     return (
         <button
-            className={`${props.className} ${colorStyle} focus:ring-2 text-white font-bold py-2 px-4 my-2 rounded`}
+            className={`${props.className} ${colorStyle} disabled:bg-gray-400 disabled:hover:bg-gray-400 focus:ring-2 text-white font-bold py-2 px-4 my-2 rounded`}
             onClick={props.onClickEvent}
             type={props.type}
             disabled={props.disabled ? true : false}
+            ref={props.ref}
         >
             {props.text}
         </button>

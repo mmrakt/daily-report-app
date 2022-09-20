@@ -1,5 +1,5 @@
 import Button from '@/components/common/Button'
-import React from 'react'
+import React, { useState } from 'react'
 import { useFetchRoles } from '@/hooks/role/useFetchRoles'
 import LoadingSpinner from '../../components/common/LoadingSpinner'
 
@@ -9,6 +9,7 @@ type IProps = {
 }
 const SearchContainer: React.FC<IProps> = ({ onChange, onDisplay }) => {
     const { data: roles, isLoading } = useFetchRoles()
+    const [isChangedOption, setIsChangedOption] = useState<boolean>(false)
 
     if (isLoading) return <LoadingSpinner />
 
@@ -23,11 +24,14 @@ const SearchContainer: React.FC<IProps> = ({ onChange, onDisplay }) => {
             <select
                 id="countries"
                 onChange={(e) => {
+                    setIsChangedOption(true)
                     onChange(e.target.value)
                 }}
-                className="border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             >
-                <option selected>ロールを選択してください</option>
+                <option selected disabled>
+                    ロールを選択してください
+                </option>
                 {roles &&
                     roles.map((role) => (
                         <option key={role.id} value={role.id}>
@@ -41,6 +45,7 @@ const SearchContainer: React.FC<IProps> = ({ onChange, onDisplay }) => {
                     color="primary"
                     className="ml-auto"
                     onClickEvent={onDisplay}
+                    disabled={!isChangedOption ? true : false}
                 />
             </div>
         </div>

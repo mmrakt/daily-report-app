@@ -20,11 +20,10 @@ const Assignment: React.VFC = () => {
                 onChange={handleChange}
                 onDisplay={handleDisplay}
             />
-            <div className="mt-5">
-                {isDisplayed && (
-                    <SearchResultContainer roleId={Number(selectedRoleId)} />
-                )}
-            </div>
+            <div className="mt-5" />
+            {isDisplayed && (
+                <SearchResultContainer roleId={Number(selectedRoleId)} />
+            )}
         </Layout>
     )
 }
