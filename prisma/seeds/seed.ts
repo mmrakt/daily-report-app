@@ -22,6 +22,7 @@ const seed = async (): Promise<void> => {
 const roles = async () => {
     await prisma.role.create({ data: { name: 'admin' } })
     await prisma.role.create({ data: { name: 'user' } })
+    await prisma.role.create({ data: { name: 'owner' } })
 }
 
 const users = async () => {
@@ -29,10 +30,10 @@ const users = async () => {
         data: Array(5)
             .fill(0)
             .map((v, i) => ({
-                customId: 'admin_id_00' + i.toString(),
-                name: 'admin_00' + i.toString(),
-                email: 'admin_email' + i.toString() + '@gmail.com',
-                roleId: 1,
+                customId: 'owner_id_00' + i.toString(),
+                name: 'owner_00' + i.toString(),
+                email: 'owner_email' + i.toString() + '@gmail.com',
+                roleId: 3,
             })),
     })
     await prisma.user.createMany({
@@ -71,23 +72,23 @@ const projectsOnRoles = async () => {
     await prisma.projectsOnRoles.createMany({
         data: [
             {
-                roleId: 1,
+                roleId: 3,
                 projectId: 1,
             },
             {
-                roleId: 1,
+                roleId: 3,
                 projectId: 2,
             },
             {
-                roleId: 1,
+                roleId: 3,
                 projectId: 3,
             },
             {
-                roleId: 1,
+                roleId: 3,
                 projectId: 4,
             },
             {
-                roleId: 1,
+                roleId: 3,
                 projectId: 5,
             },
         ],
@@ -123,23 +124,23 @@ const categoriesOnRoles = async () => {
     await prisma.categoriesOnRoles.createMany({
         data: [
             {
-                roleId: 1,
+                roleId: 3,
                 categoryId: 1,
             },
             {
-                roleId: 1,
+                roleId: 3,
                 categoryId: 2,
             },
             {
-                roleId: 1,
+                roleId: 3,
                 categoryId: 3,
             },
             {
-                roleId: 1,
+                roleId: 3,
                 categoryId: 4,
             },
             {
-                roleId: 1,
+                roleId: 3,
                 categoryId: 5,
             },
         ],

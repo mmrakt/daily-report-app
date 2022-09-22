@@ -18,3 +18,8 @@ export type RoleIds = {
 
 export type CategoryAndRoleIds = Category & RoleIds
 export type ProjectAndRoleIds = Project & RoleIds
+
+export type Classification = {
+    id: number
+    name: string
+}
