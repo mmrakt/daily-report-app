@@ -10,16 +10,25 @@ import { Classification } from '../../types/index'
 import { uuidv4 } from '@firebase/util'
 import MinusCircle from '../common/MinusCircle'
 
+type FormData = {
+    checkbox: {
+        id: Record<string | number, string>
+    }
+    text: {
+        id: Record<string | number, string>
+    }
+}
 const Content: React.FC<{
     classifications: Role[] | Category[] | Project[]
     label: string
-    mutation: UseMutationResult<
+    updateMutation: UseMutationResult<
         Response,
         unknown,
         Role[] | Classification[],
         unknown
     >
-}> = ({ classifications, label, mutation }) => {
+    deleteMutation: UseMutationResult<Response, unknown, number[], unknown>
+}> = ({ classifications, label, updateMutation, deleteMutation }) => {
     const { register, unregister, handleSubmit, formState, setValue } = useForm(
         {
             criteriaMode: 'all',
@@ -29,13 +38,14 @@ const Content: React.FC<{
     const [editClassifications, setEditClassifications] = useState<
         { id: string; name: string }[]
     >([])
-    const CLASSIFICATION_ID_PREFIX = 'classifications.id'
+    const TEXT_FORM_REGISTER_PREVIX = 'classifications.text.id.'
+    const CHECKBOX_REGISTER_PREVIX = 'classifications.checkbox.id.'
 
     useEffect(() => {
         if (classifications.length) {
             classifications.forEach((classification) => {
                 setValue(
-                    CLASSIFICATION_ID_PREFIX + classification.id,
+                    TEXT_FORM_REGISTER_PREVIX + classification.id,
                     classification.name
                 )
             })
@@ -43,9 +53,8 @@ const Content: React.FC<{
         // NOTE: mutate実行後のクリーンアップ
         if (editClassifications.length) {
             editClassifications.forEach((classification) => {
-                unregister(CLASSIFICATION_ID_PREFIX + classification.id)
+                unregister(TEXT_FORM_REGISTER_PREVIX + classification.id)
             })
-            console.log('effect')
             setEditClassifications([])
         }
     }, [classifications])
@@ -59,7 +68,7 @@ const Content: React.FC<{
                 name: '',
             },
         ])
-        setValue(CLASSIFICATION_ID_PREFIX + uuid, '')
+        setValue(TEXT_FORM_REGISTER_PREVIX + uuid, '')
     }
 
     const handleRemove = (id: string) => {
@@ -67,15 +76,15 @@ const Content: React.FC<{
             (classification) => classification.id !== id
         )
         setEditClassifications(filteredClassifications)
-        unregister(CLASSIFICATION_ID_PREFIX + id)
+        unregister(TEXT_FORM_REGISTER_PREVIX + id)
     }
 
     const onSubmit: SubmitHandler<{
-        classifications: Record<string, string>
+        classifications: FormData
     }> = async ({ classifications }) => {
-        const mutateParam = createMutateParam(classifications)
+        const mutateParam = createUpdateMutateParam(classifications.text.id)
         try {
-            await mutation.mutate(mutateParam)
+            await updateMutation.mutate(mutateParam)
             await toast.success('更新完了', {
                 autoClose: DISPLAY_NOTICE_MILLISECOUND,
                 hideProgressBar: false,
@@ -89,12 +98,41 @@ const Content: React.FC<{
         }
     }
 
-    const createMutateParam = (values: Record<string, string>) => {
+    const handleDeleteByChecked: SubmitHandler<{
+        classifications: FormData
+    }> = async ({ classifications }) => {
+        try {
+            await deleteMutation.mutate(
+                createDeleteMutateParam(classifications.checkbox.id)
+            )
+            await toast.success('削除完了', {
+                autoClose: DISPLAY_NOTICE_MILLISECOUND,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            })
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const createDeleteMutateParam = (values: FormData['checkbox']['id']) => {
+        const param: number[] = []
+        for (const [index, value] of Object.entries(values)) {
+            if (value) {
+                param.push(Number(index))
+            }
+        }
+        return param
+    }
+
+    const createUpdateMutateParam = (values: FormData['text']['id']) => {
         const param: Classification[] = []
         for (const [index, value] of Object.entries(values)) {
-            const formattedId = Number(index.slice(2))
             param.push({
-                id: formattedId ? formattedId : 0,
+                id: Number(index) ? Number(index) : 0,
                 name: value,
             })
         }
@@ -108,10 +146,17 @@ const Content: React.FC<{
                 <div className="flex ">
                     <h2 className="text-lg bold">{label}</h2>
                     <Button
-                        text="追加"
-                        type="button"
+                        text={`チェック済みの${label}を全削除`}
+                        type="submit"
                         color="secondary"
                         className="ml-auto"
+                        onClickEvent={handleSubmit(handleDeleteByChecked)}
+                    />
+                    <Button
+                        text="追加"
+                        type="button"
+                        color="tertiary"
+                        className="ml-3"
                         onClickEvent={handleAdd}
                     />
                 </div>
@@ -125,12 +170,19 @@ const Content: React.FC<{
                                         className="mt-3"
                                     >
                                         <input
-                                            type="text"
+                                            type="checkbox"
                                             {...register(
-                                                CLASSIFICATION_ID_PREFIX +
+                                                CHECKBOX_REGISTER_PREVIX +
                                                     classification.id
                                             )}
-                                            className="rounded w-4/5"
+                                        />
+                                        <input
+                                            type="text"
+                                            {...register(
+                                                TEXT_FORM_REGISTER_PREVIX +
+                                                    classification.id
+                                            )}
+                                            className="rounded w-4/5 ml-3"
                                         />
                                     </li>
                                 ))}
@@ -143,7 +195,7 @@ const Content: React.FC<{
                                         <input
                                             type="text"
                                             {...register(
-                                                CLASSIFICATION_ID_PREFIX +
+                                                TEXT_FORM_REGISTER_PREVIX +
                                                     classification.id
                                             )}
                                             className="rounded w-4/5"

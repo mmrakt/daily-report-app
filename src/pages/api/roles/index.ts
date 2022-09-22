@@ -35,6 +35,39 @@ const handler = async (
             console.error(error)
             res.status(500).end()
         }
+    } else if (req.method === 'DELETE') {
+        const body = JSON.parse(req.body) as Role[]
+        const ids = body['ids']
+        try {
+            await prisma.$transaction([
+                prisma.projectsOnRoles.deleteMany({
+                    where: {
+                        roleId: {
+                            in: ids,
+                        },
+                    },
+                }),
+                prisma.categoriesOnRoles.deleteMany({
+                    where: {
+                        roleId: {
+                            in: ids,
+                        },
+                    },
+                }),
+                prisma.role.deleteMany({
+                    where: {
+                        id: {
+                            in: ids,
+                        },
+                    },
+                }),
+            ])
+
+            res.status(200).end()
+        } catch (error) {
+            console.error(error)
+            res.status(500).end()
+        }
     } else {
         res.status(405).end()
     }

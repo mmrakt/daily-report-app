@@ -7,10 +7,14 @@ import Content from './Content'
 import useUpdateRoles from '@/hooks/role/useUpdateRoles'
 import useUpdateProjects from '../../hooks/project/useUpdateProjects'
 import useUpdateCategories from '../../hooks/category/useUpdateCategories'
+import useDeleteProjects from '../../hooks/project/useDeleteProjects'
+import useDeleteCategories from '../../hooks/category/useDeleteCategories'
+import useDeleteRoles from '../../hooks/role/useDeleteRoles'
 
 const ProjectsBlock: React.VFC = () => {
     const { data: projects, isLoading } = useFetchProjects()
     const updateProjectsMutation = useUpdateProjects()
+    const deleteProjectsMutation = useDeleteProjects()
 
     if (isLoading) return <LoadingSpinner />
     return (
@@ -18,7 +22,8 @@ const ProjectsBlock: React.VFC = () => {
             <Content
                 classifications={projects}
                 label="プロジェクト"
-                mutation={updateProjectsMutation}
+                updateMutation={updateProjectsMutation}
+                deleteMutation={deleteProjectsMutation}
             />
         </>
     )
@@ -27,6 +32,7 @@ const ProjectsBlock: React.VFC = () => {
 const CategoriesBlock: React.VFC = () => {
     const { data: categories, isLoading } = useFetchCategories()
     const updateCategoriesMutation = useUpdateCategories()
+    const deleteCategoriesMutation = useDeleteCategories()
     if (isLoading) return <LoadingSpinner />
 
     return (
@@ -34,7 +40,8 @@ const CategoriesBlock: React.VFC = () => {
             <Content
                 classifications={categories}
                 label="カテゴリー"
-                mutation={updateCategoriesMutation}
+                updateMutation={updateCategoriesMutation}
+                deleteMutation={deleteCategoriesMutation}
             />
         </>
     )
@@ -43,6 +50,7 @@ const CategoriesBlock: React.VFC = () => {
 const RolesBlock: React.VFC = () => {
     const { data: roles, isLoading } = useFetchRoles()
     const updateRolesMutation = useUpdateRoles()
+    const deleteRolesMutation = useDeleteRoles()
 
     if (isLoading) return <LoadingSpinner />
 
@@ -51,7 +59,8 @@ const RolesBlock: React.VFC = () => {
             <Content
                 classifications={roles}
                 label="ロール"
-                mutation={updateRolesMutation}
+                updateMutation={updateRolesMutation}
+                deleteMutation={deleteRolesMutation}
             />
         </>
     )
