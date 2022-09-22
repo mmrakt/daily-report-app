@@ -14,7 +14,7 @@ const useUpdateRoles = () => {
             }),
         {
             onSuccess: (data, variables) => {
-                queryClient.resetQueries(['roles'])
+                queryClient.invalidateQueries(['roles'])
             },
         }
     )

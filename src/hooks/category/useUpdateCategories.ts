@@ -14,7 +14,7 @@ const useUpdateCategories = () => {
             }),
         {
             onSuccess: (data, variables) => {
-                queryClient.resetQueries(['categories'])
+                queryClient.invalidateQueries(['categories'])
             },
         }
     )

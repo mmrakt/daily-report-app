@@ -14,7 +14,7 @@ const useUpdateProjects = () => {
             }),
         {
             onSuccess: (data, variables) => {
-                queryClient.resetQueries(['projects'])
+                queryClient.invalidateQueries(['projects'])
             },
         }
     )
