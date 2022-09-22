@@ -3,10 +3,12 @@ import { Role, Category, Project } from '@prisma/client'
 import { ToastContainer, toast } from 'react-toastify'
 import Button from '@/components/common/Button'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { UseMutationResult } from 'react-query'
 import { DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
 import { Classification } from '../../types/index'
+import { uuidv4 } from '@firebase/util'
+import MinusCircle from '../common/MinusCircle'
 
 const Content: React.FC<{
     classifications: Role[] | Category[] | Project[]
@@ -22,6 +24,9 @@ const Content: React.FC<{
         criteriaMode: 'all',
         mode: 'onChange',
     })
+    const [editClassifications, setEditClassifications] = useState<
+        { id: string; name: string }[]
+    >([])
 
     useEffect(() => {
         if (classifications.length) {
@@ -33,6 +38,25 @@ const Content: React.FC<{
             })
         }
     }, [classifications])
+
+    const handleAdd = () => {
+        const uuid = uuidv4()
+        setEditClassifications([
+            ...editClassifications,
+            {
+                id: uuid,
+                name: '',
+            },
+        ])
+        setValue('classificatin.id' + uuid, '')
+    }
+
+    const handleRemove = (id: string) => {
+        const filteredClassifications = editClassifications.filter(
+            (classification) => classification.id !== id
+        )
+        setEditClassifications(filteredClassifications)
+    }
 
     const onSubmit: SubmitHandler<{
         classifications: Record<string, string>
@@ -68,30 +92,60 @@ const Content: React.FC<{
         <>
             <ToastContainer />
             <div className="bg-gray-200 rounded p-5">
-                <div className="p-3">
+                <div className="flex ">
                     <h2 className="text-lg bold">{label}</h2>
+                    <Button
+                        text="追加"
+                        type="button"
+                        color="secondary"
+                        className="ml-auto"
+                        onClickEvent={handleAdd}
+                    />
                 </div>
                 <div className="class">
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="grid grid-cols-2 gap-4">
+                        <ul className="">
                             {classifications &&
                                 classifications.map((classification) => (
-                                    // <div
-                                    //     className="grid grid-cols-2 gap-4"
-                                    //     key={classification.id}
-                                    // >
-                                    <input
-                                        type="text"
+                                    <li
                                         key={classification.id}
-                                        // name={`classification${classification.id}`}
-                                        {...register(
-                                            `classifications.id${classification.id}`
-                                        )}
-                                        className="rounded"
-                                    />
-                                    // </div>
+                                        className="mt-3"
+                                    >
+                                        <input
+                                            type="text"
+                                            // key={classification.id}
+                                            {...register(
+                                                `classifications.id${classification.id}`
+                                            )}
+                                            className="rounded w-4/5"
+                                        />
+                                    </li>
                                 ))}
-                        </div>
+                            {editClassifications &&
+                                editClassifications.map((classification) => (
+                                    <li
+                                        key={classification.id}
+                                        className="mt-3 flex items-center"
+                                    >
+                                        <input
+                                            type="text"
+                                            // key={classification.id}
+                                            {...register(
+                                                `classifications.id${classification.id}`
+                                            )}
+                                            className="rounded w-4/5"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                handleRemove(classification.id)
+                                            }}
+                                        >
+                                            <MinusCircle className="text-red-500" />
+                                        </button>
+                                    </li>
+                                ))}
+                        </ul>
                         <div className="flex mt-3">
                             <Button
                                 text="全件更新"
