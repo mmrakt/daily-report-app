@@ -20,22 +20,33 @@ const Content: React.FC<{
         unknown
     >
 }> = ({ classifications, label, mutation }) => {
-    const { register, handleSubmit, formState, setValue } = useForm({
-        criteriaMode: 'all',
-        mode: 'onChange',
-    })
+    const { register, unregister, handleSubmit, formState, setValue } = useForm(
+        {
+            criteriaMode: 'all',
+            mode: 'onChange',
+        }
+    )
     const [editClassifications, setEditClassifications] = useState<
         { id: string; name: string }[]
     >([])
+    const CLASSIFICATION_ID_PREFIX = 'classifications.id'
 
     useEffect(() => {
         if (classifications.length) {
             classifications.forEach((classification) => {
                 setValue(
-                    `classifications.id${classification.id}`,
+                    CLASSIFICATION_ID_PREFIX + classification.id,
                     classification.name
                 )
             })
+        }
+        // NOTE: mutate実行後のクリーンアップ
+        if (editClassifications.length) {
+            editClassifications.forEach((classification) => {
+                unregister(CLASSIFICATION_ID_PREFIX + classification.id)
+            })
+            console.log('effect')
+            setEditClassifications([])
         }
     }, [classifications])
 
@@ -48,7 +59,7 @@ const Content: React.FC<{
                 name: '',
             },
         ])
-        setValue('classificatin.id' + uuid, '')
+        setValue(CLASSIFICATION_ID_PREFIX + uuid, '')
     }
 
     const handleRemove = (id: string) => {
@@ -56,6 +67,7 @@ const Content: React.FC<{
             (classification) => classification.id !== id
         )
         setEditClassifications(filteredClassifications)
+        unregister(CLASSIFICATION_ID_PREFIX + id)
     }
 
     const onSubmit: SubmitHandler<{
@@ -80,8 +92,9 @@ const Content: React.FC<{
     const createMutateParam = (values: Record<string, string>) => {
         const param: Classification[] = []
         for (const [index, value] of Object.entries(values)) {
+            const formattedId = Number(index.slice(2))
             param.push({
-                id: Number(index.slice(2)),
+                id: formattedId ? formattedId : 0,
                 name: value,
             })
         }
@@ -113,9 +126,9 @@ const Content: React.FC<{
                                     >
                                         <input
                                             type="text"
-                                            // key={classification.id}
                                             {...register(
-                                                `classifications.id${classification.id}`
+                                                CLASSIFICATION_ID_PREFIX +
+                                                    classification.id
                                             )}
                                             className="rounded w-4/5"
                                         />
@@ -129,9 +142,9 @@ const Content: React.FC<{
                                     >
                                         <input
                                             type="text"
-                                            // key={classification.id}
                                             {...register(
-                                                `classifications.id${classification.id}`
+                                                CLASSIFICATION_ID_PREFIX +
+                                                    classification.id
                                             )}
                                             className="rounded w-4/5"
                                         />
