@@ -73,6 +73,7 @@ model Role {
   createdAt  DateTime            @default(now())
   updatedAt  DateTime            @updatedAt
   name       String
+  status     Status              @default(enable)
   users      User[]
   categories CategoriesOnRoles[]
   projects   ProjectsOnRoles[]
@@ -100,6 +101,7 @@ model Category {
   createdAt DateTime            @default(now())
   updatedAt DateTime            @updatedAt
   name      String
+  status    Status              @default(enable)
   tasks     Task[]
   roles     CategoriesOnRoles[]
 }
@@ -109,6 +111,7 @@ model Project {
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
   name      String
+  status    Status            @default(enable)
   tasks     Task[]
   roles     ProjectsOnRoles[]
 }
@@ -133,4 +136,9 @@ model ProjectsOnRoles {
   updatedAt DateTime @updatedAt
 
   @@id([projectId, roleId])
+}
+
+enum Status {
+  enable
+  disable
 }

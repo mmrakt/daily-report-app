@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from 'react-query'
 
-const useDeleteCategories = () => {
+const useDisableCategories = () => {
     const queryClient = useQueryClient()
     return useMutation(
         (ids: number[]) =>
             fetch('/api/categories', {
-                method: 'DELETE',
+                method: 'PATCH',
                 body: JSON.stringify({
                     ids,
                 }),
@@ -18,4 +18,4 @@ const useDeleteCategories = () => {
     )
 }
 
-export default useDeleteCategories
+export default useDisableCategories

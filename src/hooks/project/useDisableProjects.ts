@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from 'react-query'
 
-const useDeleteProjects = () => {
+const useDisableProjects = () => {
     const queryClient = useQueryClient()
     return useMutation(
         (ids: number[]) =>
             fetch('/api/projects', {
-                method: 'DELETE',
+                method: 'PATCH',
                 body: JSON.stringify({
                     ids,
                 }),
@@ -18,4 +18,4 @@ const useDeleteProjects = () => {
     )
 }
 
-export default useDeleteProjects
+export default useDisableProjects

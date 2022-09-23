@@ -7,14 +7,14 @@ import Content from './Content'
 import useUpdateRoles from '@/hooks/role/useUpdateRoles'
 import useUpdateProjects from '../../hooks/project/useUpdateProjects'
 import useUpdateCategories from '../../hooks/category/useUpdateCategories'
-import useDeleteProjects from '../../hooks/project/useDeleteProjects'
-import useDeleteCategories from '../../hooks/category/useDeleteCategories'
 import useDeleteRoles from '../../hooks/role/useDeleteRoles'
+import useDisableProjects from '../../hooks/project/useDisableProjects'
+import useDisableCategories from '../../hooks/category/useDisableCategories'
 
 const ProjectsBlock: React.VFC = () => {
     const { data: projects, isLoading } = useFetchProjects()
     const updateProjectsMutation = useUpdateProjects()
-    const deleteProjectsMutation = useDeleteProjects()
+    const disableProjectsMutation = useDisableProjects()
 
     if (isLoading) return <LoadingSpinner />
     return (
@@ -23,7 +23,7 @@ const ProjectsBlock: React.VFC = () => {
                 classifications={projects}
                 label="プロジェクト"
                 updateMutation={updateProjectsMutation}
-                deleteMutation={deleteProjectsMutation}
+                disableMutation={disableProjectsMutation}
             />
         </>
     )
@@ -32,7 +32,7 @@ const ProjectsBlock: React.VFC = () => {
 const CategoriesBlock: React.VFC = () => {
     const { data: categories, isLoading } = useFetchCategories()
     const updateCategoriesMutation = useUpdateCategories()
-    const deleteCategoriesMutation = useDeleteCategories()
+    const disableCategoriesMutation = useDisableCategories()
     if (isLoading) return <LoadingSpinner />
 
     return (
@@ -41,7 +41,7 @@ const CategoriesBlock: React.VFC = () => {
                 classifications={categories}
                 label="カテゴリー"
                 updateMutation={updateCategoriesMutation}
-                deleteMutation={deleteCategoriesMutation}
+                disableMutation={disableCategoriesMutation}
             />
         </>
     )

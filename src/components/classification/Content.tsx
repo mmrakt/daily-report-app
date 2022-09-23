@@ -21,13 +21,14 @@ type FormData = {
 const Content: React.FC<{
     classifications: Role[] | Category[] | Project[]
     label: string
-    updateMutation: UseMutationResult<
+    updateMutation?: UseMutationResult<
         Response,
         unknown,
         Role[] | Classification[],
         unknown
     >
-    deleteMutation: UseMutationResult<Response, unknown, number[], unknown>
+    deleteMutation?: UseMutationResult<Response, unknown, number[], unknown>
+    disableMutation?: UseMutationResult<Response, unknown, number[], unknown>
 }> = ({ classifications, label, updateMutation, deleteMutation }) => {
     const { register, unregister, handleSubmit, formState, setValue } = useForm(
         {

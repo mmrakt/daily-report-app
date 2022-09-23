@@ -44,6 +44,25 @@ const handler = async (
             console.error(error)
             res.status(500).end()
         }
+    } else if (req.method === 'PATCH') {
+        const body = JSON.parse(req.body) as Category[]
+        const ids = body['ids']
+        try {
+            await prisma.category.updateMany({
+                where: {
+                    id: {
+                        in: ids,
+                    },
+                },
+                data: {
+                    status: 'disable',
+                },
+            }),
+                res.status(200).end()
+        } catch (error) {
+            console.error(error)
+            res.status(500).end()
+        }
     } else {
         res.status(405).end()
     }
