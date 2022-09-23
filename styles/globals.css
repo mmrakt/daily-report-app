@@ -1,3 +1,9 @@
 @tailwind base;
-@tailwind feComponentTransfer;
+@tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .grid-template-classification-setting-form {
+        grid-template-columns: 0.5fr 10fr;
+    }
+}

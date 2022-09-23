@@ -162,58 +162,62 @@ const Content: React.FC<{
                 </div>
                 <div className="class">
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <ul className="">
-                            {classifications &&
-                                classifications.map((classification) => (
-                                    <li
-                                        key={classification.id}
-                                        className="mt-3"
-                                    >
+                        {/* <div className="grid grid-cols-2 gap-4"> */}
+                        {classifications &&
+                            classifications.map((classification) => (
+                                <div
+                                    key={classification.id}
+                                    className="grid grid-template-classification-setting-form mt-3 gap-3"
+                                >
+                                    <div className="flex justify-center items-center">
                                         <input
                                             type="checkbox"
                                             {...register(
                                                 CHECKBOX_REGISTER_PREVIX +
                                                     classification.id
                                             )}
+                                            className="rounded"
                                         />
-                                        <input
-                                            type="text"
-                                            {...register(
-                                                TEXT_FORM_REGISTER_PREVIX +
-                                                    classification.id
-                                            )}
-                                            className="rounded w-4/5 ml-3"
-                                        />
-                                    </li>
-                                ))}
-                            {editClassifications &&
-                                editClassifications.map((classification) => (
-                                    <li
-                                        key={classification.id}
-                                        className="mt-3 flex items-center"
+                                    </div>
+                                    <input
+                                        type="text"
+                                        {...register(
+                                            TEXT_FORM_REGISTER_PREVIX +
+                                                classification.id
+                                        )}
+                                        className="rounded w-4/5"
+                                    />
+                                </div>
+                            ))}
+                        {editClassifications &&
+                            editClassifications.map((classification) => (
+                                <div
+                                    key={classification.id}
+                                    className="grid grid-template-classification-setting-form mt-3 gap-3"
+                                >
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            handleRemove(classification.id)
+                                        }}
+                                        className="flex justify-center items-center"
                                     >
-                                        <input
-                                            type="text"
-                                            {...register(
-                                                TEXT_FORM_REGISTER_PREVIX +
-                                                    classification.id
-                                            )}
-                                            className="rounded w-4/5"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                handleRemove(classification.id)
-                                            }}
-                                        >
-                                            <MinusCircle className="text-red-500" />
-                                        </button>
-                                    </li>
-                                ))}
-                        </ul>
+                                        <MinusCircle className="text-red-500" />
+                                    </button>
+                                    <input
+                                        type="text"
+                                        {...register(
+                                            TEXT_FORM_REGISTER_PREVIX +
+                                                classification.id
+                                        )}
+                                        className="rounded w-4/5"
+                                    />
+                                </div>
+                            ))}
+                        {/* </div> */}
                         <div className="flex mt-3">
                             <Button
-                                text="全件更新"
+                                text="一括登録"
                                 type="submit"
                                 color="primary"
                                 className="ml-auto"
