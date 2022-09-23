@@ -29,17 +29,25 @@ const Content: React.FC<{
     >
     disableMutation?: UseMutationResult<Response, unknown, number[], unknown>
 }> = ({ classifications, label, updateMutation, disableMutation }) => {
-    const { register, unregister, handleSubmit, formState, setValue } = useForm(
-        {
-            criteriaMode: 'all',
-            mode: 'onChange',
-        }
-    )
+    const {
+        register,
+        unregister,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+    } = useForm({
+        criteriaMode: 'all',
+        mode: 'onChange',
+    })
     const [editClassifications, setEditClassifications] = useState<
         { id: string; name: string }[]
     >([])
     const TEXT_FORM_REGISTER_PREVIX = 'classifications.text.id.'
     const CHECKBOX_REGISTER_PREVIX = 'classifications.checkbox.id.'
+    const validationRules = {
+        required: true,
+        maxLength: 30,
+    }
 
     useEffect(() => {
         if (classifications.length) {
@@ -105,7 +113,7 @@ const Content: React.FC<{
             await disableMutation.mutate(
                 createDeleteMutateParam(classifications.checkbox.id)
             )
-            await toast.success('削除完了', {
+            toast.success('アーカイブ完了', {
                 autoClose: DISPLAY_NOTICE_MILLISECOUND,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -115,6 +123,14 @@ const Content: React.FC<{
             })
         } catch (error) {
             console.error(error)
+            toast.success('アーカイブに失敗しました', {
+                autoClose: DISPLAY_NOTICE_MILLISECOUND,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            })
         }
     }
 
@@ -139,6 +155,8 @@ const Content: React.FC<{
         return param
     }
 
+    // console.log(errors.classifications?.text.id[1])
+
     return (
         <>
             <ToastContainer />
@@ -162,38 +180,53 @@ const Content: React.FC<{
                 </div>
                 <div className="class">
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        {/* <div className="grid grid-cols-2 gap-4"> */}
                         {classifications &&
                             classifications.map((classification) => (
-                                <div
-                                    key={classification.id}
-                                    className="grid grid-template-classification-setting-form mt-3 gap-3"
-                                >
-                                    <div className="flex justify-center items-center">
+                                <>
+                                    <div
+                                        key={classification.id}
+                                        className="grid grid-template-classification-setting-form mt-3 gap-3 justify-start items-center"
+                                    >
+                                        <div className="flex justify-center items-center">
+                                            <input
+                                                type="checkbox"
+                                                {...register(
+                                                    CHECKBOX_REGISTER_PREVIX +
+                                                        classification.id
+                                                )}
+                                                className="rounded"
+                                            />
+                                        </div>
                                         <input
-                                            type="checkbox"
+                                            type="text"
                                             {...register(
-                                                CHECKBOX_REGISTER_PREVIX +
-                                                    classification.id
+                                                TEXT_FORM_REGISTER_PREVIX +
+                                                    classification.id,
+                                                {
+                                                    required: true,
+                                                    maxLength: 30,
+                                                }
                                             )}
                                             className="rounded"
                                         />
-                                    </div>
-                                    <input
-                                        type="text"
-                                        {...register(
-                                            TEXT_FORM_REGISTER_PREVIX +
+                                        <span className="text-red-700 font-light">
+                                            {errors.classifications?.text.id[
                                                 classification.id
-                                        )}
-                                        className="rounded w-4/5"
-                                    />
-                                </div>
+                                            ]?.type === 'required' &&
+                                                '必須項目です'}
+                                            {errors.classifications?.text.id[
+                                                classification.id
+                                            ]?.type === 'maxLength' &&
+                                                '20文字以上は入力できません'}
+                                        </span>
+                                    </div>
+                                </>
                             ))}
                         {editClassifications &&
                             editClassifications.map((classification) => (
                                 <div
                                     key={classification.id}
-                                    className="grid grid-template-classification-setting-form mt-3 gap-3"
+                                    className="grid grid-template-classification-setting-form mt-3 gap-3 justify-start items-center"
                                 >
                                     <button
                                         type="button"
@@ -208,10 +241,17 @@ const Content: React.FC<{
                                         type="text"
                                         {...register(
                                             TEXT_FORM_REGISTER_PREVIX +
-                                                classification.id
+                                                classification.id,
+                                            { required: true, maxLength: 30 }
                                         )}
-                                        className="rounded w-4/5"
+                                        className="rounded"
                                     />
+                                    <span className="text-red-700 font-light">
+                                        {errors.classifications?.text.id[
+                                            classification.id
+                                        ]?.type === 'maxLength' &&
+                                            '20文字以上は入力できません'}
+                                    </span>
                                 </div>
                             ))}
                         {/* </div> */}
