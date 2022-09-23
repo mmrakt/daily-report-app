@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from 'react-query'
 
-const useDeleteRoles = () => {
+const useDisableRoles = () => {
     const queryClient = useQueryClient()
     return useMutation(
         (ids: number[]) =>
             fetch('/api/roles/', {
-                method: 'DELETE',
+                method: 'PATCH',
                 body: JSON.stringify({
                     ids,
                 }),
@@ -18,4 +18,4 @@ const useDeleteRoles = () => {
     )
 }
 
-export default useDeleteRoles
+export default useDisableRoles

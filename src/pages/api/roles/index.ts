@@ -7,7 +7,13 @@ const handler = async (
     res: NextApiResponse
 ): Promise<void> => {
     if (req.method === 'GET') {
-        const roles = await prisma.role.findMany({})
+        const roles = await prisma.role.findMany({
+            where: {
+                status: {
+                    equals: 'enable',
+                },
+            },
+        })
         if (roles) {
             res.status(200).json(roles)
         } else {
@@ -35,35 +41,21 @@ const handler = async (
             console.error(error)
             res.status(500).end()
         }
-    } else if (req.method === 'DELETE') {
+    } else if (req.method === 'PATCH') {
         const body = JSON.parse(req.body) as Role[]
         const ids = body['ids']
         try {
-            await prisma.$transaction([
-                prisma.projectsOnRoles.deleteMany({
-                    where: {
-                        roleId: {
-                            in: ids,
-                        },
+            await prisma.role.updateMany({
+                where: {
+                    id: {
+                        in: ids,
                     },
-                }),
-                prisma.categoriesOnRoles.deleteMany({
-                    where: {
-                        roleId: {
-                            in: ids,
-                        },
-                    },
-                }),
-                prisma.role.deleteMany({
-                    where: {
-                        id: {
-                            in: ids,
-                        },
-                    },
-                }),
-            ])
-
-            res.status(200).end()
+                },
+                data: {
+                    status: 'disable',
+                },
+            }),
+                res.status(200).end()
         } catch (error) {
             console.error(error)
             res.status(500).end()

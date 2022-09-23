@@ -7,9 +7,9 @@ import Content from './Content'
 import useUpdateRoles from '@/hooks/role/useUpdateRoles'
 import useUpdateProjects from '../../hooks/project/useUpdateProjects'
 import useUpdateCategories from '../../hooks/category/useUpdateCategories'
-import useDeleteRoles from '../../hooks/role/useDeleteRoles'
 import useDisableProjects from '../../hooks/project/useDisableProjects'
 import useDisableCategories from '../../hooks/category/useDisableCategories'
+import useDisableRoles from '../../hooks/role/useDisableRoles'
 
 const ProjectsBlock: React.VFC = () => {
     const { data: projects, isLoading } = useFetchProjects()
@@ -50,7 +50,7 @@ const CategoriesBlock: React.VFC = () => {
 const RolesBlock: React.VFC = () => {
     const { data: roles, isLoading } = useFetchRoles()
     const updateRolesMutation = useUpdateRoles()
-    const deleteRolesMutation = useDeleteRoles()
+    const disableRolesMutation = useDisableRoles()
 
     if (isLoading) return <LoadingSpinner />
 
@@ -60,7 +60,7 @@ const RolesBlock: React.VFC = () => {
                 classifications={roles}
                 label="ロール"
                 updateMutation={updateRolesMutation}
-                deleteMutation={deleteRolesMutation}
+                disableMutation={disableRolesMutation}
             />
         </>
     )

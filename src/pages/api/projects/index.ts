@@ -8,6 +8,11 @@ const handler = async (
 ): Promise<void> => {
     if (req.method === 'GET') {
         const projects = await prisma.project.findMany({
+            where: {
+                status: {
+                    equals: 'enable',
+                },
+            },
             include: {
                 roles: {
                     select: {

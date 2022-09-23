@@ -27,9 +27,8 @@ const Content: React.FC<{
         Role[] | Classification[],
         unknown
     >
-    deleteMutation?: UseMutationResult<Response, unknown, number[], unknown>
     disableMutation?: UseMutationResult<Response, unknown, number[], unknown>
-}> = ({ classifications, label, updateMutation, deleteMutation }) => {
+}> = ({ classifications, label, updateMutation, disableMutation }) => {
     const { register, unregister, handleSubmit, formState, setValue } = useForm(
         {
             criteriaMode: 'all',
@@ -103,7 +102,7 @@ const Content: React.FC<{
         classifications: FormData
     }> = async ({ classifications }) => {
         try {
-            await deleteMutation.mutate(
+            await disableMutation.mutate(
                 createDeleteMutateParam(classifications.checkbox.id)
             )
             await toast.success('削除完了', {
@@ -147,7 +146,7 @@ const Content: React.FC<{
                 <div className="flex ">
                     <h2 className="text-lg bold">{label}</h2>
                     <Button
-                        text={`チェック済みの${label}を全削除`}
+                        text={`チェック済みの${label}をアーカイブ`}
                         type="submit"
                         color="secondary"
                         className="ml-auto"

@@ -22,11 +22,13 @@ const ProjectsContainer: React.FC<{
     const extractRegisterdByRoleId = (targetArray: ProjectAndRoleIds[]) => {
         const result = []
         targetArray.forEach((target) => {
-            target.roles.forEach((role) => {
-                if (role.roleId === roleId) {
-                    result.push(target)
-                }
-            })
+            if (target.roles?.length) {
+                target.roles.forEach((role) => {
+                    if (role.roleId === roleId) {
+                        result.push(target)
+                    }
+                })
+            }
         })
         return result
     }
