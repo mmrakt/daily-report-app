@@ -1,16 +1,5 @@
 import React, { useState } from 'react'
-import {
-    TableRow,
-    TableHead,
-    TableContainer,
-    TableCell,
-    TableBody,
-    Table,
-    Paper,
-} from '@material-ui/core'
-import Item from './Row'
 import { ToastContainer, toast } from 'react-toastify'
-import styled from 'styled-components'
 import { HOURS, DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
 import { uuidv4 } from '@firebase/util'
 import { ITask } from '../../types/index'
@@ -19,10 +8,6 @@ import { useCreateTasksByDate } from '@/hooks/task/useCreateTasksByDate'
 import CloseIcon from '@/components/common/CloseIcon'
 import Button from '@/components/common/Button'
 import Row from './Row'
-
-const StyledTable = styled(Table)`
-    minwidth: 650;
-`
 
 type IProps = {
     submittedTasks?: Task[]
@@ -39,7 +24,6 @@ const Form: React.FC<IProps> = ({
     categories,
     projects,
     userId,
-    roleId,
     selectDate,
     onSubmit,
 }) => {
@@ -85,27 +69,22 @@ const Form: React.FC<IProps> = ({
     ) => {
         const newTasks = editTasks.map((task) => {
             if (task.tempId === tempId) {
-                if (typeof value === 'string') {
-                    switch (label) {
-                        case 'summary':
-                            task.summary = value
-                            break
-                        case 'note':
-                            task.note = value
-                            break
-                    }
-                } else {
-                    switch (label) {
-                        case 'hours':
-                            task.hours = value
-                            break
-                        case 'categoryId':
-                            task.categoryId = value
-                            break
-                        case 'projectId':
-                            task.projectId = value
-                            break
-                    }
+                switch (label) {
+                    case 'summary':
+                        task.summary = String(value)
+                        break
+                    case 'note':
+                        task.note = String(value)
+                        break
+                    case 'hours':
+                        task.hours = Number(value)
+                        break
+                    case 'categoryId':
+                        task.categoryId = Number(value)
+                        break
+                    case 'projectId':
+                        task.projectId = Number(value)
+                        break
                 }
             }
             return task
@@ -217,7 +196,6 @@ const Form: React.FC<IProps> = ({
                     className=""
                     onClickEvent={handleDeleteAllTasks}
                 />
-                {/* <form onSubmit={handleSubmitTasks}> */}
                 <Button
                     text="提出"
                     color="primary"
@@ -225,7 +203,6 @@ const Form: React.FC<IProps> = ({
                     className=""
                     onClickEvent={handleSubmitTasks}
                 />
-                {/* </form> */}
             </div>
         </div>
     )

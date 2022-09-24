@@ -30,7 +30,7 @@ const Row: React.FC<IProps> = ({
                     name="hourId"
                     className="rounded text-base border-none"
                     onChange={(e) => {
-                        handleChange(e, 'hourId')
+                        handleChange(e, 'hours')
                     }}
                     value={task.hours !== undefined ? task.hours : 0.25}
                 >

@@ -6,7 +6,4 @@
     .grid-template-classification-setting-form {
         grid-template-columns: 0.5fr 8fr 6fr;
     }
-    .grid-template-submit-form {
-        grid-template-columns: 2fr 2fr 2fr 2fr 2fr 2fr 2fr;
-    }
 }
