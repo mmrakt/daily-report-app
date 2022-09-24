@@ -40,6 +40,8 @@ type FormData = {
         id: Record<string | number, string>
     }
 }
+type ModalType = 'updateConfirm' | 'disableConfirm' | ''
+
 const Content: React.FC<{
     classifications: Role[] | Category[] | Project[]
     label: string
@@ -66,12 +68,10 @@ const Content: React.FC<{
         { id: string; name: string }[]
     >([])
     const [isOpen, setIsOpen] = useState<boolean>(false)
+
+    const [selectedModalType, setSelectedModalType] = useState<ModalType>('')
     const TEXT_FORM_REGISTER_PREFIX = 'classifications.text.id.'
     const CHECKBOX_REGISTER_PREFIX = 'classifications.checkbox.id.'
-    const validationRules = {
-        required: true,
-        maxLength: 30,
-    }
     const watchCheckbox = watch(CHECKBOX_REGISTER_PREFIX)
 
     useEffect(() => {
@@ -146,7 +146,7 @@ const Content: React.FC<{
                 draggable: true,
                 progress: undefined,
             })
-            setIsOpen(false)
+            handleClose()
         } catch (error) {
             console.error(error)
             toast.success('アーカイブに失敗しました', {
@@ -185,6 +185,78 @@ const Content: React.FC<{
         return watchCheckbox?.indexOf(true) === -1 ? true : false
     }
 
+    const handleOpen = (modalType: ModalType) => {
+        setSelectedModalType(modalType)
+        setIsOpen(true)
+    }
+
+    const handleClose = () => {
+        setIsOpen(false)
+        setSelectedModalType('')
+    }
+
+    const ConfirmModalContent = () => {
+        if (selectedModalType === 'disableConfirm') {
+            return (
+                <>
+                    <p className="font-medium text-base">
+                        チェックを入れた{label}をアーカイブします。
+                        <br />
+                        よろしいですか？
+                    </p>
+                    <div className="flex mt-7">
+                        <Button
+                            text="キャンセル"
+                            type="submit"
+                            color="tertiary"
+                            className="ml-auto"
+                            onClickEvent={() => {
+                                handleClose()
+                            }}
+                        />
+                        <Button
+                            text="アーカイブする"
+                            type="submit"
+                            color="secondary"
+                            className="ml-3"
+                            onClickEvent={handleSubmit(handleDeleteByChecked)}
+                        />
+                    </div>
+                </>
+            )
+        } else if (selectedModalType === 'updateConfirm') {
+            return (
+                <>
+                    <p className="font-medium text-base">
+                        {label}を全件更新します。
+                        <br />
+                        よろしいですか？
+                    </p>
+                    <div className="flex mt-7">
+                        <Button
+                            text="キャンセル"
+                            type="submit"
+                            color="tertiary"
+                            className="ml-auto"
+                            onClickEvent={() => {
+                                handleClose()
+                            }}
+                        />
+                        <Button
+                            text="更新する"
+                            type="submit"
+                            color="primary"
+                            className="ml-3"
+                            onClickEvent={handleSubmit(onSubmit)}
+                        />
+                    </div>
+                </>
+            )
+        } else {
+            return null
+        }
+    }
+
     return (
         <>
             <ToastContainer />
@@ -196,29 +268,7 @@ const Content: React.FC<{
                 }}
                 ariaHideApp={false}
             >
-                <p className="font-medium text-base">
-                    チェックを入れた{label}をアーカイブします。
-                    <br />
-                    よろしいですか？
-                </p>
-                <div className="flex mt-7">
-                    <Button
-                        text="キャンセル"
-                        type="submit"
-                        color="tertiary"
-                        className="ml-auto"
-                        onClickEvent={() => {
-                            setIsOpen(false)
-                        }}
-                    />
-                    <Button
-                        text={`チェック済みの${label}をアーカイブ`}
-                        type="submit"
-                        color="secondary"
-                        className="ml-3"
-                        onClickEvent={handleSubmit(handleDeleteByChecked)}
-                    />
-                </div>
+                <ConfirmModalContent />
             </Modal>
             <div className="bg-gray-200 rounded p-5">
                 <div className="flex ">
@@ -229,7 +279,7 @@ const Content: React.FC<{
                         color="secondary"
                         className="ml-auto"
                         onClickEvent={() => {
-                            setIsOpen(true)
+                            handleOpen('disableConfirm')
                         }}
                     />
                     <Button
@@ -241,7 +291,7 @@ const Content: React.FC<{
                     />
                 </div>
                 <div className="class">
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form>
                         {classifications &&
                             classifications.map((classification) => (
                                 <>
@@ -320,9 +370,12 @@ const Content: React.FC<{
                         <div className="flex mt-3">
                             <Button
                                 text="一括登録"
-                                type="submit"
+                                type="button"
                                 color="primary"
                                 className="ml-auto"
+                                onClickEvent={() => {
+                                    handleOpen('updateConfirm')
+                                }}
                             />
                         </div>
                     </form>
