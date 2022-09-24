@@ -9,6 +9,28 @@ import { DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
 import { Classification } from '../../types/index'
 import { uuidv4 } from '@firebase/util'
 import MinusCircle from '../common/MinusCircle'
+import Modal from 'react-modal'
+
+const modalStyle = {
+    overlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    content: {
+        maxWidth: '600px',
+        maxHeight: '200px',
+        margin: '0 auto',
+        position: 'absolute',
+        top: '10rem',
+        left: '20rem',
+        right: '20rem',
+        bottom: '10rem',
+        backgroundColor: 'white',
+        padding: '2rem',
+    },
+}
 
 type FormData = {
     checkbox: {
@@ -33,8 +55,9 @@ const Content: React.FC<{
         register,
         unregister,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, dirtyFields },
         setValue,
+        watch,
     } = useForm({
         criteriaMode: 'all',
         mode: 'onChange',
@@ -42,18 +65,20 @@ const Content: React.FC<{
     const [editClassifications, setEditClassifications] = useState<
         { id: string; name: string }[]
     >([])
-    const TEXT_FORM_REGISTER_PREVIX = 'classifications.text.id.'
-    const CHECKBOX_REGISTER_PREVIX = 'classifications.checkbox.id.'
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+    const TEXT_FORM_REGISTER_PREFIX = 'classifications.text.id.'
+    const CHECKBOX_REGISTER_PREFIX = 'classifications.checkbox.id.'
     const validationRules = {
         required: true,
         maxLength: 30,
     }
+    const watchCheckbox = watch(CHECKBOX_REGISTER_PREFIX)
 
     useEffect(() => {
         if (classifications.length) {
             classifications.forEach((classification) => {
                 setValue(
-                    TEXT_FORM_REGISTER_PREVIX + classification.id,
+                    TEXT_FORM_REGISTER_PREFIX + classification.id,
                     classification.name
                 )
             })
@@ -61,7 +86,7 @@ const Content: React.FC<{
         // NOTE: mutate実行後のクリーンアップ
         if (editClassifications.length) {
             editClassifications.forEach((classification) => {
-                unregister(TEXT_FORM_REGISTER_PREVIX + classification.id)
+                unregister(TEXT_FORM_REGISTER_PREFIX + classification.id)
             })
             setEditClassifications([])
         }
@@ -76,7 +101,7 @@ const Content: React.FC<{
                 name: '',
             },
         ])
-        setValue(TEXT_FORM_REGISTER_PREVIX + uuid, '')
+        setValue(TEXT_FORM_REGISTER_PREFIX + uuid, '')
     }
 
     const handleRemove = (id: string) => {
@@ -84,7 +109,7 @@ const Content: React.FC<{
             (classification) => classification.id !== id
         )
         setEditClassifications(filteredClassifications)
-        unregister(TEXT_FORM_REGISTER_PREVIX + id)
+        unregister(TEXT_FORM_REGISTER_PREFIX + id)
     }
 
     const onSubmit: SubmitHandler<{
@@ -111,9 +136,9 @@ const Content: React.FC<{
     }> = async ({ classifications }) => {
         try {
             await disableMutation.mutate(
-                createDeleteMutateParam(classifications.checkbox.id)
+                createDisableMutateParam(classifications.checkbox.id)
             )
-            toast.success('アーカイブ完了', {
+            await toast.success('アーカイブ完了', {
                 autoClose: DISPLAY_NOTICE_MILLISECOUND,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -121,6 +146,7 @@ const Content: React.FC<{
                 draggable: true,
                 progress: undefined,
             })
+            setIsOpen(false)
         } catch (error) {
             console.error(error)
             toast.success('アーカイブに失敗しました', {
@@ -134,7 +160,7 @@ const Content: React.FC<{
         }
     }
 
-    const createDeleteMutateParam = (values: FormData['checkbox']['id']) => {
+    const createDisableMutateParam = (values: FormData['checkbox']['id']) => {
         const param: number[] = []
         for (const [index, value] of Object.entries(values)) {
             if (value) {
@@ -155,11 +181,45 @@ const Content: React.FC<{
         return param
     }
 
-    // console.log(errors.classifications?.text.id[1])
+    const isNotCheckedAny = (): boolean => {
+        return watchCheckbox?.indexOf(true) === -1 ? true : false
+    }
 
     return (
         <>
             <ToastContainer />
+            <Modal
+                isOpen={isOpen}
+                style={modalStyle}
+                onRequestClose={() => {
+                    setIsOpen(false)
+                }}
+                ariaHideApp={false}
+            >
+                <p className="font-medium text-base">
+                    チェックを入れた{label}をアーカイブします。
+                    <br />
+                    よろしいですか？
+                </p>
+                <div className="flex mt-7">
+                    <Button
+                        text="キャンセル"
+                        type="submit"
+                        color="tertiary"
+                        className="ml-auto"
+                        onClickEvent={() => {
+                            setIsOpen(false)
+                        }}
+                    />
+                    <Button
+                        text={`チェック済みの${label}をアーカイブ`}
+                        type="submit"
+                        color="secondary"
+                        className="ml-3"
+                        onClickEvent={handleSubmit(handleDeleteByChecked)}
+                    />
+                </div>
+            </Modal>
             <div className="bg-gray-200 rounded p-5">
                 <div className="flex ">
                     <h2 className="text-lg bold">{label}</h2>
@@ -168,7 +228,9 @@ const Content: React.FC<{
                         type="submit"
                         color="secondary"
                         className="ml-auto"
-                        onClickEvent={handleSubmit(handleDeleteByChecked)}
+                        onClickEvent={() => {
+                            setIsOpen(true)
+                        }}
                     />
                     <Button
                         text="追加"
@@ -191,7 +253,7 @@ const Content: React.FC<{
                                             <input
                                                 type="checkbox"
                                                 {...register(
-                                                    CHECKBOX_REGISTER_PREVIX +
+                                                    CHECKBOX_REGISTER_PREFIX +
                                                         classification.id
                                                 )}
                                                 className="rounded"
@@ -200,7 +262,7 @@ const Content: React.FC<{
                                         <input
                                             type="text"
                                             {...register(
-                                                TEXT_FORM_REGISTER_PREVIX +
+                                                TEXT_FORM_REGISTER_PREFIX +
                                                     classification.id,
                                                 {
                                                     required: true,
@@ -240,7 +302,7 @@ const Content: React.FC<{
                                     <input
                                         type="text"
                                         {...register(
-                                            TEXT_FORM_REGISTER_PREVIX +
+                                            TEXT_FORM_REGISTER_PREFIX +
                                                 classification.id,
                                             { required: true, maxLength: 30 }
                                         )}
