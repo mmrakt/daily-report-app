@@ -1,16 +1,8 @@
 import React from 'react'
-import DeleteIcon from '@material-ui/icons/Delete'
 import { Project, Category } from '@prisma/client'
 import { HOURS } from '../../consts/index'
 import { ITask } from '../../types/index'
-import {
-    Checkbox,
-    TextField,
-    TableCell,
-    Select,
-    MenuItem,
-    TableRow,
-} from '@material-ui/core'
+import MinusCircle from '../common/MinusCircle'
 
 type IProps = {
     task: ITask
@@ -20,7 +12,7 @@ type IProps = {
     onChange: (label: string, value: string | number) => void
 }
 
-const Item: React.FC<IProps> = ({
+const Row: React.FC<IProps> = ({
     task,
     categories,
     projects,
@@ -32,79 +24,87 @@ const Item: React.FC<IProps> = ({
         onChange(label, e.target.value)
     }
     return (
-        <TableRow>
-            <TableCell align="center">
-                <Select
-                    id="hourId"
+        <tr className="border-b border-gray-100">
+            <td className="py-2 px-3">
+                <select
+                    name="hourId"
+                    className="rounded text-base border-none"
                     onChange={(e) => {
                         handleChange(e, 'hourId')
                     }}
-                    fullWidth
                     value={task.hours !== undefined ? task.hours : 0.25}
                 >
                     {HOURS.map((hour, index) => (
-                        <MenuItem value={hour} key={index}>
+                        <option value={hour} key={index}>
                             {hour}h
-                        </MenuItem>
+                        </option>
                     ))}
-                </Select>
-            </TableCell>
-            <TableCell align="center">
-                <Select
-                    id="categoryId"
+                </select>
+            </td>
+            <td className="py-2 px-3">
+                <select
+                    name="categoryId"
+                    className="rounded text-base border-none"
                     onChange={(e) => {
                         handleChange(e, 'categoryId')
                     }}
-                    fullWidth
                     value={task.categoryId !== undefined ? task.categoryId : 1}
                 >
                     {categories.map((category, index) => (
-                        <MenuItem value={category.id} key={index}>
+                        <option value={category.id} key={index}>
                             {category.name}
-                        </MenuItem>
+                        </option>
                     ))}
-                </Select>
-            </TableCell>
-            <TableCell align="center">
-                <Select
-                    id="projectId"
+                </select>
+            </td>
+            <td className="py-2 px-3">
+                <select
+                    name="projectId"
+                    className="rounded text-base border-none"
                     onChange={(e) => {
                         handleChange(e, 'projectId')
                     }}
-                    fullWidth
                     value={task.projectId !== undefined ? task.projectId : 1}
                 >
                     {projects.map((project, index) => (
-                        <MenuItem value={project.id} key={index}>
+                        <option value={project.id} key={index}>
                             {project.name}
-                        </MenuItem>
+                        </option>
                     ))}
-                </Select>
-            </TableCell>
-            <TableCell align="center">
-                <TextField
-                    id="summary"
+                </select>
+            </td>
+            <td className="py-2 px-3">
+                <input
+                    type="text"
+                    name="summary"
+                    className="rounded p-2.5 text-md"
                     onChange={(e) => {
                         handleChange(e, 'summary')
                     }}
                     value={task.summary || ''}
-                    fullWidth
                 />
-            </TableCell>
-            <TableCell align="center">
-                <TextField
-                    id="note"
+            </td>
+            <td className="py-2 px-3">
+                <input
+                    type="text"
+                    name="note"
+                    className="rounded p-2.5 text-md"
                     onChange={(e) => {
                         handleChange(e, 'note')
                     }}
                     value={task.note || ''}
-                    fullWidth
                 />
-            </TableCell>
-            <TableCell align="center">
-                <DeleteIcon onClick={onDelete} data-testid="delete-icon" />
-            </TableCell>
-        </TableRow>
+            </td>
+            <td className="py-2 px-3">
+                <button
+                    type="button"
+                    onClick={onDelete}
+                    className="flex justify-center items-center"
+                >
+                    <MinusCircle className="text-red-500" />
+                </button>
+            </td>
+        </tr>
     )
 }
-export default Item
+export default Row

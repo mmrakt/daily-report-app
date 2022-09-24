@@ -181,10 +181,6 @@ const Content: React.FC<{
         return param
     }
 
-    const isNotCheckedAny = (): boolean => {
-        return watchCheckbox?.indexOf(true) === -1 ? true : false
-    }
-
     const handleOpen = (modalType: ModalType) => {
         setSelectedModalType(modalType)
         setIsOpen(true)

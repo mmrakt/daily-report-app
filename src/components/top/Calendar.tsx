@@ -22,7 +22,7 @@ const modalStyle = {
         backgroundColor: 'rgba(0,0,0,0.5)',
     },
     content: {
-        maxWidth: '1000px',
+        maxWidth: '1200px',
         minWidth: '700px',
         margin: '0 auto',
         position: 'absolute',

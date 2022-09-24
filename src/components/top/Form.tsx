@@ -8,7 +8,7 @@ import {
     Table,
     Paper,
 } from '@material-ui/core'
-import Item from './Item'
+import Item from './Row'
 import { ToastContainer, toast } from 'react-toastify'
 import styled from 'styled-components'
 import { HOURS, DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
@@ -18,6 +18,7 @@ import { Project, Task, Category } from '@prisma/client'
 import { useCreateTasksByDate } from '@/hooks/task/useCreateTasksByDate'
 import CloseIcon from '@/components/common/CloseIcon'
 import Button from '@/components/common/Button'
+import Row from './Row'
 
 const StyledTable = styled(Table)`
     minwidth: 650;
@@ -162,7 +163,7 @@ const Form: React.FC<IProps> = ({
             <ToastContainer />
             <div className="">
                 <Button
-                    text="追加"
+                    text="タスク追加"
                     color="tertiary"
                     className=""
                     onClickEvent={handleAddTask}
@@ -176,41 +177,39 @@ const Form: React.FC<IProps> = ({
                     <CloseIcon className="text-gray-500 hover:text-gray-400" />
                 </button>
             </div>
-            <TableContainer component={Paper}>
-                <StyledTable>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">時間(h)</TableCell>
-                            <TableCell align="center">カテゴリー</TableCell>
-                            <TableCell align="center">プロジェクト</TableCell>
-                            <TableCell align="center">作業概要</TableCell>
-                            <TableCell align="center">備考</TableCell>
-                            <TableCell align="center"></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {editTasks &&
-                            editTasks.map((task) => (
-                                <Item
-                                    task={task}
-                                    categories={categories}
-                                    projects={projects}
-                                    key={task.tempId}
-                                    onChange={(label, inputValue) => {
-                                        handleUpdateTask(
-                                            task.tempId,
-                                            label,
-                                            inputValue
-                                        )
-                                    }}
-                                    onDelete={() => {
-                                        handleDeleteTask(task.tempId)
-                                    }}
-                                />
-                            ))}
-                    </TableBody>
-                </StyledTable>
-            </TableContainer>
+            <table className="table-fixed bg-gray-200 rounded">
+                <thead className="bg-gray-300 rounded text-base font-normal px-3">
+                    <tr>
+                        <th className="py-3 px-6">時間(h)</th>
+                        <th className="py-3 px-6">カテゴリー</th>
+                        <th className="py-3 px-6">プロジェクト</th>
+                        <th className="py-3 px-6">作業概要</th>
+                        <th className="py-3 px-6">備考</th>
+                        <th className="py-3 px-6"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {editTasks &&
+                        editTasks.map((task) => (
+                            <Row
+                                task={task}
+                                categories={categories}
+                                projects={projects}
+                                key={task.tempId}
+                                onChange={(label, inputValue) => {
+                                    handleUpdateTask(
+                                        task.tempId,
+                                        label,
+                                        inputValue
+                                    )
+                                }}
+                                onDelete={() => {
+                                    handleDeleteTask(task.tempId)
+                                }}
+                            />
+                        ))}
+                </tbody>
+            </table>
             <div className="flex">
                 <Button
                     text="一括削除"
