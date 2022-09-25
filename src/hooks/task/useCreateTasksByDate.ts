@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from 'react-query'
 import { DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
 
-export type CreateTasks = {
+export type CreateTask = {
     userId: number
     categoryId: number
     projectId: number
@@ -9,12 +9,12 @@ export type CreateTasks = {
     summary: string
     note: string
     date: string
-}[]
+}
 
 const useCreateTasksByDate = () => {
     const queryClient = useQueryClient()
     return useMutation(
-        (tasks: CreateTasks) =>
+        (tasks: CreateTask[]) =>
             fetch('/api/tasks', {
                 method: 'POST',
                 body: JSON.stringify({

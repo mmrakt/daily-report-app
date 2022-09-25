@@ -23,3 +23,12 @@ export type Classification = {
     id: number
     name: string
 }
+
+export type EditTask = {
+    tempId: string
+    hours: string
+    categoryId: string
+    projectId: string
+    summary: string
+    note: string
+}

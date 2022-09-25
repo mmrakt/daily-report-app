@@ -7,8 +7,8 @@ import Form from '@/components/top/Form'
 
 const FormContainer: React.FC<{
     selectDate: string
-    onSubmit: () => void
-}> = ({ selectDate, onSubmit }) => {
+    onModalClose: () => void
+}> = ({ selectDate, onModalClose }) => {
     // FIXME:
     const userId = 1
     const roleId = 1
@@ -35,7 +35,7 @@ const FormContainer: React.FC<{
             userId={userId}
             roleId={roleId}
             selectDate={selectDate}
-            onSubmit={onSubmit}
+            onModalClose={onModalClose}
         />
     )
 }

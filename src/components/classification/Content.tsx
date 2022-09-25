@@ -5,7 +5,11 @@ import Button from '@/components/common/Button'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import { UseMutationResult } from 'react-query'
-import { DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
+import {
+    DISPLAY_NOTICE_MILLISECOUND,
+    TEXT_FORM_REGISTER_PREFIX,
+    CHECKBOX_REGISTER_PREFIX,
+} from '../../consts/index'
 import { Classification } from '../../types/index'
 import { uuidv4 } from '@firebase/util'
 import MinusCircle from '../common/MinusCircle'
@@ -59,7 +63,6 @@ const Content: React.FC<{
         handleSubmit,
         formState: { errors, dirtyFields },
         setValue,
-        watch,
     } = useForm({
         criteriaMode: 'all',
         mode: 'onChange',
@@ -70,9 +73,6 @@ const Content: React.FC<{
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
     const [selectedModalType, setSelectedModalType] = useState<ModalType>('')
-    const TEXT_FORM_REGISTER_PREFIX = 'classifications.text.id.'
-    const CHECKBOX_REGISTER_PREFIX = 'classifications.checkbox.id.'
-    const watchCheckbox = watch(CHECKBOX_REGISTER_PREFIX)
 
     useEffect(() => {
         if (classifications.length) {

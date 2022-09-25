@@ -82,7 +82,7 @@ const Calendar: React.FC<{ submittedDates: CalenderProps }> = ({
                 ariaHideApp={false}
             >
                 <FormContainer
-                    onSubmit={() => {
+                    onModalClose={() => {
                         setIsModalOpen(false)
                     }}
                     selectDate={selectDate}

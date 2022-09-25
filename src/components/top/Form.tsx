@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import { HOURS, DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
 import { uuidv4 } from '@firebase/util'
-import { ITask } from '../../types/index'
+import { EditTask } from '../../types/index'
 import { Project, Task, Category } from '@prisma/client'
 import { useCreateTasksByDate } from '@/hooks/task/useCreateTasksByDate'
 import CloseIcon from '@/components/common/CloseIcon'
 import Button from '@/components/common/Button'
 import Row from './Row'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { CreateTask } from '../../hooks/task/useCreateTasksByDate'
 
 type IProps = {
     submittedTasks?: Task[]
@@ -16,8 +18,10 @@ type IProps = {
     userId: number
     roleId: number
     selectDate: string
-    onSubmit: () => void
+    onModalClose: () => void
 }
+
+type FormData = Record<string, Omit<EditTask, 'tempId'>>
 
 const Form: React.FC<IProps> = ({
     submittedTasks,
@@ -25,116 +29,100 @@ const Form: React.FC<IProps> = ({
     projects,
     userId,
     selectDate,
-    onSubmit,
+    onModalClose,
 }) => {
-    const createInitialTask = React.useCallback(() => {
+    const { register, handleSubmit, setValue, unregister } = useForm({})
+    const createInitialTask = React.useCallback((): EditTask => {
         return {
             tempId: uuidv4(),
             hours: HOURS[0],
-            projectId: 1,
-            categoryId: 1,
+            projectId: '1',
+            categoryId: '1',
             summary: '',
             note: '',
-            userId: userId,
-            date: selectDate,
         }
-    }, [userId, selectDate])
-
-    const [editTasks, setEditTasks] = useState<ITask[]>()
+    }, [])
+    const [editTasks, setEditTasks] = useState<EditTask[]>()
     const createTasksMuatation = useCreateTasksByDate()
 
     React.useEffect(() => {
-        if (submittedTasks.length) {
-            setEditTasks(assignTempIdToTasks(submittedTasks))
+        if (submittedTasks?.length) {
+            const replacedTasks = replaceToTempIdOfTasks(submittedTasks)
+            setEditTasks(replacedTasks)
+            replacedTasks.forEach((task) => {
+                setValue(`tasks.${task.tempId}`, task)
+            })
         } else {
-            setEditTasks([createInitialTask()])
+            handleAdd()
         }
     }, [submittedTasks, createInitialTask])
 
-    const handleAddTask = () => {
-        setEditTasks([...editTasks, createInitialTask()])
+    const handleAdd = () => {
+        const newTask = createInitialTask()
+        if (editTasks?.length) {
+            setEditTasks([...editTasks, newTask])
+        } else {
+            setEditTasks([newTask])
+        }
+        setValue(`task.${newTask.tempId}`, newTask)
     }
 
-    const handleDeleteTask = (tempId: string) => {
-        const newTasks = editTasks.filter((task) => task.tempId !== tempId)
-        setEditTasks(newTasks)
+    const handleRemove = (tempId: string) => {
+        const filteredTasks = editTasks.filter((task) => task.tempId !== tempId)
+        setEditTasks(filteredTasks)
+        unregister(`tasks.${tempId}`)
     }
     const handleDeleteAllTasks = () => {
         setEditTasks([])
-    }
-    const handleUpdateTask = (
-        tempId: string,
-        label: string,
-        value?: string | number
-    ) => {
-        const newTasks = editTasks.map((task) => {
-            if (task.tempId === tempId) {
-                switch (label) {
-                    case 'summary':
-                        task.summary = String(value)
-                        break
-                    case 'note':
-                        task.note = String(value)
-                        break
-                    case 'hours':
-                        task.hours = Number(value)
-                        break
-                    case 'categoryId':
-                        task.categoryId = Number(value)
-                        break
-                    case 'projectId':
-                        task.projectId = Number(value)
-                        break
-                }
-            }
-            return task
-        })
-        setEditTasks(newTasks)
+        unregister('tasks')
     }
 
-    const handleSubmitTasks = React.useCallback(
-        async (ev: React.FormEvent<HTMLFormElement>) => {
-            try {
-                ev.preventDefault()
-                await createTasksMuatation.mutate(
-                    removeTempIdByTasks(editTasks)
-                )
-                await toast.success('提出完了しました。お疲れ様でした。', {
-                    autoClose: DISPLAY_NOTICE_MILLISECOUND,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                })
-                setTimeout(() => {
-                    onSubmit()
-                }, DISPLAY_NOTICE_MILLISECOUND)
-            } catch (err) {
-                console.log(err)
-            }
-        },
-        [createTasksMuatation, editTasks, onSubmit]
-    )
-
-    const assignTempIdToTasks = (submittedTasks: Task[]): ITask[] => {
-        const assignedIdTasks = []
-        for (let i = 0; i < submittedTasks.length; ++i) {
-            const assignedIdTask = Object.assign({}, submittedTasks[i])
-            assignedIdTasks.splice(i, 0, assignedIdTask)
-            assignedIdTasks[i].tempId = uuidv4()
+    const onSubmit: SubmitHandler<{
+        tasks: FormData
+    }> = async ({ tasks }) => {
+        try {
+            await createTasksMuatation.mutate(createTasksMutationParams(tasks))
+            await toast.success('提出完了しました。お疲れ様でした。', {
+                autoClose: DISPLAY_NOTICE_MILLISECOUND,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            })
+            setTimeout(() => {
+                onModalClose()
+            }, DISPLAY_NOTICE_MILLISECOUND)
+        } catch (err) {
+            console.log(err)
         }
-        return assignedIdTasks
     }
 
-    const removeTempIdByTasks = (tasks: ITask[]): ITask[] => {
-        const tempTasks = tasks
-        const returnTasks = []
-        tempTasks.forEach((returnTask) => {
-            delete returnTask.tempId
-            returnTasks.push(returnTask)
-        })
-        return returnTasks
+    const createTasksMutationParams = (tasks: FormData) => {
+        const param: CreateTask[] = []
+        for (const [index, task] of Object.entries(tasks)) {
+            param.push({
+                categoryId: Number(task.categoryId),
+                projectId: Number(task.projectId),
+                hours: Number(task.hours),
+                summary: task.summary,
+                note: task.note,
+                date: selectDate,
+                userId: userId,
+            })
+        }
+        return param
+    }
+
+    const replaceToTempIdOfTasks = (submittedTasks: Task[]): EditTask[] => {
+        const assignedTempIdTasks = []
+        for (let i = 0; i < submittedTasks.length; ++i) {
+            const copyTask = Object.assign({}, submittedTasks[i])
+            assignedTempIdTasks.splice(i, 0, copyTask)
+            assignedTempIdTasks[i].tempId = uuidv4()
+            delete assignedTempIdTasks[i].id
+        }
+        return assignedTempIdTasks
     }
 
     return (
@@ -145,12 +133,12 @@ const Form: React.FC<IProps> = ({
                     text="タスク追加"
                     color="tertiary"
                     className=""
-                    onClickEvent={handleAddTask}
+                    onClickEvent={handleAdd}
                 />
                 <button
                     className="float-right"
                     onClick={() => {
-                        onSubmit()
+                        onModalClose()
                     }}
                 >
                     <CloseIcon className="text-gray-500 hover:text-gray-400" />
@@ -175,16 +163,10 @@ const Form: React.FC<IProps> = ({
                                 categories={categories}
                                 projects={projects}
                                 key={task.tempId}
-                                onChange={(label, inputValue) => {
-                                    handleUpdateTask(
-                                        task.tempId,
-                                        label,
-                                        inputValue
-                                    )
-                                }}
                                 onDelete={() => {
-                                    handleDeleteTask(task.tempId)
+                                    handleRemove(task.tempId)
                                 }}
+                                register={register}
                             />
                         ))}
                 </tbody>
@@ -193,6 +175,7 @@ const Form: React.FC<IProps> = ({
                 <Button
                     text="一括削除"
                     color="secondary"
+                    type="button"
                     className=""
                     onClickEvent={handleDeleteAllTasks}
                 />
@@ -201,7 +184,7 @@ const Form: React.FC<IProps> = ({
                     color="primary"
                     type="submit"
                     className=""
-                    onClickEvent={handleSubmitTasks}
+                    onClickEvent={handleSubmit(onSubmit)}
                 />
             </div>
         </div>

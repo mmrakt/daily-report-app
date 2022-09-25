@@ -1,15 +1,16 @@
 import React from 'react'
 import { Project, Category } from '@prisma/client'
 import { HOURS } from '../../consts/index'
-import { ITask } from '../../types/index'
+import { EditTask } from '../../types/index'
 import MinusCircle from '../common/MinusCircle'
+import { FieldValue, UseFormRegister } from 'react-hook-form'
 
 type IProps = {
-    task: ITask
+    task: EditTask
     categories: Category[]
     projects: Project[]
     onDelete: () => void
-    onChange: (label: string, value: string | number) => void
+    register: UseFormRegister<FieldValue>
 }
 
 const Row: React.FC<IProps> = ({
@@ -17,22 +18,15 @@ const Row: React.FC<IProps> = ({
     categories,
     projects,
     onDelete,
-    onChange,
+    register,
 }) => {
-    // NOTE: inputとselect両方から受け取るためanyを指定
-    const handleChange = (e: React.ChangeEvent<any>, label: string) => {
-        onChange(label, e.target.value)
-    }
     return (
         <tr className="border-b border-gray-100">
             <td className="py-2 px-3">
                 <select
-                    name="hourId"
+                    name="hours"
                     className="rounded text-base border-none"
-                    onChange={(e) => {
-                        handleChange(e, 'hours')
-                    }}
-                    value={task.hours !== undefined ? task.hours : 0.25}
+                    {...register(`tasks.${task.tempId}.hours`)}
                 >
                     {HOURS.map((hour, index) => (
                         <option value={hour} key={index}>
@@ -43,12 +37,9 @@ const Row: React.FC<IProps> = ({
             </td>
             <td className="py-2 px-3">
                 <select
-                    name="categoryId"
+                    name="category"
                     className="rounded text-base border-none"
-                    onChange={(e) => {
-                        handleChange(e, 'categoryId')
-                    }}
-                    value={task.categoryId !== undefined ? task.categoryId : 1}
+                    {...register(`tasks.${task.tempId}.categoryId`)}
                 >
                     {categories.map((category, index) => (
                         <option value={category.id} key={index}>
@@ -59,12 +50,9 @@ const Row: React.FC<IProps> = ({
             </td>
             <td className="py-2 px-3">
                 <select
-                    name="projectId"
+                    name="project"
                     className="rounded text-base border-none"
-                    onChange={(e) => {
-                        handleChange(e, 'projectId')
-                    }}
-                    value={task.projectId !== undefined ? task.projectId : 1}
+                    {...register(`tasks.${task.tempId}.projectId`)}
                 >
                     {projects.map((project, index) => (
                         <option value={project.id} key={index}>
@@ -78,10 +66,7 @@ const Row: React.FC<IProps> = ({
                     type="text"
                     name="summary"
                     className="rounded p-2.5 text-md"
-                    onChange={(e) => {
-                        handleChange(e, 'summary')
-                    }}
-                    value={task.summary || ''}
+                    {...register(`tasks.${task.tempId}.summary`)}
                 />
             </td>
             <td className="py-2 px-3">
@@ -89,10 +74,7 @@ const Row: React.FC<IProps> = ({
                     type="text"
                     name="note"
                     className="rounded p-2.5 text-md"
-                    onChange={(e) => {
-                        handleChange(e, 'note')
-                    }}
-                    value={task.note || ''}
+                    {...register(`tasks.${task.tempId}.note`)}
                 />
             </td>
             <td className="py-2 px-3">

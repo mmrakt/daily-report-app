@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prisma'
-import { CreateTasks } from '../../../hooks/task/useCreateTasksByDate'
+import { CreateTask } from '../../../hooks/task/useCreateTasksByDate'
 
 const handler = async (
     req: NextApiRequest,
@@ -22,7 +22,7 @@ const handler = async (
             res.status(400).json({ debugMessage: 'There was no one...' })
         }
     } else if (req.method === 'POST') {
-        const body = JSON.parse(req.body) as CreateTasks[]
+        const body = JSON.parse(req.body) as CreateTask[]
         const { userId, date } = body['tasks'][0]
 
         try {
