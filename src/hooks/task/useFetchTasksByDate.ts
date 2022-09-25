@@ -5,10 +5,13 @@ const useFetchTasksByDate = (
     userId: number,
     date: string
 ): UseQueryResult<Task[]> => {
-    return useQuery<Task[]>(['tasks', userId], async () => {
-        const res = await fetch(`/api/tasks/${date}/?userId=${userId}`)
-        return res.json()
-    })
+    return useQuery<Task[]>(
+        ['tasks', { date: date, userId: userId }],
+        async () => {
+            const res = await fetch(`/api/tasks/${date}/?userId=${userId}`)
+            return res.json()
+        }
+    )
 }
 
 export { useFetchTasksByDate }

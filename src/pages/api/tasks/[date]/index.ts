@@ -30,25 +30,6 @@ const handler = async (
             }
             break
         }
-        case 'PATCH':
-            // try {
-            //     const value = JSON.parse(req.body)
-            //     await prisma.task.update({ where: { userId }, data: value })
-            //     res.status(200).end()
-            // } catch (error) {
-            //     console.error(error)
-            //     res.status(500).end()
-            // }
-            break
-        case 'DELETE':
-            // try {
-            //     await prisma.task.delete({ where: { userId } })
-            //     res.status(200).end()
-            // } catch (error) {
-            //     console.error(error)
-            //     res.status(500).end()
-            // }
-            break
         default:
             res.status(405).end()
     }

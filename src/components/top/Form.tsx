@@ -115,14 +115,25 @@ const Form: React.FC<IProps> = ({
     }
 
     const replaceToTempIdOfTasks = (submittedTasks: Task[]): EditTask[] => {
-        const assignedTempIdTasks = []
-        for (let i = 0; i < submittedTasks.length; ++i) {
-            const copyTask = Object.assign({}, submittedTasks[i])
-            assignedTempIdTasks.splice(i, 0, copyTask)
-            assignedTempIdTasks[i].tempId = uuidv4()
-            delete assignedTempIdTasks[i].id
-        }
+        const assignedTempIdTasks: EditTask[] = []
+        submittedTasks.forEach((task) => {
+            assignedTempIdTasks.push({
+                tempId: uuidv4(),
+                projectId: String(task.projectId),
+                categoryId: String(task.categoryId),
+                hours: String(task.hours),
+                summary: task.summary,
+                note: task.note,
+            })
+        })
+
         return assignedTempIdTasks
+    }
+
+    const onClose = () => {
+        unregister('tasks')
+        setEditTasks([])
+        onModalClose()
     }
 
     return (
@@ -135,12 +146,7 @@ const Form: React.FC<IProps> = ({
                     className=""
                     onClickEvent={handleAdd}
                 />
-                <button
-                    className="float-right"
-                    onClick={() => {
-                        onModalClose()
-                    }}
-                >
+                <button className="float-right" onClick={onClose}>
                     <CloseIcon className="text-gray-500 hover:text-gray-400" />
                 </button>
             </div>

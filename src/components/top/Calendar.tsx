@@ -42,13 +42,12 @@ type CalenderProps = {
 const Calendar: React.FC<{ submittedDates: CalenderProps }> = ({
     submittedDates,
 }) => {
-    const [dates] = React.useState<CalenderProps>(submittedDates)
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false)
     const [selectDate, setSelectDate] = React.useState<string>('')
 
     const TileContent = ({ date }: { date: string }) => {
         if (
-            dates.some(
+            submittedDates.some(
                 (report) => report.date === dayjs(date).format('YYYY-MM-DD')
             )
         ) {
