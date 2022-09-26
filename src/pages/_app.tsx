@@ -10,17 +10,18 @@ import 'react-toastify/dist/ReactToastify.css'
 import { AppProps } from 'next/app'
 import '../../styles/globals.css'
 import { QueryClient, QueryClientProvider } from 'react-query'
-import { Provider as NextAuthProvider } from 'next-auth/client'
+import { SessionProvider } from 'next-auth/react'
 import NextNprogress from 'nextjs-progressbar'
 
 export const AuthContext = React.createContext(null)
 
 const queryClient = new QueryClient()
 
-// NOTE: functionでなくconstにすると下記エラーとなる
-// The default export is not a React Component
 export default function MyApp(props: AppProps): React.ReactElement {
-    const { Component, pageProps } = props
+    const {
+        Component,
+        pageProps: { session, ...pageProps },
+    } = props
 
     React.useEffect(() => {
         const jssStyles = document.querySelector('#jss-server-side')
@@ -42,10 +43,10 @@ export default function MyApp(props: AppProps): React.ReactElement {
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
 
-                    <NextAuthProvider session={pageProps.session}>
+                    <SessionProvider session={session}>
                         <NextNprogress />
                         <Component {...pageProps} />
-                    </NextAuthProvider>
+                    </SessionProvider>
                 </ThemeProvider>
             </QueryClientProvider>
         </>

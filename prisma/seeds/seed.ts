@@ -30,6 +30,7 @@ const users = async () => {
         data: Array(5)
             .fill(0)
             .map((v, i) => ({
+                id: 'owner' + i.toString(),
                 customId: 'owner_id_00' + i.toString(),
                 name: 'owner_00' + i.toString(),
                 email: 'owner_email' + i.toString() + '@gmail.com',
@@ -40,6 +41,7 @@ const users = async () => {
         data: Array(5)
             .fill(0)
             .map((v, i) => ({
+                id: 'user' + i.toString(),
                 customId: 'user_id_00' + i.toString(),
                 name: 'user_00' + i.toString(),
                 email: 'user_email' + i.toString() + '@gmail.com',
@@ -184,7 +186,6 @@ const tasks = async () => {
         '2022-09-03',
         '2022-09-04',
     ]
-    // userId=1
     dateList.forEach(async (date) => {
         await prisma.task.createMany({
             data: Array(5)
@@ -196,7 +197,7 @@ const tasks = async () => {
                     hours: 0.25 * (i + 1),
                     categoryId: i + 1,
                     projectId: i + 1,
-                    userId: 1,
+                    userId: 'owner1',
                 })),
         })
         await prisma.task.createMany({
@@ -209,12 +210,11 @@ const tasks = async () => {
                     hours: 0.25 * (i + 1),
                     categoryId: i + 1,
                     projectId: i + 1,
-                    userId: 1,
+                    userId: 'owner1',
                 })),
         })
     })
 
-    // userId=2
     dateList.forEach(async (date) => {
         await prisma.task.createMany({
             data: Array(5)
@@ -226,7 +226,7 @@ const tasks = async () => {
                     hours: 0.25 * (i + 1),
                     categoryId: i + 1,
                     projectId: i + 1,
-                    userId: 2,
+                    userId: 'user1',
                 })),
         })
         await prisma.task.createMany({
@@ -239,7 +239,7 @@ const tasks = async () => {
                     hours: 0.25 * (i + 1),
                     categoryId: i + 6,
                     projectId: i + 6,
-                    userId: 2,
+                    userId: 'user1',
                 })),
         })
     })

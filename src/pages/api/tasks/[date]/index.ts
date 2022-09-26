@@ -7,7 +7,7 @@ const handler = async (
 ): Promise<void> => {
     const query = req.query
     const date = String(query.date)
-    const userId = Number(query.userId)
+    const userId = query.userId as string
     switch (req.method) {
         case 'GET': {
             const tasks = await prisma.task.findMany({
