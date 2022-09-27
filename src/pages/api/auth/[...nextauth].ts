@@ -19,11 +19,9 @@ export default NextAuth({
         }),
     ],
     secret: 'secret',
-    // callbacks: {
-    //     async session({ session, user, token }) {
-    //         session.user.id = user.id
-    //         session.user.profile = user.profile as string
-    //         return Promise.resolve(session)
-    //     },
-    // },
+    callbacks: {
+        async redirect({ baseUrl }) {
+            return baseUrl + '/signin'
+        },
+    },
 })

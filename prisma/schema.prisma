@@ -56,8 +56,8 @@ model User {
   image         String?
   profile       String?
   avatarUrl     String?
-  role          Role      @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  roleId        Int
+  role          Role?      @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId        Int?
   tasks         Task[]
   accounts      Account[]
   sessions      Session[]
