@@ -3,10 +3,14 @@ import Link from 'next/link'
 import Tab from './Tab'
 import { useRouter } from 'next/router'
 import { TAB_ITEMS } from '../../../consts/index'
+import { useFetchPrivilege } from '@/hooks/role/useFetchPrivilege'
+import { useSession, signOut } from 'next-auth/react'
 
 const Header = React.memo(() => {
     const [isSelectedTab, setSelectedTab] = React.useState<string>('')
     const router = useRouter()
+
+    const privilege = useFetchPrivilege()
 
     React.useEffect(() => {
         setSelectedTab(router.asPath)
@@ -32,6 +36,14 @@ const Header = React.memo(() => {
                         key={item.name}
                     />
                 ))}
+                <button
+                    className="class"
+                    onClick={() => {
+                        signOut({ callbackUrl: '/signin' })
+                    }}
+                >
+                    サインアウト
+                </button>
             </div>
         </>
     )

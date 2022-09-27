@@ -23,5 +23,9 @@ export default NextAuth({
         async redirect({ baseUrl }) {
             return baseUrl + '/signin'
         },
+        async session({ session, user, token }) {
+            // session.user.id = user.id
+            return Promise.resolve(session)
+        },
     },
 })

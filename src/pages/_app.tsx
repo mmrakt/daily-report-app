@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -17,12 +17,12 @@ export const AuthContext = React.createContext(null)
 
 const queryClient = new QueryClient()
 
-export default function MyApp(props: AppProps): React.ReactElement {
-    const {
-        Component,
-        pageProps: { session, ...pageProps },
-    } = props
+type Props = AppProps & {
+    Component: React.ReactChildren
+    pageProps: AppProps
+}
 
+const App: FC<Props> = ({ Component, pageProps }) => {
     React.useEffect(() => {
         const jssStyles = document.querySelector('#jss-server-side')
         if (jssStyles) {
@@ -43,7 +43,7 @@ export default function MyApp(props: AppProps): React.ReactElement {
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
 
-                    <SessionProvider session={session}>
+                    <SessionProvider session={pageProps.session}>
                         <NextNprogress />
                         <Component {...pageProps} />
                     </SessionProvider>
@@ -52,3 +52,5 @@ export default function MyApp(props: AppProps): React.ReactElement {
         </>
     )
 }
+
+export default App
