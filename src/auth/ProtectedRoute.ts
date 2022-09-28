@@ -20,14 +20,6 @@ const ProtectedRoute: any = (props: IProps) => {
         return `<div>loading...</div>`
     }
 
-    // React.useEffect(() => {
-    //     if (!session) {
-    //         if (typeof window !== 'undefined' && session !== undefined) {
-    //             router.push('/signin')
-    //         }
-    //     }
-    // }, [session, router])
-
     return children
 }
 

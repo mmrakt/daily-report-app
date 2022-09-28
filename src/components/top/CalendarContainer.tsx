@@ -4,7 +4,7 @@ import LoadingSpinner from '@/components/common/LoadingSpinner'
 import 'react-calendar/dist/Calendar.css'
 import Calendar from './Calendar'
 
-const CalendarContainer = (): React.ReactElement => {
+const CalendarContainer: React.FC = () => {
     const userId = 1
     const {
         data: submittedDates,

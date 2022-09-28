@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import Modal from 'react-modal'
 import { Task } from '@prisma/client'
 import 'react-calendar/dist/Calendar.css'
-import CheckMark from '../common/CheckMark'
+import CheckMark from '../common/icon/CheckMark'
 import FormContainer from './FormContainer'
 
 const StyledCalendar = styled(ReactCalendar)`

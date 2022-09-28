@@ -1,15 +1,15 @@
 import React from 'react'
-import Layout from '../../components/layout'
 import { signIn } from 'next-auth/react'
 import Button from '@/components/common/Button'
 import NotSidnedInHeader from '@/components/layout/header/NotSignedInHeader'
+import Main from '../../components/layout/Main'
 
-const SignIn = () => {
+const SignIn: React.FC = () => {
     return (
         <>
-            <Layout>
-                <NotSidnedInHeader />
-                <main className="max-w-screen-md mx-auto my-20">
+            <NotSidnedInHeader />
+            <Main>
+                <div className="flex items-center justify-center">
                     <Button
                         text="Googleアカウントでログイン"
                         color="secondary"
@@ -18,8 +18,8 @@ const SignIn = () => {
                             signIn('google', { callbackUrl: '/' })
                         }}
                     />
-                </main>
-            </Layout>
+                </div>
+            </Main>
         </>
     )
 }

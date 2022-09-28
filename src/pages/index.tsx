@@ -1,14 +1,16 @@
 import SignedInHeader from '@/components/layout/header/SIgnedInHeader'
 import React from 'react'
-import Layout from '../components/layout'
 import CalendarContainer from '../components/top/CalendarContainer'
+import Main from '../components/layout/Main'
 
-const Index = (): React.ReactElement => {
+const Index: React.FC = () => {
     return (
-        <Layout>
+        <>
             <SignedInHeader />
-            <CalendarContainer />
-        </Layout>
+            <Main>
+                <CalendarContainer />
+            </Main>
+        </>
     )
 }
 
