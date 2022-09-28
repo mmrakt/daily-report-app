@@ -1,22 +1,26 @@
 import React from 'react'
-import Layout from '../../components/layout/index'
 import {
     CategoriesBlock,
     ProjectsBlock,
     RolesBlock,
 } from '@/components/classification/Block'
+import SignedInHeader from '@/components/layout/header/SIgnedInHeader'
+import Main from '@/components/layout/Main'
 
-const ClassificationPage: React.VFC = () => {
+const ClassificationPage: React.FC = () => {
     return (
-        <Layout>
-            <div className="class">
-                <RolesBlock />
-                <div className="mt-5"></div>
-                <CategoriesBlock />
-                <div className="mt-5"></div>
-                <ProjectsBlock />
-            </div>
-        </Layout>
+        <>
+            <SignedInHeader />
+            <Main>
+                <div className="class">
+                    <RolesBlock />
+                    <div className="mt-5"></div>
+                    <CategoriesBlock />
+                    <div className="mt-5"></div>
+                    <ProjectsBlock />
+                </div>
+            </Main>
+        </>
     )
 }
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { Project, Category } from '@prisma/client'
 import { HOURS } from '../../consts/index'
 import { EditTask } from '../../types/index'
-import MinusCircle from '../common/MinusCircle'
+import MinusCircle from '../common/icon/MinusCircle'
 import { FieldValue, UseFormRegister } from 'react-hook-form'
 
 type IProps = {

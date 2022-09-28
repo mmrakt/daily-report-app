@@ -1,58 +1,25 @@
 import React from 'react'
-import { providers, signIn } from 'next-auth/client'
-import Layout from '../../components/layout'
-import SocialButton from './socialButton'
+import { signIn } from 'next-auth/react'
+import Button from '@/components/common/Button'
+import NotSidnedInHeader from '@/components/layout/header/NotSignedInHeader'
+import Main from '../../components/layout/Main'
 
-type IProviders = {
-    provider: {
-        id: string
-        name: string
-    }
-}
-type IProps = {
-    props: {
-        providers: () => IProviders[]
-    }
-}
-export async function getStaticProps(): Promise<IProps> {
-    return {
-        props: {
-            providers: await providers(),
-        },
-    }
-}
-
-const SignIn = ({ providers }: { providers: IProviders }): React.ReactNode => {
+const SignIn: React.FC = () => {
     return (
         <>
-            <Layout title="ログイン">
-                {Object.values(providers).map((provider) => (
-                    <div key={provider.id}>
-                        <SocialButton
-                            id={provider.id}
-                            name={provider.name}
-                            theme={
-                                provider.name === 'GitHub'
-                                    ? 'bg-gray-500'
-                                    : provider.name === 'Google'
-                                    ? 'bg-red-400'
-                                    : provider.name === 'Twitter'
-                                    ? 'bg-blue-500'
-                                    : ''
-                            }
-                            hover={
-                                provider.name === 'GitHub'
-                                    ? 'bg-gray-600'
-                                    : provider.name === 'Google'
-                                    ? 'bg-red-500'
-                                    : provider.name === 'Twitter'
-                                    ? 'bg-blue-600'
-                                    : ''
-                            }
-                        />
-                    </div>
-                ))}
-            </Layout>
+            <NotSidnedInHeader />
+            <Main>
+                <div className="flex items-center justify-center">
+                    <Button
+                        text="Googleアカウントでログイン"
+                        color="secondary"
+                        className="font-bold py-2 px-4 my-2 rounded"
+                        onClickEvent={() => {
+                            signIn('google', { callbackUrl: '/' })
+                        }}
+                    />
+                </div>
+            </Main>
         </>
     )
 }

@@ -1,7 +1,8 @@
 import React from 'react'
-import Layout from '../../components/layout/index'
 import SearchResultContainer from '../../components/assignment/SearchResultContainer'
 import SearchContainer from '@/components/assignment/SearchContainer'
+import SignedInHeader from '@/components/layout/header/SIgnedInHeader'
+import Main from '@/components/layout/Main'
 
 const AssignmentPage: React.VFC = () => {
     const [selectedRoleId, setSelectedRoleId] = React.useState<string>()
@@ -15,16 +16,19 @@ const AssignmentPage: React.VFC = () => {
         setIsDisplayed(true)
     }
     return (
-        <Layout>
-            <SearchContainer
-                onChange={handleChange}
-                onDisplay={handleDisplay}
-            />
-            <div className="mt-5" />
-            {isDisplayed && (
-                <SearchResultContainer roleId={Number(selectedRoleId)} />
-            )}
-        </Layout>
+        <>
+            <SignedInHeader />
+            <Main>
+                <SearchContainer
+                    onChange={handleChange}
+                    onDisplay={handleDisplay}
+                />
+                <div className="mt-5" />
+                {isDisplayed && (
+                    <SearchResultContainer roleId={Number(selectedRoleId)} />
+                )}
+            </Main>
+        </>
     )
 }
 

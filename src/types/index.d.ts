@@ -1,5 +1,5 @@
 import { Category, Project } from '@prisma/client'
-export type ITask = {
+type ITask = {
     tempId?: string
     summary: string
     note: string
@@ -10,21 +10,21 @@ export type ITask = {
     date: string
 }
 
-export type RoleIds = {
+type RoleIds = {
     roles: {
         roleId: number
     }[]
 }
 
-export type CategoryAndRoleIds = Category & RoleIds
-export type ProjectAndRoleIds = Project & RoleIds
+type CategoryAndRoleIds = Category & RoleIds
+type ProjectAndRoleIds = Project & RoleIds
 
-export type Classification = {
+type Classification = {
     id: number
     name: string
 }
 
-export type EditTask = {
+type EditTask = {
     tempId: string
     hours: string
     categoryId: string

@@ -12,7 +12,7 @@ import {
 } from '../../consts/index'
 import { Classification } from '../../types/index'
 import { uuidv4 } from '@firebase/util'
-import MinusCircle from '../common/MinusCircle'
+import MinusCircle from '../common/icon/MinusCircle'
 import Modal from 'react-modal'
 
 const modalStyle = {
