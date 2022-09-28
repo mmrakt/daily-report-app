@@ -5,10 +5,12 @@ import {
     ProjectsBlock,
     RolesBlock,
 } from '@/components/classification/Block'
+import SignedInHeader from '@/components/layout/header/SIgnedInHeader'
 
 const ClassificationPage: React.VFC = () => {
     return (
         <Layout>
+            <SignedInHeader />
             <div className="class">
                 <RolesBlock />
                 <div className="mt-5"></div>

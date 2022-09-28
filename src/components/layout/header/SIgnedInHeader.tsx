@@ -5,12 +5,14 @@ import { useRouter } from 'next/router'
 import { TAB_ITEMS } from '../../../consts/index'
 import { useFetchPrivilege } from '@/hooks/role/useFetchPrivilege'
 import { useSession, signOut } from 'next-auth/react'
+import { User } from '@prisma/client'
+import Title from './Title'
 
-const Header = React.memo(() => {
+const SignedInHeader = React.memo(() => {
     const [isSelectedTab, setSelectedTab] = React.useState<string>('')
     const router = useRouter()
 
-    const privilege = useFetchPrivilege()
+    // const privilege = useFetchPrivilege()
 
     React.useEffect(() => {
         setSelectedTab(router.asPath)
@@ -18,12 +20,8 @@ const Header = React.memo(() => {
 
     return (
         <>
-            <div className="shadow-lg h-20 flex">
-                <p className="px-8 py-8 font-black text-xl">
-                    <Link href="/">
-                        <a>日報ツール</a>
-                    </Link>
-                </p>
+            <header className="shadow-lg h-20 flex items-center">
+                <Title />
                 {TAB_ITEMS.map((item) => (
                     <Tab
                         url={item.url}
@@ -36,19 +34,21 @@ const Header = React.memo(() => {
                         key={item.name}
                     />
                 ))}
-                <button
-                    className="class"
-                    onClick={() => {
-                        signOut({ callbackUrl: '/signin' })
-                    }}
-                >
-                    サインアウト
-                </button>
-            </div>
+                <div className="ml-auto mr-5">
+                    <button
+                        className="class"
+                        onClick={() => {
+                            signOut({ callbackUrl: '/signin' })
+                        }}
+                    >
+                        サインアウト
+                    </button>
+                </div>
+            </header>
         </>
     )
 })
 
-Header.displayName = 'Header'
+SignedInHeader.displayName = 'SignedInHeader'
 
-export default Header
+export default SignedInHeader
