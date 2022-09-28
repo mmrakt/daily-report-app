@@ -6,7 +6,9 @@
 
 ## 技術スタック
 
--   TypeScript + Next.js
--   Prisma
--   GraphQL(Hasura)
--   Firebase Authentication
+- Language: TypeScript
+- FW: React.js + Next.js 
+- ORM: Prisma
+- Form State: ReactHookForm
+- Fetching: ReactQuery
+- Authentication: NextAuth
