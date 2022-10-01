@@ -6,24 +6,21 @@ import {
 } from '@/components/classification/Block'
 import { SignedInHeader } from '@/components/layout/header'
 import Main from '@/components/layout/Main'
-import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
-import LoadingSpinner from '@/components/common/LoadingSpinner'
+import addCheckPermission from '@/utils/checkPermission'
+import { GetServerSidePropsContext } from 'next'
+import CustomError from '../../components/common/CustomError'
 
-const ClassificationPage: React.FC = () => {
-    const router = useRouter()
-    const { data: session, status } = useSession()
-
-    if (typeof window !== 'undefined') {
-        if (status === 'loading') return <LoadingSpinner />
-        if (status === 'unauthenticated') {
-            router.push('/signin')
-            return null
-        }
+const ClassificationPage: React.FC<{ errorCode: number; userId: string }> = ({
+    errorCode,
+    userId,
+}) => {
+    if (errorCode) {
+        return <CustomError errorCode={errorCode} />
     }
+
     return (
         <>
-            <SignedInHeader userId={session?.user?.id} />
+            <SignedInHeader userId={userId} />
             <Main>
                 <div className="class">
                     <RolesBlock />
@@ -35,6 +32,10 @@ const ClassificationPage: React.FC = () => {
             </Main>
         </>
     )
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    return addCheckPermission(context)
 }
 
 export default ClassificationPage
