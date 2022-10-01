@@ -28,3 +28,6 @@ export const TAB_ITEMS = [
 
 export const TEXT_FORM_REGISTER_PREFIX = 'classifications.text.id.'
 export const CHECKBOX_REGISTER_PREFIX = 'classifications.checkbox.id.'
+export const ERROR_MESSAGES = {
+    403: 'Forbidden',
+}

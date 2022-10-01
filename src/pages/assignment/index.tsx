@@ -3,23 +3,21 @@ import SearchResultContainer from '../../components/assignment/SearchResultConta
 import SearchContainer from '@/components/assignment/SearchContainer'
 import { SignedInHeader } from '@/components/layout/header'
 import Main from '@/components/layout/Main'
-import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
-import LoadingSpinner from '@/components/common/LoadingSpinner'
+import { unstable_getServerSession } from 'next-auth'
+import { authOptions } from '../api/auth/[...nextauth]'
+import prisma from '../../libs/prisma'
+import { GetServerSidePropsContext } from 'next'
+import CustomError from '../CustomError'
 
-const AssignmentPage: React.VFC = () => {
+const AssignmentPage: React.FC<{ errorCode: number; userId: string }> = ({
+    errorCode,
+    userId,
+}) => {
     const [selectedRoleId, setSelectedRoleId] = React.useState<string>()
     const [isDisplayed, setIsDisplayed] = React.useState<boolean>(false)
 
-    const router = useRouter()
-    const { data: session, status } = useSession()
-
-    if (typeof window !== 'undefined') {
-        if (status === 'loading') return <LoadingSpinner />
-        if (status === 'unauthenticated') {
-            router.push('/signin')
-            return null
-        }
+    if (errorCode) {
+        return <CustomError errorCode={errorCode} />
     }
 
     const handleChange = (selectedRoleId: string) => {
@@ -31,7 +29,7 @@ const AssignmentPage: React.VFC = () => {
     }
     return (
         <>
-            <SignedInHeader userId={session?.user?.id} />
+            <SignedInHeader userId={userId} />
             <Main>
                 <SearchContainer
                     onChange={handleChange}
@@ -44,6 +42,51 @@ const AssignmentPage: React.VFC = () => {
             </Main>
         </>
     )
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const session = await unstable_getServerSession(
+        context.req,
+        context.res,
+        authOptions
+    )
+
+    if (!session) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: '/signin',
+            },
+        }
+    }
+
+    const user = await prisma.user.findUnique({
+        where: {
+            id: session?.user?.id,
+        },
+        include: {
+            role: {
+                select: {
+                    privilege: true,
+                },
+            },
+        },
+    })
+
+    if (user?.role?.privilege === 'admin') {
+        return {
+            props: {
+                errorCode: null,
+                userId: user.id,
+            },
+        }
+    }
+
+    return {
+        props: {
+            errorCode: 403,
+        },
+    }
 }
 
 export default AssignmentPage
