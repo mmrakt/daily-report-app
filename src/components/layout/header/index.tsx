@@ -7,17 +7,13 @@ import Title from './Title'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { signOut } from 'next-auth/react'
 import { Role } from '@prisma/client'
+import { useSession } from 'next-auth/react'
+import role from '@/pages/api/users/[userId]/role'
 
-const SignedInHeader: React.FC<{ userId: string }> = ({ userId }) => {
-    const { data: role, isLoading } = useFetchPrivilege(userId)
-    if (isLoading) return <LoadingSpinner />
-
-    return <Header role={role} />
-}
-
-const Header: React.FC<{ role?: Pick<Role, 'privilege'> }> = ({ role }) => {
+const Header: React.FC<{ isPermitted: boolean }> = ({ isPermitted }) => {
     const [isSelectedTab, setSelectedTab] = React.useState<string>('')
     const router = useRouter()
+    const { data, status } = useSession()
 
     React.useEffect(() => {
         setSelectedTab(router.asPath)
@@ -27,7 +23,7 @@ const Header: React.FC<{ role?: Pick<Role, 'privilege'> }> = ({ role }) => {
         <>
             <header className="shadow-lg h-20 flex items-center">
                 <Title />
-                {role && role.privilege === 'admin' && (
+                {isPermitted && (
                     <>
                         {TAB_ITEMS.map((item) => (
                             <Tab
@@ -43,7 +39,9 @@ const Header: React.FC<{ role?: Pick<Role, 'privilege'> }> = ({ role }) => {
                         ))}
                     </>
                 )}
-                {role && (
+                {status === 'loading' ? (
+                    <LoadingSpinner />
+                ) : status === 'authenticated' ? (
                     <div className="ml-auto mr-5">
                         <button
                             className="class"
@@ -54,10 +52,12 @@ const Header: React.FC<{ role?: Pick<Role, 'privilege'> }> = ({ role }) => {
                             サインアウト
                         </button>
                     </div>
+                ) : (
+                    <></>
                 )}
             </header>
         </>
     )
 }
 
-export { SignedInHeader, Header }
+export default Header

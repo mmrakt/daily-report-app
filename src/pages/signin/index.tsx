@@ -1,25 +1,15 @@
 import React from 'react'
-import { signIn, useSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import Button from '@/components/common/Button'
-import { Header } from '@/components/layout/header'
+import Header from '@/components/layout/header'
 import Main from '../../components/layout/Main'
-import { useRouter } from 'next/router'
-import LoadingSpinner from '@/components/common/LoadingSpinner'
+import hasSession from '@/utils/hasSession'
+import { GetServerSidePropsContext } from 'next'
 
 const SignIn: React.FC = () => {
-    const router = useRouter()
-    const { data, status } = useSession()
-
-    if (typeof window !== 'undefined') {
-        if (status === 'loading') return <LoadingSpinner />
-        if (status === 'authenticated') {
-            router.push('/')
-            return null
-        }
-    }
     return (
         <>
-            <Header />
+            <Header isPermitted={false} />
             <Main>
                 <div className="flex items-center justify-center">
                     <Button
@@ -34,6 +24,18 @@ const SignIn: React.FC = () => {
             </Main>
         </>
     )
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const session = await hasSession(context)
+    if (session) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: '/',
+            },
+        }
+    }
 }
 
 export default SignIn

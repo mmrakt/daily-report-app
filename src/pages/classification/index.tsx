@@ -4,23 +4,24 @@ import {
     ProjectsBlock,
     RolesBlock,
 } from '@/components/classification/Block'
-import { SignedInHeader } from '@/components/layout/header'
+import Header from '@/components/layout/header'
 import Main from '@/components/layout/Main'
-import addCheckPermission from '@/utils/checkPermission'
 import { GetServerSidePropsContext } from 'next'
 import CustomError from '../../components/common/CustomError'
+import hasSession from '@/utils/hasSession'
+import isPermittedRole from '@/utils/isPermiteedRole'
 
-const ClassificationPage: React.FC<{ errorCode: number; userId: string }> = ({
-    errorCode,
-    userId,
-}) => {
+const ClassificationPage: React.FC<{
+    errorCode: number
+    isPermitted: boolean
+}> = ({ errorCode, isPermitted }) => {
     if (errorCode) {
         return <CustomError errorCode={errorCode} />
     }
 
     return (
         <>
-            <SignedInHeader userId={userId} />
+            <Header isPermitted={isPermitted} />
             <Main>
                 <div className="class">
                     <RolesBlock />
@@ -35,7 +36,20 @@ const ClassificationPage: React.FC<{ errorCode: number; userId: string }> = ({
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-    return addCheckPermission(context)
+    const session = await hasSession(context)
+    if (!session) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: '/signin',
+            },
+        }
+    }
+    return {
+        props: isPermittedRole(session?.user?.id)
+            ? { errorCode: null, isPermitted: true }
+            : { errorCode: 403 },
+    }
 }
 
 export default ClassificationPage

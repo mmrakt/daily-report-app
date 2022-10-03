@@ -1,15 +1,16 @@
 import React from 'react'
 import SearchResultContainer from '../../components/assignment/SearchResultContainer'
 import SearchContainer from '@/components/assignment/SearchContainer'
-import { SignedInHeader } from '@/components/layout/header'
+import Header from '@/components/layout/header'
 import Main from '@/components/layout/Main'
 import { GetServerSidePropsContext } from 'next'
 import CustomError from '../../components/common/CustomError'
-import checkPermission from '../../utils/checkPermission'
+import isPermittedRole from '../../utils/isPermiteedRole'
+import hasSession from '@/utils/hasSession'
 
-const AssignmentPage: React.FC<{ errorCode: number; userId: string }> = ({
+const AssignmentPage: React.FC<{ errorCode: number; isPermitted: boolean }> = ({
     errorCode,
-    userId,
+    isPermitted,
 }) => {
     const [selectedRoleId, setSelectedRoleId] = React.useState<string>()
     const [isDisplayed, setIsDisplayed] = React.useState<boolean>(false)
@@ -27,7 +28,7 @@ const AssignmentPage: React.FC<{ errorCode: number; userId: string }> = ({
     }
     return (
         <>
-            <SignedInHeader userId={userId} />
+            <Header isPermitted={isPermitted} />
             <Main>
                 <SearchContainer
                     onChange={handleChange}
@@ -43,7 +44,20 @@ const AssignmentPage: React.FC<{ errorCode: number; userId: string }> = ({
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-    return checkPermission(context)
+    const session = await hasSession(context)
+    if (!session) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: '/signin',
+            },
+        }
+    }
+    return {
+        props: isPermittedRole(session?.user?.id)
+            ? { errorCode: null, isPermitted: true }
+            : { errorCode: 403 },
+    }
 }
 
 export default AssignmentPage

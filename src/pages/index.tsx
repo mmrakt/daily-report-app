@@ -1,30 +1,37 @@
-import { SignedInHeader } from '@/components/layout/header'
+import Header from '@/components/layout/header'
 import React from 'react'
 import CalendarContainer from '../components/top/CalendarContainer'
 import Main from '../components/layout/Main'
-import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
-import LoadingSpinner from '@/components/common/LoadingSpinner'
+import { GetServerSidePropsContext } from 'next'
+import isPermittedRole from '../utils/isPermiteedRole'
+import hasSession from '../utils/hasSession'
 
-const Index: React.FC = () => {
-    const router = useRouter()
-    const { data: session, status } = useSession()
-
-    if (typeof window !== 'undefined') {
-        if (status === 'loading') return <LoadingSpinner />
-        if (status === 'unauthenticated') {
-            router.push('/signin')
-            return null
-        }
-    }
+const Index: React.FC<{ isPermitted: boolean }> = ({ isPermitted }) => {
     return (
         <>
-            <SignedInHeader userId={session?.user?.id} />
+            <Header isPermitted={isPermitted} />
             <Main>
                 <CalendarContainer />
             </Main>
         </>
     )
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const session = await hasSession(context)
+    if (!session) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: '/signin',
+            },
+        }
+    }
+
+    const isPermitted = isPermittedRole(session?.user?.id)
+    return {
+        props: isPermitted,
+    }
 }
 
 export default Index
