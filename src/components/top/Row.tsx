@@ -10,7 +10,7 @@ type IProps = {
     categories: Category[]
     projects: Project[]
     onDelete: () => void
-    register: UseFormRegister<FieldValue>
+    register: UseFormRegister<FieldValue<any>>
 }
 
 const Row: React.FC<IProps> = ({

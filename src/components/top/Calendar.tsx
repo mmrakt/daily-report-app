@@ -35,11 +35,7 @@ const modalStyle = {
     },
 }
 
-type CalenderProps = {
-    dates: Pick<Task, 'date'>[]
-}
-
-const Calendar: React.FC<{ submittedDates: CalenderProps }> = ({
+const Calendar: React.FC<{ submittedDates: Pick<Task, 'date'>[] }> = ({
     submittedDates,
 }) => {
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false)
@@ -47,7 +43,7 @@ const Calendar: React.FC<{ submittedDates: CalenderProps }> = ({
 
     const TileContent = ({ date }: { date: string }) => {
         if (
-            submittedDates.some(
+            (submittedDates as any).some(
                 (report) => report.date === dayjs(date).format('YYYY-MM-DD')
             )
         ) {

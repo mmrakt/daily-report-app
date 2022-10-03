@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React from 'react'
 import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -12,17 +12,18 @@ import '../../styles/globals.css'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { SessionProvider } from 'next-auth/react'
 import NextNprogress from 'nextjs-progressbar'
+import { Session } from 'next-auth'
 
 export const AuthContext = React.createContext(null)
 
 const queryClient = new QueryClient()
 
-type Props = AppProps & {
-    Component: React.ReactChildren
-    pageProps: AppProps
-}
-
-const App: FC<Props> = ({ Component, pageProps }) => {
+function App({
+    Component,
+    pageProps,
+}: AppProps<{
+    session: Session
+}>) {
     React.useEffect(() => {
         const jssStyles = document.querySelector('#jss-server-side')
         if (jssStyles) {

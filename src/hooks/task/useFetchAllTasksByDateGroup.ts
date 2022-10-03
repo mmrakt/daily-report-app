@@ -3,11 +3,14 @@ import { Task } from '@prisma/client'
 
 const useFetchAllTasksByDateGroup = (
     userId: number
-): UseQueryResult<Task[]> => {
-    return useQuery<Task[]>(['tasks', { userId: userId }], async () => {
-        const res = await fetch(`/api/tasks?userId=${userId}`)
-        return res.json()
-    })
+): UseQueryResult<Pick<Task, 'date'>[]> => {
+    return useQuery<Pick<Task, 'date'>[]>(
+        ['tasks', { userId: userId }],
+        async () => {
+            const res = await fetch(`/api/tasks?userId=${userId}`)
+            return res.json()
+        }
+    )
 }
 
 export { useFetchAllTasksByDateGroup }

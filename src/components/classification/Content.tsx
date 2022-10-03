@@ -318,13 +318,13 @@ const Content: React.FC<{
                                             className="rounded"
                                         />
                                         <span className="text-red-700 font-light">
-                                            {errors.classifications?.text.id[
-                                                classification.id
-                                            ]?.type === 'required' &&
+                                            {(errors.classifications as any)
+                                                ?.type.id[classification.id]
+                                                ?.type === 'required' &&
                                                 '必須項目です'}
-                                            {errors.classifications?.text.id[
-                                                classification.id
-                                            ]?.type === 'maxLength' &&
+                                            {(errors.classifications as any)
+                                                ?.text.id[classification.id]
+                                                ?.type === 'maxLength' &&
                                                 '20文字以上は入力できません'}
                                         </span>
                                     </div>
@@ -355,9 +355,9 @@ const Content: React.FC<{
                                         className="rounded"
                                     />
                                     <span className="text-red-700 font-light">
-                                        {errors.classifications?.text.id[
-                                            classification.id
-                                        ]?.type === 'maxLength' &&
+                                        {(errors.classifications as any)?.text
+                                            .id[classification.id]?.type ===
+                                            'maxLength' &&
                                             '20文字以上は入力できません'}
                                     </span>
                                 </div>
