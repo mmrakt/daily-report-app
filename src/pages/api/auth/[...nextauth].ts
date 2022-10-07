@@ -20,6 +20,17 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async session({ session, user }) {
             session.user.id = user.id
+            const dbUser = await prisma.user.findFirst({
+                where: {
+                    id: {
+                        equals: user.id,
+                    },
+                },
+                select: {
+                    roleId: true,
+                },
+            })
+            session.user.roleId = dbUser.roleId
             return Promise.resolve(session)
         },
     },

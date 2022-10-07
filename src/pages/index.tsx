@@ -1,6 +1,6 @@
 import Header from '@/components/layout/header'
 import React from 'react'
-import CalendarContainer from '../components/top/CalendarContainer'
+import CalendarWrapper from '../components/top/CalendarWrapper'
 import Main from '../components/layout/Main'
 import { GetServerSidePropsContext } from 'next'
 import isPermittedRole from '../utils/isPermiteedRole'
@@ -11,7 +11,7 @@ const Index: React.FC<{ isPermitted: boolean }> = ({ isPermitted }) => {
         <>
             <Header isPermitted={isPermitted} />
             <Main>
-                <CalendarContainer />
+                <CalendarWrapper />
             </Main>
         </>
     )

@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from 'react-query'
 import { Task } from '@prisma/client'
 
 const useFetchTasksByDate = (
-    userId: number,
+    userId: string,
     date: string
 ): UseQueryResult<Task[]> => {
     return useQuery<Task[]>(

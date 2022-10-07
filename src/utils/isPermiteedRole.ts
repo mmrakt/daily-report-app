@@ -1,7 +1,4 @@
 import prisma from '@/libs/prisma'
-import { authOptions } from '@/pages/api/auth/[...nextauth]'
-import { GetServerSidePropsContext } from 'next'
-import { unstable_getServerSession } from 'next-auth'
 
 const isPermittedRole = async (userId: string) => {
     const user = await prisma.user.findUnique({

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import { DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
 
 export type CreateTask = {
-    userId: number
+    userId: string
     categoryId: number
     projectId: number
     hours: number

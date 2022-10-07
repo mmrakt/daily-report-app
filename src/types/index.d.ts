@@ -6,7 +6,7 @@ type ITask = {
     projectId: number
     categoryId: number
     hours: number
-    userId: number
+    userId: string
     date: string
 }
 

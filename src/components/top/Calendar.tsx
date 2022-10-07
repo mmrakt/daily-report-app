@@ -6,7 +6,7 @@ import Modal from 'react-modal'
 import { Task } from '@prisma/client'
 import 'react-calendar/dist/Calendar.css'
 import CheckMark from '../common/icon/CheckMark'
-import FormContainer from './FormContainer'
+import FormWrapper from './FormWrapper'
 
 const StyledCalendar = styled(ReactCalendar)`
     margin: 0 auto;
@@ -76,7 +76,7 @@ const Calendar: React.FC<{ submittedDates: Pick<Task, 'date'>[] }> = ({
                 }}
                 ariaHideApp={false}
             >
-                <FormContainer
+                <FormWrapper
                     onModalClose={() => {
                         setIsModalOpen(false)
                     }}

@@ -4,7 +4,7 @@ import LoadingSpinner from '@/components/common/LoadingSpinner'
 import 'react-calendar/dist/Calendar.css'
 import Calendar from './Calendar'
 
-const CalendarContainer: React.FC = () => {
+const CalendarWrapper: React.FC = () => {
     const userId = 1
     const {
         data: submittedDates,
@@ -17,4 +17,4 @@ const CalendarContainer: React.FC = () => {
     return <Calendar submittedDates={submittedDates} />
 }
 
-export default CalendarContainer
+export default CalendarWrapper

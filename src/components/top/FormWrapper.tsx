@@ -4,21 +4,26 @@ import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { useFetchCategoriesByRole } from '@/hooks/category/useFetchCategoriesByRole'
 import { useFetchProjectsByRole } from '@/hooks/project/useFetchProjectsByRole'
 import Form from '@/components/top/Form'
+import { useSession } from 'next-auth/react'
 
-const FormContainer: React.FC<{
+const FormWrapper: React.FC<{
     selectDate: string
     onModalClose: () => void
 }> = ({ selectDate, onModalClose }) => {
-    // FIXME:
-    const userId = 1
-    const roleId = 1
-    const { data: submittedTasks, isLoading: isLoadingFetchTasks } =
-        useFetchTasksByDate(userId, selectDate)
+    const { data: session, status } = useSession()
+    const fetchTasksByDate = useFetchTasksByDate
+    const fetchCategoriesByRole = useFetchCategoriesByRole
+    const fetchProjectsByRole = useFetchProjectsByRole
 
+    if (status === 'loading') return <LoadingSpinner />
+
+    const { id, roleId } = session?.user
+    const { data: submittedTasks, isLoading: isLoadingFetchTasks } =
+        fetchTasksByDate(id, selectDate)
     const { data: categories, isLoading: isLoadingFeatchCategories } =
-        useFetchCategoriesByRole(roleId)
+        fetchCategoriesByRole(roleId)
     const { data: projects, isLoading: isLoadingFeatchProjects } =
-        useFetchProjectsByRole(roleId)
+        fetchProjectsByRole(roleId)
 
     if (
         isLoadingFetchTasks ||
@@ -32,7 +37,7 @@ const FormContainer: React.FC<{
             submittedTasks={submittedTasks}
             categories={categories}
             projects={projects}
-            userId={userId}
+            userId={id}
             roleId={roleId}
             selectDate={selectDate}
             onModalClose={onModalClose}
@@ -41,4 +46,4 @@ const FormContainer: React.FC<{
     )
 }
 
-export default FormContainer
+export default FormWrapper

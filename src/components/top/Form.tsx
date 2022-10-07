@@ -15,7 +15,7 @@ type IProps = {
     submittedTasks?: Task[]
     categories: Category[]
     projects: Project[]
-    userId: number
+    userId: string
     roleId: number
     selectDate: string
     onModalClose: () => void
