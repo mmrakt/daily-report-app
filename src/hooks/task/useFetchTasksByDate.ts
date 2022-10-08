@@ -10,6 +10,9 @@ const useFetchTasksByDate = (
         async () => {
             const res = await fetch(`/api/tasks/${date}/?userId=${userId}`)
             return res.json()
+        },
+        {
+            enabled: !!userId && !!date,
         }
     )
 }

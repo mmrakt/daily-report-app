@@ -32,8 +32,6 @@
         "@testing-library/user-event": "^12.6.0",
         "@types/jest": "^26.0.19",
         "@types/node": "^14.14.22",
-        "@types/react": "^17.0.0",
-        "@types/react-redux": "^7.1.15",
         "@types/react-test-renderer": "^17.0.0",
         "@types/styled-components": "^5.1.7",
         "@typescript-eslint/eslint-plugin": "^4.14.1",
@@ -63,9 +61,9 @@
         "onchange": "^7.1.0",
         "postcss": "8.1.7",
         "prettier": "^2.2.1",
-        "react": "^17.0.1",
+        "react": "^18.2.0",
         "react-calendar": "^3.3.0",
-        "react-dom": "^17.0.1",
+        "react-dom": "^18.2.0",
         "react-hook-form": "^7.35.0",
         "react-image-crop": "^8.6.6",
         "react-modal": "^3.12.1",
@@ -93,6 +91,7 @@
     },
     "devDependencies": {
         "@types/autosize": "^3.0.7",
+        "@types/react": "^18.0.21",
         "eslint-plugin-react-hooks": "^4.2.0",
         "prisma": "^4.3.1",
         "ts-node": "^9.1.1"

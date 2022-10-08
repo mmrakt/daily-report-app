@@ -11,7 +11,7 @@ import useDisableProjects from '../../hooks/project/useDisableProjects'
 import useDisableCategories from '../../hooks/category/useDisableCategories'
 import useDisableRoles from '../../hooks/role/useDisableRoles'
 
-const ProjectsBlock: React.VFC = () => {
+const ProjectsBlock: React.FC = () => {
     const { data: projects, isLoading } = useFetchProjects()
     const updateProjectsMutation = useUpdateProjects()
     const disableProjectsMutation = useDisableProjects()
@@ -29,7 +29,7 @@ const ProjectsBlock: React.VFC = () => {
     )
 }
 
-const CategoriesBlock: React.VFC = () => {
+const CategoriesBlock: React.FC = () => {
     const { data: categories, isLoading } = useFetchCategories()
     const updateCategoriesMutation = useUpdateCategories()
     const disableCategoriesMutation = useDisableCategories()
@@ -47,7 +47,7 @@ const CategoriesBlock: React.VFC = () => {
     )
 }
 
-const RolesBlock: React.VFC = () => {
+const RolesBlock: React.FC = () => {
     const { data: roles, isLoading } = useFetchRoles()
     const updateRolesMutation = useUpdateRoles()
     const disableRolesMutation = useDisableRoles()

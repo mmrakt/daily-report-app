@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import { HOURS, DISPLAY_NOTICE_MILLISECOUND } from '../../consts/index'
-import { uuidv4 } from '@firebase/util'
+import { v4 as uuidv4 } from 'uuid'
 import { EditTask } from '../../types/index'
 import { Project, Task, Category } from '@prisma/client'
 import { useCreateTasksByDate } from '@/hooks/task/useCreateTasksByDate'

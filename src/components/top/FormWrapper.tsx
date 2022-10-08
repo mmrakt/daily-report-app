@@ -11,21 +11,16 @@ const FormWrapper: React.FC<{
     onModalClose: () => void
 }> = ({ selectDate, onModalClose }) => {
     const { data: session, status } = useSession()
-    const fetchTasksByDate = useFetchTasksByDate
-    const fetchCategoriesByRole = useFetchCategoriesByRole
-    const fetchProjectsByRole = useFetchProjectsByRole
-
-    if (status === 'loading') return <LoadingSpinner />
-
     const { id, roleId } = session?.user
     const { data: submittedTasks, isLoading: isLoadingFetchTasks } =
-        fetchTasksByDate(id, selectDate)
+        useFetchTasksByDate(id, selectDate)
     const { data: categories, isLoading: isLoadingFeatchCategories } =
-        fetchCategoriesByRole(roleId)
+        useFetchCategoriesByRole(roleId)
     const { data: projects, isLoading: isLoadingFeatchProjects } =
-        fetchProjectsByRole(roleId)
+        useFetchProjectsByRole(roleId)
 
     if (
+        status === 'loading' ||
         isLoadingFetchTasks ||
         isLoadingFeatchCategories ||
         isLoadingFeatchProjects

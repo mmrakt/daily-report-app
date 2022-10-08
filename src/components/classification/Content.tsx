@@ -61,7 +61,7 @@ const Content: React.FC<{
         register,
         unregister,
         handleSubmit,
-        formState: { errors, dirtyFields },
+        formState: { errors },
         setValue,
     } = useForm({
         criteriaMode: 'all',
