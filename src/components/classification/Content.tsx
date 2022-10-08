@@ -11,9 +11,9 @@ import {
     CHECKBOX_REGISTER_PREFIX,
 } from '../../consts/index'
 import { Classification } from '../../types/index'
-import { uuidv4 } from '@firebase/util'
 import MinusCircle from '../common/icon/MinusCircle'
 import Modal from 'react-modal'
+import { v4 as uuidv4 } from 'uuid'
 
 const modalStyle = {
     overlay: {
