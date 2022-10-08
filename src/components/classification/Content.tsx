@@ -289,47 +289,49 @@ const Content: React.FC<{
                 <div className="class">
                     <form>
                         {classifications &&
-                            classifications.map((classification) => (
-                                <>
-                                    <div
-                                        key={classification.id}
-                                        className="grid grid-template-classification-setting-form mt-3 gap-3 justify-start items-center"
-                                    >
-                                        <div className="flex justify-center items-center">
+                            classifications.map(
+                                (classification: Role | Category | Project) => (
+                                    <>
+                                        <div
+                                            key={classification.id}
+                                            className="grid grid-template-classification-setting-form mt-3 gap-3 justify-start items-center"
+                                        >
+                                            <div className="flex justify-center items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    {...register(
+                                                        CHECKBOX_REGISTER_PREFIX +
+                                                            classification.id
+                                                    )}
+                                                    className="rounded"
+                                                />
+                                            </div>
                                             <input
-                                                type="checkbox"
+                                                type="text"
                                                 {...register(
-                                                    CHECKBOX_REGISTER_PREFIX +
-                                                        classification.id
+                                                    TEXT_FORM_REGISTER_PREFIX +
+                                                        classification.id,
+                                                    {
+                                                        required: true,
+                                                        maxLength: 30,
+                                                    }
                                                 )}
                                                 className="rounded"
                                             />
+                                            <span className="text-red-700 font-light">
+                                                {(errors.classifications as any)
+                                                    ?.type.id[classification.id]
+                                                    ?.type === 'required' &&
+                                                    '必須項目です'}
+                                                {(errors.classifications as any)
+                                                    ?.text.id[classification.id]
+                                                    ?.type === 'maxLength' &&
+                                                    '20文字以上は入力できません'}
+                                            </span>
                                         </div>
-                                        <input
-                                            type="text"
-                                            {...register(
-                                                TEXT_FORM_REGISTER_PREFIX +
-                                                    classification.id,
-                                                {
-                                                    required: true,
-                                                    maxLength: 30,
-                                                }
-                                            )}
-                                            className="rounded"
-                                        />
-                                        <span className="text-red-700 font-light">
-                                            {(errors.classifications as any)
-                                                ?.type.id[classification.id]
-                                                ?.type === 'required' &&
-                                                '必須項目です'}
-                                            {(errors.classifications as any)
-                                                ?.text.id[classification.id]
-                                                ?.type === 'maxLength' &&
-                                                '20文字以上は入力できません'}
-                                        </span>
-                                    </div>
-                                </>
-                            ))}
+                                    </>
+                                )
+                            )}
                         {editClassifications &&
                             editClassifications.map((classification) => (
                                 <div

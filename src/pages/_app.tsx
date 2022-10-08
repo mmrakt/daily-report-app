@@ -1,8 +1,5 @@
 import React from 'react'
 import Head from 'next/head'
-import { ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import theme from '../libs/theme'
 import 'minireset.css'
 import '../base.css'
 import 'react-calendar/dist/Calendar.css'
@@ -41,14 +38,10 @@ function App({
                 />
             </Head>
             <QueryClientProvider client={queryClient}>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-
-                    <SessionProvider session={pageProps.session}>
-                        <NextNprogress />
-                        <Component {...pageProps} />
-                    </SessionProvider>
-                </ThemeProvider>
+                <SessionProvider session={pageProps.session}>
+                    <NextNprogress />
+                    <Component {...pageProps} />
+                </SessionProvider>
             </QueryClientProvider>
         </>
     )

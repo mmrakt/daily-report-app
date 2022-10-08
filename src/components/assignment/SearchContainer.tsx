@@ -23,13 +23,14 @@ const SearchContainer: React.FC<IProps> = ({ onChange, onDisplay }) => {
             </label>
             <select
                 id="countries"
+                defaultValue="0"
                 onChange={(e) => {
                     setIsChangedOption(true)
                     onChange(e.target.value)
                 }}
                 className="border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             >
-                <option selected disabled>
+                <option value="0" disabled>
                     ロールを選択してください
                 </option>
                 {roles &&
