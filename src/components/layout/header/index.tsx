@@ -2,13 +2,10 @@ import React from 'react'
 import Tab from './Tab'
 import { useRouter } from 'next/router'
 import { TAB_ITEMS } from '../../../consts/index'
-import { useFetchPrivilege } from '@/hooks/role/useFetchPrivilege'
 import Title from './Title'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { signOut } from 'next-auth/react'
-import { Role } from '@prisma/client'
 import { useSession } from 'next-auth/react'
-import role from '@/pages/api/users/[userId]/role'
 
 const Header: React.FC<{ isPermitted: boolean }> = ({ isPermitted }) => {
     const [isSelectedTab, setSelectedTab] = React.useState<string>('')

@@ -31,7 +31,7 @@ function App({
     return (
         <>
             <Head>
-                <title>日報つーる</title>
+                <title>業務日報くん</title>
                 <meta
                     name="viewport"
                     content="minimum-scale=1, initial-scale=1, width=device-width"

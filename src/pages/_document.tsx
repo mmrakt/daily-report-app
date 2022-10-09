@@ -39,7 +39,7 @@ export default class MyDocument extends Document {
         return (
             <Html lang="ja">
                 <Head />
-                <body>
+                <body className="bg-gray-100">
                     <Main />
                     <NextScript />
                 </body>
