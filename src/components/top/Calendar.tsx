@@ -1,36 +1,9 @@
 import React from 'react'
 import { Calendar as ReactCalendar } from 'react-calendar'
-import styled from 'styled-components'
 import dayjs from 'dayjs'
 import Modal from 'react-modal'
 import { Task } from '@prisma/client'
-import CheckMark from '../common/icon/CheckMark'
 import FormWrapper from './FormWrapper'
-
-const StyledCalendar = styled(ReactCalendar)`
-    margin: 0 auto;
-    width: 1000px;
-    font-size: 16px;
-    border-style: none;
-    .react-calendar__navigation {
-        margin-bottom: 0px;
-        font-size: 20px;
-        border-left: 1px solid #cccccc;
-    }
-    .react-calendar__tile {
-        aspect-ratio: 1 / 1;
-        border-top: 1px solid #cccccc;
-        border-left: 1px solid #cccccc;
-        display: flex;
-    }
-    .react-calendar__month-view__weekdays {
-        border-left: 1px solid #cccccc;
-        font-size: 16px;
-    }
-    .react-calendar__tile--active {
-        color: blue;
-    }
-`
 
 const modalStyle = {
     overlay: {
@@ -75,7 +48,7 @@ const Calendar: React.FC<{ submittedDates: Pick<Task, 'date'>[] }> = ({
 
     return (
         <div className="border-t-2 border-r-2 border-b-2 border-[#cccccc]">
-            <StyledCalendar
+            <ReactCalendar
                 value={new Date()}
                 formatDay={(locale, date) => dayjs(date).format('D')}
                 calendarType="US"

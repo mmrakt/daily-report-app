@@ -7,3 +7,28 @@
         grid-template-columns: 0.5fr 8fr 6fr;
     }
 }
+
+.react-calendar {
+    margin: 0 auto;
+    width: 1000px;
+    font-size: 16px;
+    border-style: none;
+}
+.react-calendar .react-calendar__navigation {
+    margin-bottom: 0px;
+    font-size: 20px;
+    border-left: 1px solid #cccccc;
+}
+.react-calendar .react-calendar__tile {
+    aspect-ratio: 1 / 1;
+    border-top: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
+    display: flex;
+}
+.react-calendar .react-calendar__month-view__weekdays {
+    border-left: 1px solid #cccccc;
+    font-size: 16px;
+}
+.react-calendar .react-calendar__tile--active {
+    color: blue;
+}
