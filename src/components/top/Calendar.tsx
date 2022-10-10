@@ -27,6 +27,9 @@ const StyledCalendar = styled(ReactCalendar)`
         border-left: 1px solid #cccccc;
         font-size: 16px;
     }
+    .react-calendar__tile--active {
+        color: blue;
+    }
 `
 
 const modalStyle = {
@@ -56,16 +59,13 @@ const Calendar: React.FC<{ submittedDates: Pick<Task, 'date'>[] }> = ({
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false)
     const [selectDate, setSelectDate] = React.useState<string>('')
 
-    const TileContent = ({ date }: { date: string }) => {
-        if (
-            (submittedDates as any).some(
-                (report) => report.date === dayjs(date).format('YYYY-MM-DD')
-            )
-        ) {
-            return <CheckMark />
-        } else {
-            return <div className="text-gray-400">-</div>
-        }
+    const getTileClassName = ({ date }: { date: string }): string => {
+        console.log(date)
+        return (submittedDates as any).some(
+            (report) => report.date === dayjs(date).format('YYYY-MM-DD')
+        )
+            ? 'bg-green-200'
+            : ''
     }
 
     const onModalOpen = React.useCallback(async (date: string) => {
@@ -82,6 +82,7 @@ const Calendar: React.FC<{ submittedDates: Pick<Task, 'date'>[] }> = ({
                 onClickDay={(value) => {
                     onModalOpen(value)
                 }}
+                tileClassName={getTileClassName}
             />
             <Modal
                 isOpen={isModalOpen}
