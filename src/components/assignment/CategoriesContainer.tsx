@@ -96,10 +96,9 @@ const CategoriesContainer: React.FC<{
                     <h2 className="text-lg bold">カテゴリー</h2>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-3">
-                    {categories &&
-                        selectCategories &&
+                    {categories.length !== 0 && selectCategories ? (
                         categories.map((category) => (
-                            <div key={category.id}>
+                            <div key={category.id} className="pl-3">
                                 <input
                                     checked={existsById(category.id)}
                                     onChange={(e) => {
@@ -112,12 +111,17 @@ const CategoriesContainer: React.FC<{
                                 />
                                 <label
                                     htmlFor="checked-checkbox"
-                                    className="ml-2 text-sm font-medium"
+                                    className="ml-2"
                                 >
                                     {category.name}
                                 </label>
                             </div>
-                        ))}
+                        ))
+                    ) : (
+                        <div className="p-3">
+                            カテゴリーが登録されていません。
+                        </div>
+                    )}
                 </div>
                 <div className="flex">
                     <Button

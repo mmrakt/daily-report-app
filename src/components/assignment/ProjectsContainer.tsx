@@ -87,10 +87,9 @@ const ProjectsContainer: React.FC<{
                     <h2 className="text-lg bold">プロジェクト</h2>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-3">
-                    {projects &&
-                        selectedProjects &&
+                    {projects.length !== 0 && selectedProjects ? (
                         projects.map((project) => (
-                            <div key={project.id}>
+                            <div key={project.id} className="pl-3">
                                 <input
                                     checked={existsById(project.id)}
                                     onChange={(e) => {
@@ -103,12 +102,17 @@ const ProjectsContainer: React.FC<{
                                 />
                                 <label
                                     htmlFor="checked-checkbox"
-                                    className="ml-2 text-sm font-medium"
+                                    className="ml-2"
                                 >
                                     {project.name}
                                 </label>
                             </div>
-                        ))}
+                        ))
+                    ) : (
+                        <div className="p-3">
+                            プロジェクトが登録されていません。
+                        </div>
+                    )}
                 </div>
                 <div className="flex">
                     <Button
