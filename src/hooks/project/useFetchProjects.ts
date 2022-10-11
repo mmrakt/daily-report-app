@@ -3,7 +3,9 @@ import { ProjectAndRoleIds } from '../../types/index'
 
 const useFetchProjects = (): UseQueryResult<ProjectAndRoleIds[]> => {
     return useQuery<ProjectAndRoleIds[]>(['projects'], async () => {
-        const res = await fetch(`/api/projects`)
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_APP_URL}/api/projects`
+        )
         return res.json()
     })
 }
