@@ -14,6 +14,7 @@ type IProps = {
     className?: string
     disabled?: boolean
     ref?: React.MutableRefObject<HTMLButtonElement>
+    role?: string
 }
 const Button = (props: IProps): React.ReactElement => {
     let colorStyle = ''
@@ -35,6 +36,7 @@ const Button = (props: IProps): React.ReactElement => {
             type={props.type}
             disabled={props.disabled ? true : false}
             ref={props.ref}
+            role={props.role}
         >
             {props.text}
         </button>

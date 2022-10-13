@@ -9,13 +9,16 @@ export type CategoriesOnRoles = {
 const useCreateCategoriesOnRoles = () => {
     const queryClient = useQueryClient()
     return useMutation(
-        (categoriesOnRoles: CategoriesOnRoles) =>
-            fetch(`/api/roles/${categoriesOnRoles[0].roleId}/categories`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    categoriesOnRoles,
-                }),
-            }),
+        async (categoriesOnRoles: CategoriesOnRoles) =>
+            await fetch(
+                `${process.env.NEXT_PUBLIC_APP_URL}/api/roles/${categoriesOnRoles[0].roleId}/categories`,
+                {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        categoriesOnRoles,
+                    }),
+                }
+            ),
         {
             onSuccess: (data, variables) => {
                 // TODO: setTimeoutを使わずにcache破棄のタイミングを遅延させる

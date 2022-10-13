@@ -13,7 +13,6 @@ const CategoriesContainer: React.FC<{
     roleId: number
 }> = ({ categories, roleId }) => {
     const [selectCategories, setSelectCategories] = useState<Category[]>()
-    useState<Category[]>()
     const createCategoriesOnRoles = useCreateCategoriesOnRoles()
 
     const extractRegisterdByRoleId = useCallback(

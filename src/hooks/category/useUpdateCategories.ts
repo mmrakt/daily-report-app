@@ -5,8 +5,8 @@ import { Classification } from '../../types/index'
 const useUpdateCategories = () => {
     const queryClient = useQueryClient()
     return useMutation(
-        (categories: Category[] | Classification[]) =>
-            fetch('/api/categories', {
+        async (categories: Category[] | Classification[]) =>
+            await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/categories`, {
                 method: 'POST',
                 body: JSON.stringify({
                     categories,

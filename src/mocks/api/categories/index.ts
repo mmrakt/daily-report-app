@@ -24,4 +24,12 @@ const get: ResponseResolver<MockedRequest, typeof restContext> = (
     )
 }
 
-export default { get }
+const post: ResponseResolver<MockedRequest, typeof restContext> = (
+    req,
+    res,
+    ctx
+) => {
+    return res(ctx.status(200))
+}
+
+export default { get, post }

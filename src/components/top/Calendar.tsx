@@ -33,7 +33,6 @@ const Calendar: React.FC<{ submittedDates: Pick<Task, 'date'>[] }> = ({
     const [selectDate, setSelectDate] = React.useState<string>('')
 
     const getTileClassName = ({ date }: { date: string }): string => {
-        console.log(date)
         return (submittedDates as any).some(
             (report) => report.date === dayjs(date).format('YYYY-MM-DD')
         )

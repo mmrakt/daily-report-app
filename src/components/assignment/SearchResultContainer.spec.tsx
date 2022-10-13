@@ -5,12 +5,15 @@ import React from 'react'
 import { createQueryWrapper } from '../../../test/utlis/createQueryWrapper'
 
 describe('SearchResultContainer', () => {
-    beforeAll(() => server.listen())
+    let queryWrapper
+    beforeAll(() => {
+        queryWrapper = createQueryWrapper().queryWrapper
+        server.listen()
+    })
     afterEach(() => server.resetHandlers())
     afterAll(() => server.close())
 
     test('render:loading', async () => {
-        const { queryWrapper } = createQueryWrapper()
         const { asFragment, getByRole } = render(
             <SearchResultContainer roleId={1} />,
             {
@@ -23,7 +26,6 @@ describe('SearchResultContainer', () => {
     })
 
     test('render:fetch categories and projects', async () => {
-        const { queryWrapper } = createQueryWrapper()
         const { findByText, queryByText } = render(
             <SearchResultContainer roleId={1} />,
             {
