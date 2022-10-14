@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prisma'
-import { Category, Prisma, PrismaClient } from '@prisma/client'
+import { Category, PrismaClient } from '@prisma/client'
 
 const handler = async (
     req: NextApiRequest,

@@ -1,10 +1,11 @@
 import { server } from '@/mocks/server'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import CategoriesContainer from './CategoriesContainer'
 import React from 'react'
 import { createQueryWrapper } from '../../../test/utlis/createQueryWrapper'
 import { CategoryAndRoleIds } from '@/types'
 import userEvent from '@testing-library/user-event'
+import { rest } from 'msw'
 
 describe('CategoriesContainer', () => {
     beforeAll(() => server.listen())
@@ -62,6 +63,16 @@ describe('CategoriesContainer', () => {
     })
 
     test('render:submit', async () => {
+        const mockFn = jest.fn()
+        server.use(
+            rest.post(
+                `${process.env.NEXT_PUBLIC_APP_URL}/api/roles/1/categories`,
+                async (req, res, ctx) => {
+                    mockFn()
+                    return res(ctx.status(200))
+                }
+            )
+        )
         const queryWrapper = createQueryWrapper().queryWrapper
         const result = render(
             <CategoriesContainer roleId={1} categories={dummyCategories} />,
@@ -73,6 +84,7 @@ describe('CategoriesContainer', () => {
         const user = userEvent.setup()
         const submitButton = screen.queryByRole('button')
         await user.click(submitButton)
-        expect(await result.findByText('category001')).toBeInTheDocument()
+        await user.click(submitButton)
+        await waitFor(() => expect(mockFn).toHaveBeenCalledTimes(2))
     })
 })
