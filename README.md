@@ -1,10 +1,10 @@
-# 日報ツール
+# daily-report-app
 
-## 概要
+## About
 
 業務日報の提出、管理、更新ができます。
 
-## 技術スタック
+## Tech stack
 
 - Language: TypeScript
 - FW: React.js + Next.js 
@@ -12,3 +12,8 @@
 - Form State: ReactHookForm
 - Fetching: ReactQuery
 - Authentication: NextAuth
+- DB: Supabase
+- Test: Vitest
+- API Mock: MSW
+
+## 
