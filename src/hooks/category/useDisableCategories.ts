@@ -4,7 +4,7 @@ const useDisableCategories = () => {
     const queryClient = useQueryClient()
     return useMutation(
         (ids: number[]) =>
-            fetch('/api/categories', {
+            fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/categories`, {
                 method: 'PATCH',
                 body: JSON.stringify({
                     ids,

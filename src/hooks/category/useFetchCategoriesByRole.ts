@@ -7,7 +7,9 @@ const useFetchCategoriesByRole = (
     return useQuery<Category[]>(
         ['categories', roleId],
         async () => {
-            const res = await fetch(`/api/roles/${roleId}/categories`)
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_APP_URL}/api/roles/${roleId}/categories`
+            )
             return res.json()
         },
         {

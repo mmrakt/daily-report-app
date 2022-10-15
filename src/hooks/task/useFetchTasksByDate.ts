@@ -8,7 +8,9 @@ const useFetchTasksByDate = (
     return useQuery<Task[]>(
         ['tasks', { date: date, userId: userId }],
         async () => {
-            const res = await fetch(`/api/tasks/${date}/?userId=${userId}`)
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_APP_URL}/api/tasks/${date}/?userId=${userId}`
+            )
             return res.json()
         },
         {

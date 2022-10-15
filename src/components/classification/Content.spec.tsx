@@ -1,5 +1,5 @@
 import { server } from '@/mocks/server'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, renderHook } from '@testing-library/react'
 import Content from './Content'
 import React from 'react'
 import { createQueryWrapper } from '../../../test/utlis/createQueryWrapper'
@@ -37,14 +37,19 @@ describe('Content', () => {
     ]
 
     test('render:categories', async () => {
-        // TODO: ts-jestのesm対応必要
         const queryWrapper = createQueryWrapper().queryWrapper
+        const { result: updateCategories } = renderHook(useUpdateCategories, {
+            wrapper: queryWrapper,
+        })
+        const { result: disableCategories } = renderHook(useDisableCategories, {
+            wrapper: queryWrapper,
+        })
         const result = render(
             <Content
                 classifications={dummyClassifications}
                 label="カテゴリー"
-                updateMutation={useUpdateCategories()}
-                disableMutation={useDisableCategories()}
+                updateMutation={updateCategories.current}
+                disableMutation={disableCategories.current}
             />,
             {
                 wrapper: queryWrapper,

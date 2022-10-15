@@ -6,6 +6,7 @@ import { createQueryWrapper } from '../../../test/utlis/createQueryWrapper'
 import { CategoryAndRoleIds } from '@/types'
 import userEvent from '@testing-library/user-event'
 import { rest } from 'msw'
+import { vi } from 'vitest'
 
 describe('CategoriesContainer', () => {
     beforeAll(() => server.listen())
@@ -63,7 +64,7 @@ describe('CategoriesContainer', () => {
     })
 
     test('render:submit', async () => {
-        const mockFn = jest.fn()
+        const mockFn = vi.fn()
         server.use(
             rest.post(
                 `${process.env.NEXT_PUBLIC_APP_URL}/api/roles/1/categories`,

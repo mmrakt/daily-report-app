@@ -7,7 +7,9 @@ const useFetchAllTasksByDateGroup = (
     return useQuery<Pick<Task, 'date'>[]>(
         ['tasks', { userId: userId }],
         async () => {
-            const res = await fetch(`/api/tasks?userId=${userId}`)
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_APP_URL}/api/tasks?userId=${userId}`
+            )
             return res.json()
         },
         {
