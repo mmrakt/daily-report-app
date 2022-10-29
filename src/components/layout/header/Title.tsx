@@ -5,7 +5,7 @@ const Title = React.memo(() => {
     return (
         <p className="px-8 py-8 font-black text-xl">
             <Link href="/">
-                <a>業務日報くん</a>
+                <span>業務日報くん</span>
             </Link>
         </p>
     )
