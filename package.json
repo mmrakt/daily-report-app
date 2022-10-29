@@ -2,7 +2,7 @@
     "name": "daily-report-app",
     "version": "0.1.0",
     "private": true,
-    "license": "UNLICENSED"
+    "license": "UNLICENSED",
     "scripts": {
         "dev": "next dev",
         "dev:analyze": "ANALYZE=true next dev",
@@ -39,7 +39,7 @@
         "husky": "^4.3.6",
         "lint-staged": "^10.5.3",
         "minireset.css": "^0.0.6",
-        "next": "^12.3.1",
+        "next": "^13.0.0",
         "next-auth": "^4.12.0",
         "nextjs-progressbar": "^0.0.13",
         "onchange": "^7.1.0",
@@ -66,8 +66,7 @@
     },
     "lint-staged": {
         "*.{js,ts,tsx}": [
-            "eslint --ext .ts,.tsx ./src/",
-            "yarn run test:no-watch"
+            "eslint --ext .ts,.tsx ./src/"
         ]
     },
     "devDependencies": {

@@ -10,11 +10,11 @@ type IProps = {
 const Tab = (props: IProps): React.ReactElement => {
     return (
         <Link href={props.url}>
-            <a
+            <span
                 className={`px-4 py-8 font-medium text-base hover:text-black ${props.textColor}`}
             >
                 {props.name}
-            </a>
+            </span>
         </Link>
     )
 }
